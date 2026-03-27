@@ -47,12 +47,21 @@ function ensureSeed(): PersistentStoreData {
   }
 }
 
+function tryWriteFile(filePath: string, data: string): boolean {
+  try {
+    fs.mkdirSync(path.dirname(filePath), { recursive: true })
+    fs.writeFileSync(filePath, data, 'utf8')
+    return true
+  } catch {
+    return false
+  }
+}
+
 export function readPersistentStore(): PersistentStoreData {
   try {
     if (!fs.existsSync(STORE_FILE)) {
-      fs.mkdirSync(path.dirname(STORE_FILE), { recursive: true })
       const seed = ensureSeed()
-      fs.writeFileSync(STORE_FILE, JSON.stringify(seed, null, 2), 'utf8')
+      tryWriteFile(STORE_FILE, JSON.stringify(seed, null, 2))
       return seed
     }
     const raw = fs.readFileSync(STORE_FILE, 'utf8')
@@ -86,19 +95,11 @@ export function readPersistentStore(): PersistentStoreData {
     }))
     return merged
   } catch {
-    const seed = ensureSeed()
-    try {
-      fs.mkdirSync(path.dirname(STORE_FILE), { recursive: true })
-      fs.writeFileSync(STORE_FILE, JSON.stringify(seed, null, 2), 'utf8')
-    } catch {
-      // ignore
-    }
-    return seed
+    return ensureSeed()
   }
 }
 
 export function writePersistentStore(next: PersistentStoreData) {
-  fs.mkdirSync(path.dirname(STORE_FILE), { recursive: true })
-  fs.writeFileSync(STORE_FILE, JSON.stringify(next, null, 2), 'utf8')
+  tryWriteFile(STORE_FILE, JSON.stringify(next, null, 2))
 }
 

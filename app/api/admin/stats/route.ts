@@ -46,6 +46,16 @@ export async function GET(request: Request) {
       })),
     })
   } catch (error) {
+    if (error instanceof Error && error.message.startsWith('Missing env var:')) {
+      return NextResponse.json({
+        totalProducts: 0,
+        totalOrders: 0,
+        totalRevenue: 0,
+        totalVouches: 0,
+        recentOrders: [],
+        warning: 'Supabase env vars missing; stats unavailable.',
+      })
+    }
     console.error('Admin stats error:', error)
     return NextResponse.json(
       { error: 'Internal server error' },

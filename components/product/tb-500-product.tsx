@@ -87,7 +87,7 @@ export function Tb500Product({ product, relatedProducts = [], vouches = [] }: Tb
   const section2 = useScrollReveal()
 
   const productVouches = vouches.filter((v) => v.product_id === product.id || v.product_id === null)
-  const imageSrc = product.image_url || null
+  const imageSrc = product.image_url || '/images/tb-500-vial.png'
 
   return (
     <div className="min-h-screen bg-white text-[#0A1931]">

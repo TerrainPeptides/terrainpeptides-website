@@ -88,7 +88,7 @@ export function DsipProduct({ product, relatedProducts = [], vouches = [] }: Dsi
 
   const productVouches = vouches.filter((v) => v.product_id === product.id || v.product_id === null)
 
-  const imageSrc = product.image_url || null
+  const imageSrc = product.image_url || '/images/dsip-vial.png'
 
   return (
     <div className="min-h-screen bg-white text-[#0A1931]">

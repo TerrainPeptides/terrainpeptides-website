@@ -22,7 +22,7 @@
       "in_stock": true,
       "stock_level": null,
       "featured": true,
-      "image_url": null,
+      "image_url": "/images/bpc-157-vial.png",
       "coa_url": null,
       "created_at": "2026-03-21T01:11:05.928Z",
       "updated_at": "2026-03-21T01:11:05.928Z"
@@ -49,7 +49,7 @@
       "in_stock": true,
       "stock_level": null,
       "featured": true,
-      "image_url": null,
+      "image_url": "/images/tb-500-vial.png",
       "coa_url": null,
       "created_at": "2026-03-21T01:11:05.928Z",
       "updated_at": "2026-03-21T01:11:05.928Z"
@@ -76,7 +76,7 @@
       "in_stock": true,
       "stock_level": null,
       "featured": true,
-      "image_url": null,
+      "image_url": "/images/bpc-157-vial.png",
       "coa_url": null,
       "created_at": "2026-03-21T01:11:05.928Z",
       "updated_at": "2026-03-21T01:11:05.928Z"
@@ -103,7 +103,7 @@
       "in_stock": true,
       "stock_level": null,
       "featured": false,
-      "image_url": null,
+      "image_url": "/images/bpc-157-vial.png",
       "coa_url": null,
       "created_at": "2026-03-21T01:11:05.928Z",
       "updated_at": "2026-03-21T01:11:05.928Z"
@@ -136,6 +136,60 @@
       "updated_at": "2026-03-21T01:11:05.928Z"
     },
     {
+      "id": "prod-semax",
+      "slug": "semax",
+      "name": "Semax",
+      "category": "individual",
+      "description": "Semax is a synthetic peptide studied for cognitive support, neurotrophic signaling, and focus.",
+      "overview": "Nootropic peptide for cognitive and neurotrophic research",
+      "price_cents": 5499,
+      "dosage": "5mg",
+      "vial_count": 1,
+      "purity": "99%+",
+      "molecular_weight": null,
+      "sequence": null,
+      "research_benefits": [
+        "Cognitive support",
+        "Focus",
+        "Neurotrophic signaling"
+      ],
+      "research_studies": null,
+      "in_stock": true,
+      "stock_level": null,
+      "featured": false,
+      "image_url": "/images/semax-vial.png",
+      "coa_url": null,
+      "created_at": "2026-03-21T01:11:05.928Z",
+      "updated_at": "2026-03-21T01:11:05.928Z"
+    },
+    {
+      "id": "prod-selank",
+      "slug": "selank",
+      "name": "Selank",
+      "category": "individual",
+      "description": "Selank is a synthetic peptide studied for anxiolytic-like effects, stress resilience, and calm focus.",
+      "overview": "Research peptide for stress, anxiety, and sleep-quality research",
+      "price_cents": 5499,
+      "dosage": "5mg",
+      "vial_count": 1,
+      "purity": "99%+",
+      "molecular_weight": null,
+      "sequence": null,
+      "research_benefits": [
+        "Stress resilience",
+        "Calm focus",
+        "Sleep quality"
+      ],
+      "research_studies": null,
+      "in_stock": true,
+      "stock_level": null,
+      "featured": false,
+      "image_url": "/images/selank-vial.png",
+      "coa_url": null,
+      "created_at": "2026-03-21T01:11:05.928Z",
+      "updated_at": "2026-03-21T01:11:05.928Z"
+    },
+    {
       "id": "prod-5",
       "slug": "syringe-kit",
       "overview": "Sterile syringes and bacteriostatic water for research use",
@@ -153,7 +207,7 @@
       "in_stock": true,
       "stock_level": null,
       "featured": false,
-      "image_url": null,
+      "image_url": "/images/bpc-157-vial.png",
       "coa_url": null,
       "created_at": "2026-03-21T01:11:05.928Z",
       "updated_at": "2026-03-21T01:11:05.928Z"

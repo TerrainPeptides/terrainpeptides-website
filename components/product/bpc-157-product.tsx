@@ -96,7 +96,7 @@ export function Bpc157Product({ product, relatedProducts = [], vouches = [] }: B
 
   const productVouches = vouches.filter((v) => v.product_id === product.id || v.product_id === null)
 
-  const imageSrc = product.image_url || null
+  const imageSrc = product.image_url || '/images/bpc-157-vial.png'
 
   return (
     <div className="min-h-screen bg-white text-[#0A1931]">

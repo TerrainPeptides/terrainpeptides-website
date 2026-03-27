@@ -88,7 +88,7 @@ export function Aod9604Product({ product, relatedProducts = [], vouches = [] }: 
   const section2 = useScrollReveal()
 
   const productVouches = vouches.filter((v) => v.product_id === product.id || v.product_id === null)
-  const imageSrc = product.image_url || null
+  const imageSrc = product.image_url || '/images/aod-9604-vial.png'
 
   return (
     <div className="min-h-screen bg-white text-[#0A1931]">

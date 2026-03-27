@@ -110,7 +110,7 @@ export function RetatrutideProduct({ product, relatedProducts = [], vouches = []
 
   const productVouches = vouches.filter((v) => v.product_id === product.id || v.product_id === null)
 
-  const imageSrc = product.image_url || '/images/retatrutide-vial.svg'
+  const imageSrc = product.image_url || '/images/retatrutide-vial.png'
 
   return (
     <div className="min-h-screen bg-white text-[#0A1931]">
