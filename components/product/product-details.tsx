@@ -18,6 +18,7 @@ import {
   Plus,
   Star
 } from 'lucide-react'
+import { CoaButton } from '@/components/product/coa-button'
 import { formatPriceVial, formatUsdCents } from '@/lib/format-price'
 import { packageLineTotalCents } from '@/lib/product-price'
 import {
@@ -234,6 +235,8 @@ export function ProductDetails({ product }: ProductDetailsProps) {
               {product.in_stock ? 'In Stock' : 'Out of Stock'}
             </span>
           </div>
+
+          <CoaButton coaUrl={product.coa_url} />
         </div>
       </div>
     </div>

@@ -11,9 +11,9 @@ import { Menu, ShoppingCart } from 'lucide-react'
 const navLinks = [
   { href: '/', label: 'Home' },
   { href: '/shop', label: 'Shop' },
-  { href: '/faq', label: 'FAQ' },
+  { href: '/affiliates', label: 'Affiliate' },
   { href: '/contact', label: 'Contact' },
-  { href: '/track', label: 'Track Order' },
+  { href: '/faq', label: 'FAQ' },
 ]
 
 const TICKER_ITEMS = [

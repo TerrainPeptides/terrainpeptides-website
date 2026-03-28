@@ -1,7 +1,32 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, Shield, Warehouse, FileCheck, Truck } from 'lucide-react'
+
+const NAVY = '#0A1931'
+
+const trustCards = [
+  {
+    icon: Shield,
+    title: '99%+ Purity Guaranteed',
+    description: 'Every batch independently verified by third-party labs',
+  },
+  {
+    icon: Warehouse,
+    title: 'USA Warehouse',
+    description: 'Ships domestically for fast, reliable delivery',
+  },
+  {
+    icon: FileCheck,
+    title: 'Third-Party Tested',
+    description: 'Full Certificate of Analysis with every order',
+  },
+  {
+    icon: Truck,
+    title: 'Fast Shipping',
+    description: 'Orders processed and shipped within 1-2 business days',
+  },
+] as const
 
 const bullets = [
   'Third-party tested quality',
@@ -58,6 +83,33 @@ export function AboutTerrainSection() {
               />
             </div>
           </div>
+        </div>
+
+        <div className="mt-12 text-center sm:mt-16">
+          <h2 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+            Why TerrainPeptides?
+          </h2>
+          <p className="mx-auto mt-3 max-w-2xl text-muted-foreground">
+            We set the standard for quality, transparency, and reliability in research peptides.
+          </p>
+        </div>
+
+        <div className="mt-8 grid gap-5 sm:mt-10 sm:grid-cols-2 lg:grid-cols-4">
+          {trustCards.map((card) => (
+            <div
+              key={card.title}
+              className="group flex flex-col rounded-2xl border border-white/10 p-8 text-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-white/25 hover:shadow-lg sm:p-9"
+              style={{ background: NAVY }}
+            >
+              <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-white/10 transition-colors group-hover:bg-white/[0.14]">
+                <card.icon className="h-6 w-6 text-white" aria-hidden />
+              </div>
+              <h3 className="text-lg font-bold tracking-tight">{card.title}</h3>
+              <p className="mt-2 text-sm leading-snug text-white/75 sm:text-[0.9375rem]">
+                {card.description}
+              </p>
+            </div>
+          ))}
         </div>
       </div>
     </section>

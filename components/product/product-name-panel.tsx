@@ -24,6 +24,7 @@ import {
   type LucideIcon,
 } from 'lucide-react'
 import type { Product } from '@/lib/types'
+import { CoaButton } from '@/components/product/coa-button'
 
 const TRUST_BADGES: { label: string; Icon: LucideIcon }[] = [
   { label: 'HPLC Tested', Icon: ShieldCheck },
@@ -199,18 +200,7 @@ export function ProductNamePanel({ product, theme = 'navy' }: ProductNamePanelPr
         )}
       </p>
 
-      {product.coa_url && (
-        <Button
-          variant="outline"
-          size="sm"
-          className="mt-4 w-fit rounded-full"
-          asChild
-        >
-          <a href={product.coa_url} target="_blank" rel="noopener noreferrer">
-            CoA
-          </a>
-        </Button>
-      )}
+      <CoaButton coaUrl={product.coa_url} theme={theme} />
 
       <div
         className={`mt-8 border-t pt-6 ${isNavy ? 'border-[#0A1931]/15' : 'border-border'}`}
