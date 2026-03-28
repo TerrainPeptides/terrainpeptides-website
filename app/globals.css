@@ -166,3 +166,30 @@ a {
   cursor: pointer;
 }
 
+/* Navbar trust ticker — infinite horizontal scroll */
+@keyframes navbar-ticker-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.navbar-ticker__track {
+  display: flex;
+  width: max-content;
+  animation: navbar-ticker-scroll 50s linear infinite;
+  will-change: transform;
+}
+
+.navbar-ticker:hover .navbar-ticker__track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navbar-ticker__track {
+    animation: none;
+  }
+}
+

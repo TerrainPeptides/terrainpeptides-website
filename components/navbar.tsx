@@ -2,11 +2,11 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { useState } from 'react'
+import { Fragment, useState } from 'react'
 import { useCart } from '@/lib/cart-context'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet'
-import { Menu, ShoppingCart, X } from 'lucide-react'
+import { Menu, ShoppingCart } from 'lucide-react'
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -15,6 +15,42 @@ const navLinks = [
   { href: '/contact', label: 'Contact' },
   { href: '/track', label: 'Track Order' },
 ]
+
+const TICKER_ITEMS = [
+  'Free Shipping on Orders $300+',
+  '99%+ Purity Guaranteed',
+  'Third-Party Tested',
+  'Discreet Packaging',
+  'USA Warehouse',
+  'Research Grade Only',
+] as const
+
+/**
+ * One marquee cycle: uppercase labels + → after each item; `pr` matches `gap` so two
+ * copies tile seamlessly at translateX(-50%) with no dead navy gap.
+ */
+function NavbarTickerPeriod({ duplicate }: { duplicate?: boolean }) {
+  return (
+    <div
+      className="flex shrink-0 items-center gap-x-6 pr-6 sm:gap-x-8 sm:pr-8 md:gap-x-10 md:pr-10"
+      aria-hidden={duplicate}
+    >
+      {TICKER_ITEMS.map((text) => (
+        <Fragment key={duplicate ? `d-${text}` : text}>
+          <span className="whitespace-nowrap text-xs font-semibold uppercase tracking-[0.12em] text-white sm:text-[13px] md:text-sm">
+            {text}
+          </span>
+          <span
+            className="shrink-0 select-none px-1 text-sm font-medium text-white sm:text-[15px] md:text-base"
+            aria-hidden
+          >
+            →
+          </span>
+        </Fragment>
+      ))}
+    </div>
+  )
+}
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
@@ -28,15 +64,15 @@ export function Navbar() {
           <Image
             src="/images/terrain-wordmark.png"
             alt="Terrain Peptides"
-            width={180}
-            height={48}
-            className="h-8 w-auto"
+            width={220}
+            height={59}
+            className="h-9 w-auto contrast-[1.12] md:h-10"
             priority
           />
         </Link>
 
         {/* Desktop Navigation */}
-        <div className="hidden items-center justify-self-center gap-8 md:flex">
+        <div className="hidden items-center justify-self-center gap-10 lg:gap-12 md:flex">
           {navLinks.map(link => (
             <Link
               key={link.href}
@@ -101,6 +137,19 @@ export function Navbar() {
           </Sheet>
         </div>
       </nav>
+
+      <div
+        className="navbar-ticker w-full bg-[#1a2f4e] py-2 sm:py-2.5"
+        role="region"
+        aria-label="Announcements"
+      >
+        <div className="overflow-hidden">
+          <div className="navbar-ticker__track flex w-max items-center">
+            <NavbarTickerPeriod />
+            <NavbarTickerPeriod duplicate />
+          </div>
+        </div>
+      </div>
     </header>
   )
 }
