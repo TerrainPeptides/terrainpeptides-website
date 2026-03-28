@@ -28,6 +28,7 @@ import {
 } from '@/lib/dosage-variants'
 import { getSeededProductReviewDisplay } from '@/lib/product-review-display'
 import type { Product } from '@/lib/types'
+import { PRODUCT_CATEGORY_LABELS } from '@/lib/product-category'
 
 interface ProductDetailsProps {
   product: Product
@@ -59,12 +60,7 @@ export function ProductDetails({ product }: ProductDetailsProps) {
     )
   }
 
-  const categoryLabel = {
-    individual: 'Individual Peptide',
-    blend: 'Branded Blend',
-    capsule: 'Capsule',
-    accessory: 'Accessory',
-  }
+  const categoryLabel = PRODUCT_CATEGORY_LABELS
 
   return (
     <div>

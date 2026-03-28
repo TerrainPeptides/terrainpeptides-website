@@ -7,18 +7,11 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Search } from 'lucide-react'
 import type { Product } from '@/lib/types'
+import { SHOP_CATEGORY_FILTERS } from '@/lib/product-category'
 
 interface ShopContentProps {
   products: Product[]
 }
-
-const categories = [
-  { value: 'all', label: 'All Products' },
-  { value: 'individual', label: 'Individual Peptides' },
-  { value: 'blend', label: 'Branded Blends' },
-  { value: 'capsule', label: 'Capsules' },
-  { value: 'accessory', label: 'Accessories' },
-]
 
 export function ShopContent({ products }: ShopContentProps) {
   const searchParams = useSearchParams()
@@ -62,7 +55,7 @@ export function ShopContent({ products }: ShopContentProps) {
               Categories
             </h3>
             <div className="flex flex-col gap-1">
-              {categories.map((cat) => (
+              {SHOP_CATEGORY_FILTERS.map((cat) => (
                 <Button
                   key={cat.value}
                   variant={activeCategory === cat.value ? 'secondary' : 'ghost'}

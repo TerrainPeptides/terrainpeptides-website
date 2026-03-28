@@ -4,7 +4,7 @@ import { getProductsAsync } from '@/lib/data'
 
 export const metadata = {
   title: 'Shop | Terrain Peptides',
-  description: 'Browse our complete catalog of premium research peptides, branded blends, capsules, and accessories.',
+  description: 'Browse our complete catalog of premium research peptides by goal: fat loss, skin and collagen, sleep, cognitive support, and performance.',
 }
 
 export default async function ShopPage() {

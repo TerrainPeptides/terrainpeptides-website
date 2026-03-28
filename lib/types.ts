@@ -4,11 +4,19 @@ export interface ProductDosageVariant {
   price_cents: number
 }
 
+/** Shop / catalog taxonomy (filters on /shop) */
+export type ProductCategory =
+  | 'fat-loss'
+  | 'skin-collagen'
+  | 'sleep'
+  | 'cognitive'
+  | 'performance'
+
 export interface Product {
   id: string
   slug: string
   name: string
-  category: 'individual' | 'blend' | 'capsule' | 'accessory'
+  category: ProductCategory
   description: string | null
   overview: string | null
   price_cents: number

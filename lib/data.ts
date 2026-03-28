@@ -29,7 +29,7 @@ function filterVisible(products: Product[]): Product[] {
   return products.filter((p) => !(p as { hidden?: boolean }).hidden)
 }
 
-const SEED_SLUGS_TO_ALWAYS_INCLUDE = ['ghk-cu', 'selank']
+const SEED_SLUGS_TO_ALWAYS_INCLUDE = ['ghk-cu', 'selank', 'kisspeptin']
 
 export async function getProductsAsync(): Promise<Product[]> {
   const fromSupabase = await getProductsFromSupabase()

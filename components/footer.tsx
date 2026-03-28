@@ -3,10 +3,12 @@ import Image from 'next/image'
 
 const footerLinks = {
   shop: [
-    { href: '/shop?category=individual', label: 'Individual Peptides' },
-    { href: '/shop?category=blend', label: 'Branded Blends' },
-    { href: '/shop?category=capsule', label: 'Capsules' },
-    { href: '/shop?category=accessory', label: 'Accessories' },
+    { href: '/shop', label: 'All Products' },
+    { href: '/shop?category=fat-loss', label: 'Fat Loss' },
+    { href: '/shop?category=skin-collagen', label: 'Skin & Collagen' },
+    { href: '/shop?category=sleep', label: 'Sleep' },
+    { href: '/shop?category=cognitive', label: 'Cognitive' },
+    { href: '/shop?category=performance', label: 'Performance' },
   ],
   support: [
     { href: '/faq', label: 'FAQ' },
@@ -22,9 +24,9 @@ const footerLinks = {
 
 export function Footer() {
   return (
-    <footer className="border-t border-border bg-muted/30">
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+    <footer className="bg-[#0A1931] text-white">
+      <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
+        <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
           {/* Brand */}
           <div className="space-y-4">
             <Link href="/">
@@ -33,23 +35,23 @@ export function Footer() {
                 alt="Terrain Peptides"
                 width={160}
                 height={36}
-                className="h-8 w-auto"
+                className="h-8 w-auto brightness-0 invert"
               />
             </Link>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm leading-relaxed text-white/60">
               Premium research peptides for scientific applications. All products are strictly for laboratory research use only.
             </p>
           </div>
 
           {/* Shop Links */}
           <div>
-            <h3 className="mb-4 text-sm font-semibold text-foreground">Shop</h3>
+            <h3 className="mb-4 text-sm font-semibold text-white">Shop</h3>
             <ul className="space-y-3">
               {footerLinks.shop.map(link => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                    className="text-sm text-white/60 transition-colors hover:text-white"
                   >
                     {link.label}
                   </Link>
@@ -60,13 +62,13 @@ export function Footer() {
 
           {/* Support Links */}
           <div>
-            <h3 className="mb-4 text-sm font-semibold text-foreground">Support</h3>
+            <h3 className="mb-4 text-sm font-semibold text-white">Support</h3>
             <ul className="space-y-3">
               {footerLinks.support.map(link => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                    className="text-sm text-white/60 transition-colors hover:text-white"
                   >
                     {link.label}
                   </Link>
@@ -77,13 +79,13 @@ export function Footer() {
 
           {/* Legal Links */}
           <div>
-            <h3 className="mb-4 text-sm font-semibold text-foreground">Legal</h3>
+            <h3 className="mb-4 text-sm font-semibold text-white">Legal</h3>
             <ul className="space-y-3">
               {footerLinks.legal.map(link => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                    className="text-sm text-white/60 transition-colors hover:text-white"
                   >
                     {link.label}
                   </Link>
@@ -93,12 +95,12 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 border-t border-border pt-8">
+        <div className="mt-14 border-t border-white/10 pt-8">
           <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
-            <p className="text-xs text-muted-foreground">
-              {new Date().getFullYear()} Terrain Peptides. All rights reserved.
+            <p className="text-xs text-white/40">
+              &copy; {new Date().getFullYear()} Terrain Peptides. All rights reserved.
             </p>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-white/40">
               For research purposes only. Not for human consumption.
             </p>
           </div>

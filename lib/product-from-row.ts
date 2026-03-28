@@ -1,4 +1,5 @@
 import type { Product } from '@/lib/types'
+import { normalizeProductCategory } from '@/lib/product-category'
 import { dosageVariantsFromDbRow, parseResearchStudiesField } from '@/lib/dosage-variants-storage'
 
 /** Map a Supabase `products` row (or seed object) to `Product`. */
@@ -14,7 +15,7 @@ export function productFromDbRow(row: Record<string, unknown>): Product {
     id: String(row.id),
     slug: String(row.slug),
     name: String(row.name),
-    category: (row.category as Product['category']) || 'individual',
+    category: normalizeProductCategory(row.category, String(row.slug)),
     description: (row.description as string) ?? null,
     overview: (row.overview as string) ?? null,
     price_cents: priceCents,

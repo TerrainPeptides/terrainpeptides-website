@@ -2,6 +2,7 @@ import fs from 'fs'
 import path from 'path'
 
 import type { ContactSubmission, Order, OrderItem, Product, ReferralCode, Vouch } from '@/lib/types'
+import { normalizeProductCategory } from '@/lib/product-category'
 import { seedProducts, seedVouches } from '@/lib/seed-data'
 
 const GHK_CU_SLUG = 'ghk-cu'
@@ -12,6 +13,11 @@ function getGhkCuProduct(): Product {
 const SELANK_SLUG = 'selank'
 function getSelankProduct(): Product {
   return seedProducts.find((p) => p.slug === SELANK_SLUG)!
+}
+
+const KISSPEPTIN_SLUG = 'kisspeptin'
+function getKisspeptinProduct(): Product {
+  return seedProducts.find((p) => p.slug === KISSPEPTIN_SLUG)!
 }
 
 export interface DiscountCode {
@@ -79,6 +85,7 @@ export function readPersistentStore(): PersistentStoreData {
     }
     merged.products = merged.products.map((p) => ({
       ...p,
+      category: normalizeProductCategory(p.category, p.slug),
       vial_count: p.vial_count ?? 1,
       research_studies: p.research_studies ?? null,
       stock_level: p.stock_level ?? null,
@@ -88,6 +95,9 @@ export function readPersistentStore(): PersistentStoreData {
     }
     if (!merged.products.some((p) => p.slug === SELANK_SLUG)) {
       merged.products.push(getSelankProduct())
+    }
+    if (!merged.products.some((p) => p.slug === KISSPEPTIN_SLUG)) {
+      merged.products.push(getKisspeptinProduct())
     }
     merged.orders = merged.orders.map((o) => ({
       ...o,

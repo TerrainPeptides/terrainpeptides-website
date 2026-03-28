@@ -18,6 +18,7 @@ import {
   perVialPriceCentsForVariant,
 } from '@/lib/dosage-variants'
 import type { Product } from '@/lib/types'
+import { PRODUCT_CATEGORY_LABELS } from '@/lib/product-category'
 
 interface ProductCardProps {
   product: Product
@@ -44,12 +45,7 @@ export function ProductCard({ product }: ProductCardProps) {
     toast.success(`${product.name} added to cart`)
   }
 
-  const categoryLabel = {
-    individual: 'Peptide',
-    blend: 'Blend',
-    capsule: 'Capsule',
-    accessory: 'Accessory',
-  }
+  const categoryLabel = PRODUCT_CATEGORY_LABELS
 
   return (
     <Link href={`/product/${product.slug}`} className="block">

@@ -66,7 +66,7 @@ interface ProductScienceProps {
 export function ProductScience({ product, vouches = [] }: ProductScienceProps) {
   const hasScientificData = product.molecular_weight || product.sequence || product.research_benefits
 
-  if (!hasScientificData && product.category === 'accessory') {
+  if (!hasScientificData && product.slug === 'syringe-kit') {
     return null
   }
 
@@ -154,7 +154,7 @@ export function ProductScience({ product, vouches = [] }: ProductScienceProps) {
                     {product.purity && (<div className="rounded-lg border border-border p-4"><p className="text-sm text-muted-foreground">Purity</p><p className="mt-1 text-lg font-semibold text-foreground">{product.purity}</p></div>)}
                     {product.dosage && (<div className="rounded-lg border border-border p-4"><p className="text-sm text-muted-foreground">Amount</p><p className="mt-1 text-lg font-semibold text-foreground">{product.dosage}</p></div>)}
                     {product.molecular_weight && (<div className="rounded-lg border border-border p-4"><p className="text-sm text-muted-foreground">Molecular Weight</p><p className="mt-1 text-lg font-semibold text-foreground">{product.molecular_weight}</p></div>)}
-                    <div className="rounded-lg border border-border p-4"><p className="text-sm text-muted-foreground">Physical Form</p><p className="mt-1 text-lg font-semibold text-foreground">{product.category === 'capsule' ? 'Capsule' : 'Lyophilized Powder'}</p></div>
+                    <div className="rounded-lg border border-border p-4"><p className="text-sm text-muted-foreground">Physical Form</p><p className="mt-1 text-lg font-semibold text-foreground">{product.slug === 'capsule-stack' ? 'Capsule' : 'Lyophilized Powder'}</p></div>
                   </div>
                   {product.sequence && (<div className="mt-6 rounded-lg border border-border p-4"><p className="mb-2 text-sm text-muted-foreground">Amino Acid Sequence</p><p className="font-mono text-sm text-foreground break-all">{product.sequence}</p></div>)}
                 </CardContent>

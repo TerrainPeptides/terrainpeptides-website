@@ -132,7 +132,7 @@ export async function POST(request: Request) {
       id: `prod-${Date.now()}`,
       slug,
       name,
-      category: body.category ?? 'individual',
+      category: body.category ?? 'performance',
         description: body.description ?? null,
         overview: body.overview ?? null,
         price_cents,

@@ -37,7 +37,7 @@ export default function AdminProductsPage() {
   const [formData, setFormData] = useState({
     name: '',
     slug: '',
-    category: 'individual',
+    category: 'performance',
     description: '',
     overview: '',
     price_cents: 0,
@@ -195,7 +195,7 @@ export default function AdminProductsPage() {
     setFormData({
       name: '',
       slug: '',
-      category: 'individual',
+      category: 'performance',
       description: '',
       overview: '',
       price_cents: 0,
@@ -326,10 +326,11 @@ export default function AdminProductsPage() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="individual">Individual Peptide</SelectItem>
-                      <SelectItem value="blend">Branded Blend</SelectItem>
-                      <SelectItem value="capsule">Capsule</SelectItem>
-                      <SelectItem value="accessory">Accessory</SelectItem>
+                      <SelectItem value="fat-loss">Fat Loss</SelectItem>
+                      <SelectItem value="skin-collagen">Skin &amp; Collagen</SelectItem>
+                      <SelectItem value="sleep">Sleep</SelectItem>
+                      <SelectItem value="cognitive">Cognitive</SelectItem>
+                      <SelectItem value="performance">Performance</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
