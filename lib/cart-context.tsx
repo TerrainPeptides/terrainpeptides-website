@@ -1,12 +1,14 @@
 'use client'
 
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
+import { createContext, useContext, useState, useEffect, useRef, ReactNode } from 'react'
 import { packageLineTotalCents } from './product-price'
 import { getDefaultDosageVariantId } from './dosage-variants'
 import { LEGACY_LOCAL_STORAGE_KEYS } from './legacy-brand-storage'
 import type { Product, CartItem } from './types'
 
 interface CartContextType {
+  /** False until cart has been read from localStorage (avoids empty flash / wrong persist on reload). */
+  isCartHydrated: boolean
   items: CartItem[]
   addItem: (product: Product, quantity?: number, dosage_variant_id?: string) => void
   removeItem: (productId: string, dosage_variant_id: string) => void
@@ -64,7 +66,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([])
   const [referralCode, setReferralCode] = useState<string | null>(null)
   const [discountPercent, setDiscountPercent] = useState(0)
-  const [isHydrated, setIsHydrated] = useState(false)
+  const [isCartHydrated, setIsCartHydrated] = useState(false)
+  /** Prevents writing [] to localStorage before the initial restore commit is applied (reload bug). */
+  const allowPersistRef = useRef(false)
 
   useEffect(() => {
     migrateLegacyCartKeys()
@@ -72,31 +76,33 @@ export function CartProvider({ children }: { children: ReactNode }) {
     const savedCode = localStorage.getItem(LS_REFERRAL)
     const savedDiscount = localStorage.getItem(LS_DISCOUNT)
 
+    let restored: CartItem[] = []
     if (savedCart) {
       try {
         const parsed = JSON.parse(savedCart)
-        setItems(normalizeSavedCartItems(parsed))
+        restored = normalizeSavedCartItems(parsed)
       } catch (e) {
         console.error('Failed to parse cart', e)
       }
     }
+    setItems(restored)
     if (savedCode) setReferralCode(savedCode)
     if (savedDiscount) setDiscountPercent(Number(savedDiscount))
-    setIsHydrated(true)
+    allowPersistRef.current = true
+    setIsCartHydrated(true)
   }, [])
 
   useEffect(() => {
-    if (isHydrated) {
-      localStorage.setItem(LS_CART, JSON.stringify(items))
-    }
-  }, [items, isHydrated])
+    if (!isCartHydrated || !allowPersistRef.current) return
+    localStorage.setItem(LS_CART, JSON.stringify(items))
+  }, [items, isCartHydrated])
 
   useEffect(() => {
-    if (isHydrated && referralCode) {
+    if (isCartHydrated && referralCode) {
       localStorage.setItem(LS_REFERRAL, referralCode)
       localStorage.setItem(LS_DISCOUNT, String(discountPercent))
     }
-  }, [referralCode, discountPercent, isHydrated])
+  }, [referralCode, discountPercent, isCartHydrated])
 
   const addItem = (product: Product, quantity = 1, dosage_variant_id?: string) => {
     const vid = dosage_variant_id ?? getDefaultDosageVariantId(product)
@@ -159,6 +165,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   return (
     <CartContext.Provider
       value={{
+        isCartHydrated,
         items,
         addItem,
         removeItem,

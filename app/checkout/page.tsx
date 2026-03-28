@@ -3,7 +3,6 @@
 import { useState, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import Image from 'next/image'
 import {
   Elements,
   PaymentElement,
@@ -11,6 +10,7 @@ import {
   useElements,
 } from '@stripe/react-stripe-js'
 import { stripePromise } from '@/lib/stripe-client'
+import { resolveProductImageSrc } from '@/lib/product-image'
 import { useCart } from '@/lib/cart-context'
 import { packageLineTotalCents } from '@/lib/product-price'
 import { displayDosageLabel } from '@/lib/dosage-variants'
@@ -42,6 +42,10 @@ import {
 
 const SHIPPING_CENTS = 2500
 const HST_RATE = 0.13
+/** Customer-facing vials per product unit at checkout (matches site offer). */
+const CHECKOUT_VIALS_PER_PRODUCT_UNIT = 10
+
+const NO_TEN_VIAL_COPY_SLUGS = new Set(['syringe-kit', 'capsule-stack'])
 
 interface ShippingInfo {
   name: string
@@ -83,21 +87,25 @@ function OrderSummary({
       <div className="space-y-4">
         {items.map((item) => {
           const dose = displayDosageLabel(item.product, item.dosage_variant_id)
-          const vials = item.product.vial_count ?? 1
-          const imageSrc = item.product.image_url
+          const slug = item.product.slug
+          const imageSrc = resolveProductImageSrc(item.product)
+          const showTenVials = !NO_TEN_VIAL_COPY_SLUGS.has(slug)
+          const totalVials = showTenVials ? CHECKOUT_VIALS_PER_PRODUCT_UNIT * item.quantity : null
           return (
             <div
               key={`${item.product.id}-${item.dosage_variant_id}`}
               className="flex gap-4"
             >
-              <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg border border-border bg-muted/40">
+              <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-lg border border-border bg-muted/40">
                 {imageSrc ? (
-                  <Image
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
                     src={imageSrc}
                     alt={item.product.name}
-                    fill
-                    className="object-contain p-1"
-                    unoptimized={imageSrc.startsWith('/') || imageSrc.startsWith('data:')}
+                    width={80}
+                    height={80}
+                    className="h-full w-full object-contain p-1"
+                    loading="lazy"
                   />
                 ) : (
                   <div className="flex h-full w-full items-center justify-center">
@@ -107,9 +115,25 @@ function OrderSummary({
               </div>
               <div className="min-w-0 flex-1">
                 <p className="font-medium text-foreground">{item.product.name}</p>
-                <p className="text-xs text-muted-foreground">
-                  {dose ? `${dose} · ` : ''}{vials * item.quantity} vials ({vials} per unit &times; {item.quantity})
-                </p>
+                {showTenVials ? (
+                  <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                    {dose ? <span className="font-medium text-foreground">{dose}</span> : null}
+                    {dose ? ' · ' : null}
+                    <span className="font-semibold text-foreground">
+                      Includes {CHECKOUT_VIALS_PER_PRODUCT_UNIT} research vials per unit
+                    </span>
+                    {item.quantity > 1 ? (
+                      <>
+                        {' '}
+                        ({totalVials} vials total for quantity {item.quantity})
+                      </>
+                    ) : null}
+                  </p>
+                ) : (
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    {dose ? `${dose} · ` : ''}Quantity: {item.quantity}
+                  </p>
+                )}
               </div>
               <p className="shrink-0 font-semibold tabular-nums text-foreground">
                 {formatPrice(
@@ -121,10 +145,13 @@ function OrderSummary({
         })}
       </div>
 
-      <div className="rounded-lg bg-[#0A1931]/5 px-4 py-3">
-        <div className="flex items-center gap-2 text-sm font-medium text-[#0A1931]">
-          <Package className="h-4 w-4" />
-          Every order ships with 10 vials per product
+      <div className="rounded-lg border border-[#0A1931]/15 bg-[#0A1931]/5 px-4 py-3">
+        <div className="flex items-start gap-2 text-sm font-semibold text-[#0A1931]">
+          <Package className="mt-0.5 h-4 w-4 shrink-0" />
+          <span>
+            Each peptide line item includes <strong>10 research-grade vials</strong> per unit you order (not 1). Your
+            summary above shows exactly what you are receiving.
+          </span>
         </div>
       </div>
 
@@ -143,13 +170,14 @@ function OrderSummary({
             <span className="tabular-nums text-green-600">-{formatPrice(discountCents)}</span>
           </div>
         )}
-        <div className="flex justify-between text-sm">
-          <span className="flex items-center gap-1.5 text-muted-foreground">
-            <Truck className="h-3.5 w-3.5" />
-            Flat-rate shipping
+        <div className="flex justify-between text-sm font-medium">
+          <span className="flex items-center gap-1.5 text-foreground">
+            <Truck className="h-3.5 w-3.5 shrink-0" />
+            Shipping — flat rate (all orders)
           </span>
-          <span className="tabular-nums text-foreground">{formatPrice(SHIPPING_CENTS)}</span>
+          <span className="tabular-nums font-semibold text-foreground">{formatPrice(SHIPPING_CENTS)}</span>
         </div>
+        <p className="text-xs text-muted-foreground">$25.00 shipping applies to every order at checkout.</p>
         <div className="flex justify-between text-sm">
           <span className="text-muted-foreground">
             Tax {country === 'CA' ? '(13% HST)' : ''}
@@ -330,7 +358,7 @@ function PaymentStep({
 
 export default function CheckoutPage() {
   const router = useRouter()
-  const { items, subtotalCents, discountCents, referralCode, clearCart } = useCart()
+  const { isCartHydrated, items, subtotalCents, discountCents, referralCode, clearCart } = useCart()
 
   const [paymentMethod, setPaymentMethod] = useState<'stripe' | 'crypto'>('stripe')
   const [isProcessing, setIsProcessing] = useState(false)
@@ -421,6 +449,20 @@ export default function CheckoutPage() {
     } finally {
       setIsProcessing(false)
     }
+  }
+
+  if (!isCartHydrated) {
+    return (
+      <div className="bg-background">
+        <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
+          <div className="animate-pulse space-y-4">
+            <div className="h-8 w-48 rounded-md bg-muted" />
+            <div className="h-64 rounded-xl bg-muted" />
+          </div>
+          <p className="mt-6 text-sm text-muted-foreground">Loading your cart…</p>
+        </div>
+      </div>
+    )
   }
 
   if (items.length === 0) {
