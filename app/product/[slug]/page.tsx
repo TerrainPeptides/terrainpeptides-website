@@ -12,7 +12,6 @@ import { Aod9604Product } from '@/components/product/aod-9604-product'
 import { SemaxProduct } from '@/components/product/semax-product'
 import { SelankProduct } from '@/components/product/selank-product'
 import { getProductBySlugAsync, getRelatedProductsAsync, getVouchesForProduct } from '@/lib/data'
-import { PartnerCTA } from '@/components/partner-cta'
 import type { Product } from '@/lib/types'
 import type { Metadata } from 'next'
 
@@ -48,7 +47,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
   const vouches = getVouchesForProduct(product.id)
 
   if (slug === 'ghk-cu') {
-    return <><GhkCuProduct product={product as Product} relatedProducts={relatedProducts} vouches={vouches} /><PartnerCTA /></>
+    return <GhkCuProduct product={product as Product} relatedProducts={relatedProducts} vouches={vouches} />
   }
 
   const SEMAX_SLUGS = ['semax', 'semax-nasal']
@@ -56,52 +55,49 @@ export default async function ProductPage({ params }: ProductPageProps) {
     SEMAX_SLUGS.includes(slug) ||
     product.name?.toLowerCase().includes('semax')
   ) {
-    return <><SemaxProduct product={product as Product} relatedProducts={relatedProducts} vouches={vouches} /><PartnerCTA /></>
+    return <SemaxProduct product={product as Product} relatedProducts={relatedProducts} vouches={vouches} />
   }
 
   if (slug === 'selank' || product.name?.toLowerCase().includes('selank')) {
-    return <><SelankProduct product={product as Product} relatedProducts={relatedProducts} vouches={vouches} /><PartnerCTA /></>
+    return <SelankProduct product={product as Product} relatedProducts={relatedProducts} vouches={vouches} />
   }
 
   if (slug === 'bpc-157') {
-    return <><Bpc157Product product={product as Product} relatedProducts={relatedProducts} vouches={vouches} /><PartnerCTA /></>
+    return <Bpc157Product product={product as Product} relatedProducts={relatedProducts} vouches={vouches} />
   }
 
   if (RETATRUTIDE_SLUGS.includes(slug) || product.name?.toLowerCase() === 'retatrutide') {
-    return <><RetatrutideProduct product={product as Product} relatedProducts={relatedProducts} vouches={vouches} /><PartnerCTA /></>
+    return <RetatrutideProduct product={product as Product} relatedProducts={relatedProducts} vouches={vouches} />
   }
 
   if (slug === 'mt2-10mg') {
-    return <><Mt2Product product={product as Product} relatedProducts={relatedProducts} vouches={vouches} /><PartnerCTA /></>
+    return <Mt2Product product={product as Product} relatedProducts={relatedProducts} vouches={vouches} />
   }
 
   const DSIP_SLUGS = ['dsip', 'dsip-5mg', 'dsip-10mg']
   if (DSIP_SLUGS.includes(slug) || product.name?.toLowerCase().includes('dsip')) {
-    return <><DsipProduct product={product as Product} relatedProducts={relatedProducts} vouches={vouches} /><PartnerCTA /></>
+    return <DsipProduct product={product as Product} relatedProducts={relatedProducts} vouches={vouches} />
   }
 
   const TB500_SLUGS = ['tb-500', 'tb500', 'tb500-10mg']
   if (TB500_SLUGS.includes(slug) || product.name?.toLowerCase().includes('tb-500') || product.name?.toLowerCase().includes('tb500')) {
-    return <><Tb500Product product={product as Product} relatedProducts={relatedProducts} vouches={vouches} /><PartnerCTA /></>
+    return <Tb500Product product={product as Product} relatedProducts={relatedProducts} vouches={vouches} />
   }
 
   const AOD9604_SLUGS = ['aod-9604', 'aod9604']
   if (AOD9604_SLUGS.includes(slug) || product.name?.toLowerCase().includes('aod-9604') || product.name?.toLowerCase().includes('aod9604')) {
-    return <><Aod9604Product product={product as Product} relatedProducts={relatedProducts} vouches={vouches} /><PartnerCTA /></>
+    return <Aod9604Product product={product as Product} relatedProducts={relatedProducts} vouches={vouches} />
   }
 
   return (
-    <>
-      <div className="bg-background">
-        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-          <ProductDetails product={product as Product} />
-          <ProductScience product={product as Product} vouches={vouches} />
-          {relatedProducts.length > 0 && (
-            <RelatedProducts products={relatedProducts} />
-          )}
-        </div>
+    <div className="bg-background">
+      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+        <ProductDetails product={product as Product} />
+        <ProductScience product={product as Product} vouches={vouches} />
+        {relatedProducts.length > 0 && (
+          <RelatedProducts products={relatedProducts} />
+        )}
       </div>
-      <PartnerCTA />
-    </>
+    </div>
   )
 }
