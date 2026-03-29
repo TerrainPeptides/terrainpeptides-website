@@ -4,7 +4,6 @@ import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 import { Navbar } from '@/components/navbar'
 import { Footer } from '@/components/footer'
-import { PartnerCTASlot } from '@/components/partner-cta-slot'
 import { AgeVerification } from '@/components/age-verification'
 import { CartProvider } from '@/lib/cart-context'
 import { Toaster } from '@/components/ui/sonner'
@@ -38,7 +37,6 @@ export default function RootLayout({
           <main className="min-h-screen">
             {children}
           </main>
-          <PartnerCTASlot />
           <Footer />
           <Toaster />
         </CartProvider>
