@@ -9,6 +9,7 @@ function dataUrlToBytes(dataUrl: string): { bytes: Uint8Array; contentType: stri
     contentType === 'image/webp' ? 'webp' :
     contentType === 'image/gif' ? 'gif' :
     contentType === 'image/jpeg' ? 'jpg' :
+    contentType === 'application/pdf' ? 'pdf' :
     'bin'
   return { bytes: new Uint8Array(bin), contentType, ext }
 }

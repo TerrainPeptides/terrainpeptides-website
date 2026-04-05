@@ -10,6 +10,7 @@ import { Progress } from '@/components/ui/progress'
 import { ChevronLeft, FileText, Star } from 'lucide-react'
 import { RelatedProducts } from '@/components/product/related-products'
 import { ProductNamePanel } from '@/components/product/product-name-panel'
+import { CoaDocumentPanel } from '@/components/product/coa-document-panel'
 import type { Product, Vouch } from '@/lib/types'
 
 interface GhkCuProductProps {
@@ -311,6 +312,7 @@ export function GhkCuProduct({ product, relatedProducts = [], vouches = [] }: Gh
                   </Card>
                 ))}
               </div>
+              <CoaDocumentPanel coaUrl={product.coa_url} frameClassName="border-[#0A1931]/10" />
             </TabsContent>
             )}
 

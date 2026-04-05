@@ -13,14 +13,18 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { toast } from 'sonner'
-import { Upload, FileText } from 'lucide-react'
+import { Upload, FileText, Loader2 } from 'lucide-react'
 import type { Product } from '@/lib/types'
+
+const MAX_PDF_BYTES = 15 * 1024 * 1024
 
 export default function AdminCOAPage() {
   const [products, setProducts] = useState<Product[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [selectedProduct, setSelectedProduct] = useState('')
-  const [coaUrl, setCoaUrl] = useState('')
+  const [coaPayload, setCoaPayload] = useState('')
+  const [urlDraft, setUrlDraft] = useState('')
+  const [saving, setSaving] = useState(false)
 
   useEffect(() => {
     fetchProducts()
@@ -42,12 +46,35 @@ export default function AdminCOAPage() {
     }
   }
 
+  const handlePdfSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    e.target.value = ''
+    if (!file) return
+    if (file.type !== 'application/pdf') {
+      toast.error('Please choose a PDF file')
+      return
+    }
+    if (file.size > MAX_PDF_BYTES) {
+      toast.error('PDF must be 15MB or smaller')
+      return
+    }
+    const reader = new FileReader()
+    reader.onload = () => {
+      setCoaPayload(String(reader.result || ''))
+      setUrlDraft('')
+    }
+    reader.onerror = () => toast.error('Could not read that file')
+    reader.readAsDataURL(file)
+  }
+
   const handleUpdateCOA = async () => {
-    if (!selectedProduct || !coaUrl.trim()) {
-      toast.error('Please select a product and enter a COA URL')
+    const value = coaPayload.trim() || urlDraft.trim()
+    if (!selectedProduct || !value) {
+      toast.error('Select a product and upload a PDF or enter a COA URL')
       return
     }
 
+    setSaving(true)
     try {
       const res = await fetch('/api/admin/products', {
         method: 'PUT',
@@ -55,19 +82,23 @@ export default function AdminCOAPage() {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${localStorage.getItem('terrain-admin-token')}`,
         },
-        body: JSON.stringify({ id: selectedProduct, coa_url: coaUrl }),
+        body: JSON.stringify({ id: selectedProduct, coa_url: value }),
       })
 
       if (res.ok) {
-        toast.success('COA URL updated')
-        setCoaUrl('')
+        toast.success('COA updated')
+        setCoaPayload('')
+        setUrlDraft('')
         setSelectedProduct('')
         fetchProducts()
       } else {
-        toast.error('Failed to update COA')
+        const data = await res.json().catch(() => ({}))
+        toast.error(typeof data.error === 'string' ? data.error : 'Failed to update COA')
       }
     } catch {
       toast.error('An error occurred')
+    } finally {
+      setSaving(false)
     }
   }
 
@@ -85,18 +116,18 @@ export default function AdminCOAPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-foreground">COA Images</h1>
+        <h1 className="text-2xl font-bold text-foreground">COA documents</h1>
         <p className="text-muted-foreground">
-          Manage Certificate of Analysis documents for products.
+          Upload PDF certificates of analysis or paste a hosted URL. Customers can scroll through PDFs
+          on the product page.
         </p>
       </div>
 
-      {/* Upload Form */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Upload className="h-5 w-5" />
-            Add COA URL
+            Add or replace COA
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -116,21 +147,42 @@ export default function AdminCOAPage() {
             </Select>
           </div>
           <div className="space-y-2">
-            <Label>COA URL</Label>
+            <Label>Upload PDF</Label>
             <Input
-              value={coaUrl}
-              onChange={(e) => setCoaUrl(e.target.value)}
-              placeholder="https://example.com/coa/product-coa.pdf"
+              type="file"
+              accept="application/pdf,.pdf"
+              className="cursor-pointer"
+              onChange={handlePdfSelected}
             />
+            <p className="text-xs text-muted-foreground">PDF only, up to 15MB. Stored in your product bucket.</p>
           </div>
-          <Button onClick={handleUpdateCOA} className="gap-2">
-            <Upload className="h-4 w-4" />
-            Update COA
+          <div className="space-y-2">
+            <Label>Or COA URL</Label>
+            <Input
+              value={urlDraft}
+              onChange={(e) => {
+                setUrlDraft(e.target.value)
+                setCoaPayload('')
+              }}
+              placeholder="https://example.com/coa/batch.pdf"
+            />
+            {coaPayload.startsWith('data:application/pdf') && (
+              <p className="text-sm text-green-600 dark:text-green-500">
+                PDF loaded — save to attach it to the selected product.
+              </p>
+            )}
+          </div>
+          <Button onClick={handleUpdateCOA} disabled={saving} className="gap-2">
+            {saving ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Upload className="h-4 w-4" />
+            )}
+            Save COA
           </Button>
         </CardContent>
       </Card>
 
-      {/* Products with COA */}
       <Card>
         <CardHeader>
           <CardTitle className="text-green-600">
@@ -145,11 +197,11 @@ export default function AdminCOAPage() {
                   key={product.id}
                   className="flex items-center justify-between rounded-lg border border-border p-4"
                 >
-                  <div className="flex items-center gap-3">
-                    <FileText className="h-5 w-5 text-green-600" />
-                    <div>
+                  <div className="flex items-center gap-3 min-w-0">
+                    <FileText className="h-5 w-5 shrink-0 text-green-600" />
+                    <div className="min-w-0">
                       <p className="font-medium text-foreground">{product.name}</p>
-                      <p className="text-sm text-muted-foreground truncate max-w-md">
+                      <p className="text-sm text-muted-foreground truncate" title={product.coa_url || ''}>
                         {product.coa_url}
                       </p>
                     </div>
@@ -158,9 +210,9 @@ export default function AdminCOAPage() {
                     href={product.coa_url || '#'}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-sm text-primary hover:underline"
+                    className="shrink-0 text-sm text-primary hover:underline ml-2"
                   >
-                    View COA
+                    Open
                   </a>
                 </div>
               ))}
@@ -173,7 +225,6 @@ export default function AdminCOAPage() {
         </CardContent>
       </Card>
 
-      {/* Products without COA */}
       <Card>
         <CardHeader>
           <CardTitle className="text-yellow-600">

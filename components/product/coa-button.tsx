@@ -4,7 +4,15 @@ import { useState } from 'react'
 import { FileText, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
 import { toast } from 'sonner'
+import { CoaDocumentPanel } from '@/components/product/coa-document-panel'
 
 interface CoaButtonProps {
   coaUrl?: string | null
@@ -24,12 +32,25 @@ export function CoaButton({ coaUrl, theme = 'default' }: CoaButtonProps) {
 
   if (coaUrl) {
     return (
-      <Button variant="outline" size="sm" className={`mt-4 gap-2 ${btnClass}`} asChild>
-        <a href={coaUrl} target="_blank" rel="noopener noreferrer">
-          <FileText className="h-4 w-4" />
-          View Certificate of Analysis
-        </a>
-      </Button>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger asChild>
+          <Button variant="outline" size="sm" className={`mt-4 gap-2 ${btnClass}`}>
+            <FileText className="h-4 w-4" />
+            View Certificate of Analysis
+          </Button>
+        </DialogTrigger>
+        <DialogContent
+          showCloseButton
+          className="flex max-h-[92vh] w-[calc(100%-1rem)] max-w-5xl flex-col gap-0 overflow-hidden p-0 sm:max-w-5xl"
+        >
+          <DialogHeader className="shrink-0 border-b px-6 py-4 pr-14 text-left">
+            <DialogTitle>Certificate of Analysis</DialogTitle>
+          </DialogHeader>
+          <div className="min-h-0 flex-1 overflow-y-auto p-4">
+            <CoaDocumentPanel coaUrl={coaUrl} className="mt-0" hideFooterNote />
+          </div>
+        </DialogContent>
+      </Dialog>
     )
   }
 

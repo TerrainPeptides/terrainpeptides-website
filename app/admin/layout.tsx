@@ -26,7 +26,7 @@ const navItems = [
   { href: '/admin/inventory', label: 'Inventory', icon: Boxes },
   { href: '/admin/orders', label: 'Orders', icon: ShoppingCart },
   { href: '/admin/vouches', label: 'Reviews', icon: Star },
-  { href: '/admin/coa', label: 'COA Images', icon: FileText },
+  { href: '/admin/coa', label: 'COA', icon: FileText },
   { href: '/admin/referrals', label: 'Referral Codes', icon: Tag },
   { href: '/admin/discounts', label: 'Discount Codes', icon: Percent },
   { href: '/admin/messages', label: 'Messages', icon: Mail },

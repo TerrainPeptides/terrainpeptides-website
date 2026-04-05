@@ -8,6 +8,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ChevronLeft, FileText, Star, FlaskConical, Beaker, Package } from 'lucide-react'
 import { RelatedProducts } from '@/components/product/related-products'
+import { CoaDocumentPanel } from '@/components/product/coa-document-panel'
 import { ProductNamePanel } from '@/components/product/product-name-panel'
 import type { Product, Vouch } from '@/lib/types'
 
@@ -420,16 +421,7 @@ export function Mt2Product({ product, relatedProducts = [], vouches = [] }: Mt2P
               <TabsContent value="coa" className="mt-0">
                 <p className="text-xs font-medium uppercase tracking-wider text-[#0A1931]/60">🧪 Certificate of Analysis</p>
                 <p className="mt-0.5 text-sm text-[#0A1931]/60">Third party tested.</p>
-                <Card className="mt-6 border-[#0A1931]/10 max-w-md">
-                  <CardContent className="p-6">
-                    <Button asChild className="w-full gap-2 bg-[#0A1931] text-white hover:bg-[#0A1931]/90">
-                      <a href={product.coa_url} target="_blank" rel="noopener noreferrer">
-                        <FileText className="h-4 w-4" />
-                        View COA
-                      </a>
-                    </Button>
-                  </CardContent>
-                </Card>
+                <CoaDocumentPanel coaUrl={product.coa_url} frameClassName="border-[#0A1931]/10" />
               </TabsContent>
             )}
 

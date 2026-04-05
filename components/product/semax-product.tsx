@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Progress } from '@/components/ui/progress'
 import { ChevronLeft, FileText, FlaskConical, Star } from 'lucide-react'
 import { RelatedProducts } from '@/components/product/related-products'
+import { CoaDocumentPanel } from '@/components/product/coa-document-panel'
 import { ProductNamePanel } from '@/components/product/product-name-panel'
 import type { Product, Vouch } from '@/lib/types'
 
@@ -709,16 +710,7 @@ export function SemaxProduct({ product, relatedProducts = [], vouches = [] }: Se
                   🧪 Certificate of Analysis
                 </p>
                 <p className="mt-0.5 text-sm text-[#0A1931]/60">Third party tested.</p>
-                <Card className="mt-6 max-w-md border-[#0A1931]/10">
-                  <CardContent className="p-6">
-                    <Button asChild className="w-full gap-2 bg-[#0A1931] text-white hover:bg-[#0A1931]/90">
-                      <a href={product.coa_url} target="_blank" rel="noopener noreferrer">
-                        <FileText className="h-4 w-4" />
-                        View COA
-                      </a>
-                    </Button>
-                  </CardContent>
-                </Card>
+                <CoaDocumentPanel coaUrl={product.coa_url} frameClassName="border-[#0A1931]/10" />
               </TabsContent>
             )}
 
