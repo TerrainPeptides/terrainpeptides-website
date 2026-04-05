@@ -117,6 +117,10 @@ async function resolveTransferAmountLabel(
 
 const TARGET_STATES = new Set(['outgoing_payment_sent', 'funds_converted'])
 
+export async function GET() {
+  return NextResponse.json({ ok: true }, { status: 200 })
+}
+
 export async function POST(request: Request) {
   if (!verifyOptionalUrlSecret(request)) {
     return new NextResponse(null, { status: 400 })
