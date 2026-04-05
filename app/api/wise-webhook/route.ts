@@ -122,6 +122,10 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  if (request.headers.get('x-test-notification')?.toLowerCase() === 'true') {
+    return new NextResponse(null, { status: 200 })
+  }
+
   if (!verifyOptionalUrlSecret(request)) {
     return new NextResponse(null, { status: 400 })
   }
