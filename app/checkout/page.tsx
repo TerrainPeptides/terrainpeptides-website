@@ -18,7 +18,6 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import {
   Select,
   SelectContent,
@@ -28,9 +27,14 @@ import {
 } from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
 import { toast } from 'sonner'
+import { cn } from '@/lib/utils'
 import {
   CreditCard,
   Bitcoin,
+  Building2,
+  Banknote,
+  Check,
+  ChevronRight,
   ArrowLeft,
   ShoppingBag,
   Lock,
@@ -358,9 +362,11 @@ function PaymentStep({
 
 export default function CheckoutPage() {
   const router = useRouter()
-  const { isCartHydrated, items, subtotalCents, discountCents, referralCode, clearCart } = useCart()
+  const { isCartHydrated, items, subtotalCents, discountCents, referralCode } = useCart()
 
-  const [paymentMethod, setPaymentMethod] = useState<'stripe' | 'crypto'>('stripe')
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<
+    'bank-transfer' | 'cash' | 'crypto'
+  >('bank-transfer')
   const [isProcessing, setIsProcessing] = useState(false)
   const [shippingInfo, setShippingInfo] = useState<ShippingInfo>({
     name: '',
@@ -394,56 +400,13 @@ export default function CheckoutPage() {
     setIsProcessing(true)
 
     try {
-      if (paymentMethod === 'stripe') {
-        const res = await fetch('/api/create-payment-intent', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            items: items.map((item) => ({
-              productId: item.product.id,
-              quantity: item.quantity,
-              dosage_variant_id: item.dosage_variant_id,
-            })),
-            shippingInfo,
-            referralCode,
-            discountCents,
-            shippingCents: SHIPPING_CENTS,
-            taxCents,
-          }),
-        })
-
-        const data = await res.json()
-        if (!res.ok) throw new Error(data.error || 'Failed to initialize payment')
-
-        setClientSecret(data.clientSecret)
-        setOrderNumber(data.orderNumber)
-      } else {
-        const res = await fetch('/api/checkout', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            items: items.map((item) => ({
-              productId: item.product.id,
-              quantity: item.quantity,
-              dosage_variant_id: item.dosage_variant_id,
-            })),
-            paymentMethod,
-            shippingInfo,
-            referralCode,
-            discountCents,
-            shippingCents: SHIPPING_CENTS,
-            taxCents,
-          }),
-        })
-
-        const data = await res.json()
-        if (!res.ok) throw new Error(data.error || 'Checkout failed')
-
-        clearCart()
-        router.push(
-          `/checkout/crypto?order=${data.orderNumber}&address=${data.cryptoAddress}&amount=${data.totalUsd}`
-        )
-      }
+      const path =
+        selectedPaymentMethod === 'bank-transfer'
+          ? '/checkout/bank-transfer'
+          : selectedPaymentMethod === 'cash'
+            ? '/checkout/cash'
+            : '/checkout/crypto'
+      router.push(path)
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Checkout failed')
     } finally {
@@ -644,33 +607,115 @@ export default function CheckoutPage() {
                     Payment Method
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <RadioGroup
-                    value={paymentMethod}
-                    onValueChange={(value) => setPaymentMethod(value as 'stripe' | 'crypto')}
-                    className="space-y-3"
+                <CardContent className="space-y-3">
+                  <button
+                    type="button"
+                    onClick={() => setSelectedPaymentMethod('bank-transfer')}
+                    className={cn(
+                      'relative w-full rounded-lg border p-4 text-left transition-colors',
+                      selectedPaymentMethod === 'bank-transfer'
+                        ? 'border-[#0A1931] bg-muted/30 shadow-sm'
+                        : 'border-border hover:bg-muted/30'
+                    )}
                   >
-                    <div className="flex items-center space-x-3 rounded-lg border border-border p-4 transition-colors hover:bg-muted/30">
-                      <RadioGroupItem value="stripe" id="stripe" />
-                      <Label htmlFor="stripe" className="flex flex-1 cursor-pointer items-center gap-3">
-                        <CreditCard className="h-5 w-5 text-[#0A1931]" />
-                        <div>
-                          <p className="font-medium">Credit / Debit Card</p>
-                          <p className="text-sm text-muted-foreground">Pay securely with Stripe</p>
-                        </div>
-                      </Label>
+                    {selectedPaymentMethod === 'bank-transfer' ? (
+                      <span className="absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full bg-[#0A1931] text-white">
+                        <Check className="h-3.5 w-3.5" strokeWidth={2.5} />
+                      </span>
+                    ) : null}
+                    <div className="flex gap-3 pr-10">
+                      <Building2 className="mt-0.5 h-5 w-5 shrink-0 text-[#0A1931]" />
+                      <div className="min-w-0 flex-1">
+                        <p className="font-medium text-foreground">Bank Transfer</p>
+                        <p className="text-sm text-muted-foreground">
+                          Same-day payment via direct bank transfer
+                        </p>
+                        {selectedPaymentMethod === 'bank-transfer' ? (
+                          <div className="mt-4 space-y-2 border-t border-border/60 pt-4">
+                            <div className="flex items-center justify-between gap-2 text-sm font-medium text-foreground">
+                              <span>Link a new bank account</span>
+                              <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
+                            </div>
+                            <p className="text-xs leading-relaxed text-muted-foreground">
+                              Supported: US bank accounts via Zelle, international via Wise
+                            </p>
+                          </div>
+                        ) : null}
+                      </div>
                     </div>
-                    <div className="flex items-center space-x-3 rounded-lg border border-border p-4 transition-colors hover:bg-muted/30">
-                      <RadioGroupItem value="crypto" id="crypto" />
-                      <Label htmlFor="crypto" className="flex flex-1 cursor-pointer items-center gap-3">
-                        <Bitcoin className="h-5 w-5 text-[#0A1931]" />
-                        <div>
-                          <p className="font-medium">Cryptocurrency</p>
-                          <p className="text-sm text-muted-foreground">Bitcoin, Ethereum, or USDC</p>
-                        </div>
-                      </Label>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setSelectedPaymentMethod('cash')}
+                    className={cn(
+                      'relative w-full rounded-lg border p-4 text-left transition-colors',
+                      selectedPaymentMethod === 'cash'
+                        ? 'border-[#0A1931] bg-muted/30 shadow-sm'
+                        : 'border-border hover:bg-muted/30'
+                    )}
+                  >
+                    {selectedPaymentMethod === 'cash' ? (
+                      <span className="absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full bg-[#0A1931] text-white">
+                        <Check className="h-3.5 w-3.5" strokeWidth={2.5} />
+                      </span>
+                    ) : null}
+                    <div className="flex gap-3 pr-10">
+                      <Banknote className="mt-0.5 h-5 w-5 shrink-0 text-[#0A1931]" />
+                      <div className="min-w-0 flex-1">
+                        <p className="font-medium text-foreground">Pay with Cash</p>
+                        <p className="text-sm text-muted-foreground">
+                          Send payment instantly via Zelle or Wise
+                        </p>
+                        {selectedPaymentMethod === 'cash' ? (
+                          <div className="mt-4 flex flex-wrap gap-2 border-t border-border/60 pt-4">
+                            <span className="rounded-full border border-[#0A1931]/20 bg-[#0A1931]/5 px-3 py-1 text-xs font-medium text-[#0A1931]">
+                              Zelle
+                            </span>
+                            <span className="rounded-full border border-[#0A1931]/20 bg-[#0A1931]/5 px-3 py-1 text-xs font-medium text-[#0A1931]">
+                              Wise
+                            </span>
+                          </div>
+                        ) : null}
+                      </div>
                     </div>
-                  </RadioGroup>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setSelectedPaymentMethod('crypto')}
+                    className={cn(
+                      'relative w-full rounded-lg border p-4 text-left transition-colors',
+                      selectedPaymentMethod === 'crypto'
+                        ? 'border-[#0A1931] bg-muted/30 shadow-sm'
+                        : 'border-border hover:bg-muted/30'
+                    )}
+                  >
+                    {selectedPaymentMethod === 'crypto' ? (
+                      <span className="absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full bg-[#0A1931] text-white">
+                        <Check className="h-3.5 w-3.5" strokeWidth={2.5} />
+                      </span>
+                    ) : null}
+                    <div className="flex gap-3 pr-10">
+                      <Bitcoin className="mt-0.5 h-5 w-5 shrink-0 text-[#0A1931]" />
+                      <div className="min-w-0 flex-1">
+                        <p className="font-medium text-foreground">Cryptocurrency</p>
+                        <p className="text-sm text-muted-foreground">Pay anonymously with crypto</p>
+                        {selectedPaymentMethod === 'crypto' ? (
+                          <div className="mt-4 flex flex-wrap gap-2 border-t border-border/60 pt-4">
+                            {(['BTC', 'ETH', 'USDT', 'LTC', 'USDC'] as const).map((coin) => (
+                              <span
+                                key={coin}
+                                className="rounded-md border border-[#0A1931]/20 bg-[#0A1931]/5 px-2.5 py-1 text-xs font-semibold tabular-nums text-[#0A1931]"
+                              >
+                                {coin}
+                              </span>
+                            ))}
+                          </div>
+                        ) : null}
+                      </div>
+                    </div>
+                  </button>
                 </CardContent>
               </Card>
             </div>
@@ -698,9 +743,11 @@ export default function CheckoutPage() {
                   >
                     {isProcessing
                       ? 'Processing...'
-                      : paymentMethod === 'stripe'
-                        ? 'Continue to Payment'
-                        : 'Pay with Crypto'}
+                      : selectedPaymentMethod === 'bank-transfer'
+                        ? 'Pay with Bank Transfer'
+                        : selectedPaymentMethod === 'cash'
+                          ? 'Pay with Cash'
+                          : 'Pay with Crypto'}
                   </Button>
 
                   <p className="mt-4 text-center text-xs text-muted-foreground">

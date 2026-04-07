@@ -28,7 +28,7 @@ export async function GET(request: Request) {
     if (!data || data.length === 0) {
       const now = new Date().toISOString()
       const seedRows = seedProducts.map((p) => ({
-        id: p.id,
+        id: crypto.randomUUID(),
         slug: p.slug,
         name: p.name,
         category: p.category,
@@ -129,7 +129,7 @@ export async function POST(request: Request) {
     const research_studies = encodeResearchStudiesForDb(body.research_studies ?? null, variants)
 
     const insertRow = {
-      id: `prod-${Date.now()}`,
+      id: crypto.randomUUID(),
       slug,
       name,
       category: body.category ?? 'performance',

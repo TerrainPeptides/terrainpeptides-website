@@ -75,7 +75,7 @@ export function AboutTerrainSection() {
             </div>
             <div className="relative h-full min-h-[280px] sm:min-h-[340px] md:min-h-[22rem]">
               <Image
-                src="/images/terrain_bpc-157_cinematic_shot.png"
+                src="/images/about-standard-dual-vials.png"
                 alt="Terrain research peptide vials: BPC-157 and GHK-Cu on dark stone"
                 fill
                 className="object-cover object-center"

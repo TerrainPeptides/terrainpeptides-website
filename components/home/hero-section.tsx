@@ -43,7 +43,7 @@ export function HeroSection() {
           <div className="relative flex min-h-[320px] items-center justify-center lg:min-h-[480px]">
             <div className="relative h-[320px] w-[320px] sm:h-[400px] sm:w-[400px] lg:h-[480px] lg:w-[480px]">
               <Image
-                src="/images/ghk-cu-vial.png"
+                src="/images/home-hero-ghk-cu.png"
                 alt="GHK-Cu peptide vial — Terrain Peptides"
                 fill
                 className="object-contain drop-shadow-xl"
