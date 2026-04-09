@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { useState, type ReactNode } from 'react'
+import { Suspense, useState, type ReactNode } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { ArrowLeft, Copy, ExternalLink, FlaskConical, Package, Truck, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -220,7 +220,7 @@ function WiseStepCard({
   )
 }
 
-export default function CheckoutWisePage() {
+function WiseCheckoutContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { isCartHydrated, items, subtotalCents, discountCents, referralCode } = useCart()
@@ -531,5 +531,13 @@ export default function CheckoutWisePage() {
         </div>
       ) : null}
     </div>
+  )
+}
+
+export default function CheckoutWisePage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <WiseCheckoutContent />
+    </Suspense>
   )
 }
