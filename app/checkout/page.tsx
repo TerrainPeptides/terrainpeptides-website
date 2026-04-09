@@ -46,7 +46,6 @@ import {
 
 const SHIPPING_CENTS = 2500
 const HST_RATE = 0.13
-/** Customer-facing vials per product unit at checkout (matches site offer). */
 const CHECKOUT_VIALS_PER_PRODUCT_UNIT = 10
 
 const NO_TEN_VIAL_COPY_SLUGS = new Set(['syringe-kit', 'capsule-stack'])
@@ -365,8 +364,14 @@ export default function CheckoutPage() {
   const { isCartHydrated, items, subtotalCents, discountCents, referralCode } = useCart()
 
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<
-    'bank-transfer' | 'cash' | 'crypto'
+    'bank-transfer' | 'cash' | 'crypto' | 'paypal'
   >('bank-transfer')
+  const [cashSubMethod, setCashSubMethod] = useState<'zelle' | 'wise' | null>(null)
+  // Stable order ID generated once per session for the Wise flow
+  const [wiseOrderId] = useState(
+    () => `ORD-${Math.random().toString(36).slice(2, 8).toUpperCase()}`
+  )
+
   const [isProcessing, setIsProcessing] = useState(false)
   const [shippingInfo, setShippingInfo] = useState<ShippingInfo>({
     name: '',
@@ -400,11 +405,51 @@ export default function CheckoutPage() {
     setIsProcessing(true)
 
     try {
+      if (selectedPaymentMethod === 'paypal') {
+        const paypalPayload = {
+          items: items.map((item) => ({
+            productId: item.product.id,
+            quantity: item.quantity,
+            dosage_variant_id: item.dosage_variant_id,
+          })),
+          shippingInfo,
+          referralCode,
+          discountCents,
+        }
+        console.log('[checkout] Card (PayPal hosted) — cart payload for /api/paypal/create-order', {
+          items: items.map((item) => ({
+            productId: item.product.id,
+            productName: item.product.name,
+            quantity: item.quantity,
+            dosage_variant_id: item.dosage_variant_id,
+            product_dosage_variants: item.product.dosage_variants,
+            product_price_cents: item.product.price_cents,
+            product_dosage: item.product.dosage,
+            vial_count: item.product.vial_count,
+          })),
+          payload: paypalPayload,
+          computedTotalCents: totalCents,
+        })
+        const res = await fetch('/api/paypal/create-order', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(paypalPayload),
+        })
+        const data = (await res.json()) as { approvalUrl?: string; error?: string }
+        if (!res.ok || !data.approvalUrl) {
+          throw new Error(data.error ?? 'Could not create PayPal order')
+        }
+        window.location.href = data.approvalUrl
+        return
+      }
+
       const path =
         selectedPaymentMethod === 'bank-transfer'
           ? '/checkout/bank-transfer'
-          : selectedPaymentMethod === 'cash'
-            ? '/checkout/cash'
+          : selectedPaymentMethod === 'cash' && cashSubMethod === 'wise'
+            ? `/checkout/wise?order=${encodeURIComponent(wiseOrderId)}&total=${(totalCents / 100).toFixed(2)}&country=${encodeURIComponent(shippingInfo.country)}`
+            : selectedPaymentMethod === 'cash'
+              ? '/checkout/cash'
             : '/checkout/crypto'
       router.push(path)
     } catch (error) {
@@ -412,6 +457,12 @@ export default function CheckoutPage() {
     } finally {
       setIsProcessing(false)
     }
+  }
+
+  const selectPaymentMethod = (method: 'bank-transfer' | 'cash' | 'crypto' | 'paypal') => {
+    setSelectedPaymentMethod(method)
+    if (method !== 'cash') setCashSubMethod(null)
+    else setCashSubMethod('wise')
   }
 
   if (!isCartHydrated) {
@@ -608,9 +659,10 @@ export default function CheckoutPage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
+                  {/* ── Bank Transfer ─────────────────────────────────────── */}
                   <button
                     type="button"
-                    onClick={() => setSelectedPaymentMethod('bank-transfer')}
+                    onClick={() => selectPaymentMethod('bank-transfer')}
                     className={cn(
                       'relative w-full rounded-lg border p-4 text-left transition-colors',
                       selectedPaymentMethod === 'bank-transfer'
@@ -645,9 +697,42 @@ export default function CheckoutPage() {
                     </div>
                   </button>
 
+                  {/* ── Card Payments (PayPal hosted) ───────────────────────── */}
                   <button
                     type="button"
-                    onClick={() => setSelectedPaymentMethod('cash')}
+                    onClick={() => selectPaymentMethod('paypal')}
+                    className={cn(
+                      'relative w-full rounded-lg border p-4 text-left transition-colors',
+                      selectedPaymentMethod === 'paypal'
+                        ? 'border-[#0A1931] bg-muted/30 shadow-sm'
+                        : 'border-border hover:bg-muted/30'
+                    )}
+                  >
+                    {selectedPaymentMethod === 'paypal' ? (
+                      <span className="absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full bg-[#0A1931] text-white">
+                        <Check className="h-3.5 w-3.5" strokeWidth={2.5} />
+                      </span>
+                    ) : null}
+                    <div className="flex gap-3 pr-10">
+                      <CreditCard className="mt-0.5 h-5 w-5 shrink-0 text-[#0A1931]" />
+                      <div className="min-w-0 flex-1">
+                        <p className="font-medium text-foreground">Card Payments</p>
+                        <p className="text-sm text-muted-foreground">
+                          Powered by PayPal — no PayPal account required
+                        </p>
+                        {selectedPaymentMethod === 'paypal' ? (
+                          <p className="mt-2 text-xs text-muted-foreground">
+                            Pay with any debit or credit card via PayPal&apos;s secure checkout.
+                          </p>
+                        ) : null}
+                      </div>
+                    </div>
+                  </button>
+
+                  {/* ── Pay with Cash ──────────────────────────────────────── */}
+                  <button
+                    type="button"
+                    onClick={() => selectPaymentMethod('cash')}
                     className={cn(
                       'relative w-full rounded-lg border p-4 text-left transition-colors',
                       selectedPaymentMethod === 'cash'
@@ -667,23 +752,52 @@ export default function CheckoutPage() {
                         <p className="text-sm text-muted-foreground">
                           Send payment instantly via Zelle or Wise
                         </p>
+
                         {selectedPaymentMethod === 'cash' ? (
-                          <div className="mt-4 flex flex-wrap gap-2 border-t border-border/60 pt-4">
-                            <span className="rounded-full border border-[#0A1931]/20 bg-[#0A1931]/5 px-3 py-1 text-xs font-medium text-[#0A1931]">
-                              Zelle
-                            </span>
-                            <span className="rounded-full border border-[#0A1931]/20 bg-[#0A1931]/5 px-3 py-1 text-xs font-medium text-[#0A1931]">
-                              Wise
-                            </span>
+                          <div className="mt-4 border-t border-border/60 pt-4">
+                            {/* Sub-method pills */}
+                            <div className="flex flex-wrap gap-2">
+                              <button
+                                type="button"
+                                onClick={(e) => { e.stopPropagation(); setCashSubMethod('zelle') }}
+                                className={cn(
+                                  'flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-sm font-medium transition-colors',
+                                  cashSubMethod === 'zelle'
+                                    ? 'border-[#0A1931] bg-[#0A1931] text-white'
+                                    : 'border-border bg-background text-foreground hover:bg-muted/40'
+                                )}
+                              >
+                                🇺🇸 Zelle
+                                <span className={cn('text-xs', cashSubMethod === 'zelle' ? 'text-white/75' : 'text-muted-foreground')}>
+                                  (U.S. Only)
+                                </span>
+                              </button>
+                              <button
+                                type="button"
+                                onClick={(e) => { e.stopPropagation(); setCashSubMethod('wise') }}
+                                className={cn(
+                                  'flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-sm font-medium transition-colors',
+                                  cashSubMethod === 'wise'
+                                    ? 'border-[#0A1931] bg-[#0A1931] text-white'
+                                    : 'border-border bg-background text-foreground hover:bg-muted/40'
+                                )}
+                              >
+                                🌍 Wise
+                                <span className={cn('text-xs', cashSubMethod === 'wise' ? 'text-white/75' : 'text-muted-foreground')}>
+                                  (International)
+                                </span>
+                              </button>
+                            </div>
                           </div>
                         ) : null}
                       </div>
                     </div>
                   </button>
 
+                  {/* ── Cryptocurrency ─────────────────────────────────────── */}
                   <button
                     type="button"
-                    onClick={() => setSelectedPaymentMethod('crypto')}
+                    onClick={() => selectPaymentMethod('crypto')}
                     className={cn(
                       'relative w-full rounded-lg border p-4 text-left transition-colors',
                       selectedPaymentMethod === 'crypto'
@@ -743,11 +857,15 @@ export default function CheckoutPage() {
                   >
                     {isProcessing
                       ? 'Processing...'
-                      : selectedPaymentMethod === 'bank-transfer'
-                        ? 'Pay with Bank Transfer'
-                        : selectedPaymentMethod === 'cash'
-                          ? 'Pay with Cash'
-                          : 'Pay with Crypto'}
+                      : selectedPaymentMethod === 'paypal'
+                        ? 'Continue to card checkout'
+                        : selectedPaymentMethod === 'bank-transfer'
+                          ? 'Pay with Bank Transfer'
+                          : selectedPaymentMethod === 'cash' && cashSubMethod === 'wise'
+                            ? 'Pay with Cash (Wise)'
+                            : selectedPaymentMethod === 'cash'
+                              ? 'Pay with Cash'
+                              : 'Pay with Crypto'}
                   </Button>
 
                   <p className="mt-4 text-center text-xs text-muted-foreground">
@@ -759,6 +877,7 @@ export default function CheckoutPage() {
           </div>
         </form>
       </div>
+
     </div>
   )
 }

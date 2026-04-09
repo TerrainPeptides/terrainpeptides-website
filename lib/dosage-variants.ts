@@ -32,8 +32,16 @@ export function findDosageVariant(
   variantId: string | null | undefined
 ): ProductDosageVariant | null {
   const variants = product.dosage_variants
+  // Exactly one option — always use it (cart may omit id, send "", or a stale id after catalog changes)
+  if (variants?.length === 1) {
+    return variants[0]
+  }
   if (!variants?.length) {
-    if (variantId == null || variantId === DEFAULT_CART_VARIANT_ID) {
+    const unset =
+      variantId == null ||
+      variantId === '' ||
+      variantId === DEFAULT_CART_VARIANT_ID
+    if (unset) {
       return {
         id: DEFAULT_CART_VARIANT_ID,
         label: product.dosage?.trim() ?? '',
@@ -42,8 +50,9 @@ export function findDosageVariant(
     }
     return null
   }
-  const id = variantId ?? variants[0].id
-  return variants.find((x) => x.id === id) ?? null
+  const normalized =
+    variantId == null || variantId === '' ? variants[0].id : variantId
+  return variants.find((x) => x.id === normalized) ?? null
 }
 
 export function perVialPriceCentsForVariant(

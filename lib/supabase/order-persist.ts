@@ -34,6 +34,7 @@ function isLikelyColumnMismatch(message: string): boolean {
 export type CheckoutPayment =
   | { mode: 'stripe'; stripeSessionOrPaymentIntentId: string }
   | { mode: 'crypto'; cryptoAddress: string }
+  | { mode: 'paypal'; paypalOrderId: string }
 
 /**
  * Inserts a pending order + line items for Stripe Elements, hosted Checkout, or crypto.
@@ -75,15 +76,22 @@ export async function insertPendingCheckoutOrderWithItems(
 
   const emailLower = email.toLowerCase()
   const isStripe = payment.mode === 'stripe'
+  const isPaypal = payment.mode === 'paypal'
+  const paymentMethodLabel = isStripe ? 'stripe' : isPaypal ? 'paypal' : 'crypto'
+  const sessionIdValue = isStripe
+    ? payment.stripeSessionOrPaymentIntentId
+    : isPaypal
+      ? payment.paypalOrderId
+      : null
   const modernBase = {
     order_number: orderNumber,
     status: 'pending',
     tracking_number: null as string | null,
     referral_code: referralCode,
-    payment_method: isStripe ? 'stripe' : 'crypto',
+    payment_method: paymentMethodLabel,
     payment_status: 'pending',
-    stripe_session_id: isStripe ? payment.stripeSessionOrPaymentIntentId : null,
-    crypto_address: isStripe ? null : payment.cryptoAddress,
+    stripe_session_id: sessionIdValue,
+    crypto_address: payment.mode === 'crypto' ? payment.cryptoAddress : null,
     shipping_address: shippingPayload as unknown as Record<string, unknown>,
     created_at: now,
     updated_at: now,
@@ -124,10 +132,10 @@ export async function insertPendingCheckoutOrderWithItems(
         order_number: orderNumber,
         email: emailLower,
         status: 'pending',
-        payment_method: isStripe ? 'stripe' : 'crypto',
+        payment_method: paymentMethodLabel,
         payment_status: 'pending',
-        stripe_session_id: isStripe ? payment.stripeSessionOrPaymentIntentId : null,
-        crypto_address: isStripe ? null : payment.cryptoAddress,
+        stripe_session_id: sessionIdValue,
+        crypto_address: payment.mode === 'crypto' ? payment.cryptoAddress : null,
         subtotal_cents: subtotalCents,
         discount_cents: discountCents,
         total_cents: totalCents,
