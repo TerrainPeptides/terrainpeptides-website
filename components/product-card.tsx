@@ -70,7 +70,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
           <button
             type="button"
-            className="mt-4 w-full rounded-full bg-[#C8E6C9] py-2.5 text-sm font-semibold text-[#1C3D2A] transition-colors hover:bg-[#A5D6A7]"
+            className="mt-4 w-full rounded-full bg-[#0A1628] py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#0A1628]/90"
           >
             Shop Now
           </button>

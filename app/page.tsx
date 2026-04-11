@@ -7,7 +7,7 @@ export default async function HomePage() {
   const featuredProducts = await getFeaturedProductsAsync()
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col bg-white">
       <HeroSection />
       <AboutTerrainSection />
       <FeaturedProducts products={featuredProducts} />

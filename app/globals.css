@@ -27,7 +27,8 @@
   --card-foreground: var(--body-text);
   --popover: var(--white);
   --popover-foreground: var(--body-text);
-  --primary: var(--forest);
+  /* Primary actions — storefront buttons */
+  --primary: #0a1628;
   --primary-foreground: var(--white);
   --secondary: var(--section-subtle);
   --secondary-foreground: var(--body-text);
@@ -39,8 +40,8 @@
   --destructive-foreground: var(--white);
   --border: var(--divider);
   --input: var(--divider);
-  --ring: var(--forest);
-  --chart-1: var(--forest);
+  --ring: var(--primary);
+  --chart-1: var(--primary);
   --chart-2: #1E40AF;
   --chart-3: #3B82F6;
   --chart-4: #60A5FA;
@@ -48,12 +49,12 @@
   --radius: 0.75rem;
   --sidebar: var(--section-subtle);
   --sidebar-foreground: var(--body-text);
-  --sidebar-primary: var(--forest);
+  --sidebar-primary: var(--primary);
   --sidebar-primary-foreground: var(--white);
   --sidebar-accent: var(--gray-100);
   --sidebar-accent-foreground: var(--body-text);
   --sidebar-border: var(--divider);
-  --sidebar-ring: var(--forest);
+  --sidebar-ring: var(--primary);
 }
 
 .dark {
@@ -157,12 +158,12 @@
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: color-mix(in srgb, var(--forest) 35%, var(--divider));
+  background: color-mix(in srgb, var(--primary) 35%, var(--divider));
 }
 
-/* Product research progress bars — primary forest */
+/* Product research progress bars — primary */
 .progress-green[data-slot="progress"] [data-slot="progress-indicator"] {
-  background-color: var(--forest);
+  background-color: var(--primary);
 }
 
 /* Global: pointer cursor on all clickable elements */
@@ -193,7 +194,7 @@ a {
   animation-play-state: paused;
 }
 
-/* Marquee strip — animated light green while scrolling */
+/* Marquee strip — fluid blue gradient (light → saturated) slowly drifting */
 @keyframes navbar-ticker-bg-roll {
   0% {
     background-position: 0% 50%;
@@ -206,15 +207,19 @@ a {
 .navbar-ticker--rolling {
   background: linear-gradient(
     90deg,
-    #e8f5e9 0%,
-    #dcedc8 20%,
-    #f1f8e9 40%,
-    #c8e6c9 60%,
-    #e8f5e9 80%,
-    #dcedc8 100%
+    #eff6ff 0%,
+    #dbeafe 12%,
+    #bfdbfe 28%,
+    #93c5fd 42%,
+    #60a5fa 52%,
+    #3b82f6 62%,
+    #2563eb 72%,
+    #60a5fa 82%,
+    #bfdbfe 92%,
+    #eff6ff 100%
   );
-  background-size: 200% 100%;
-  animation: navbar-ticker-bg-roll 14s linear infinite;
+  background-size: 220% 100%;
+  animation: navbar-ticker-bg-roll 22s linear infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -223,7 +228,7 @@ a {
   }
   .navbar-ticker--rolling {
     animation: none;
-    background: #e8f5e9;
+    background: #dbeafe;
   }
 }
 
@@ -309,9 +314,9 @@ a {
   }
 }
 
-/* Product page — add to cart: light mint base, left-to-right fill to deep green on hover */
+/* Product page — add to cart: light base, fill to brand navy on hover */
 .product-add-to-cart {
-  background: #e8f0e4;
+  background: #e8eaef;
   isolation: isolate;
 }
 
@@ -320,7 +325,7 @@ a {
   position: absolute;
   inset: 0;
   z-index: 0;
-  background: #1a2f1a;
+  background: #0a1628;
   transform: translateX(-100%);
   transition: transform 0.42s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -330,7 +335,7 @@ a {
 }
 
 .product-add-to-cart:hover:not(:disabled) {
-  border-color: #000;
+  border-color: #0a1628;
 }
 
 .product-add-to-cart:disabled::before {

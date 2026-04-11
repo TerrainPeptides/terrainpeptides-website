@@ -301,7 +301,7 @@ export function GhkCuProduct({ product, relatedProducts = [], vouches = [] }: Gh
                       </dl>
                       <Button
                         asChild
-                        className="mt-6 w-full gap-2 bg-[#1C3D2A] text-white hover:bg-[#1C3D2A]/90"
+                        className="mt-6 w-full gap-2 bg-[#0A1628] text-white hover:bg-[#0A1628]/90"
                       >
                         <a href={product.coa_url || '/contact'} target={product.coa_url ? '_blank' : undefined} rel={product.coa_url ? 'noopener noreferrer' : undefined}>
                           <FileText className="h-4 w-4" />

@@ -27,7 +27,7 @@ export function CoaButton({ coaUrl, theme = 'default' }: CoaButtonProps) {
 
   const isNavy = theme === 'navy'
   const btnClass = isNavy
-    ? 'border-border/35 text-foreground hover:bg-[#1C3D2A]/5'
+    ? 'border-border/35 text-foreground hover:bg-[#0A1628]/5'
     : ''
 
   if (coaUrl) {
@@ -94,7 +94,7 @@ export function CoaButton({ coaUrl, theme = 'default' }: CoaButtonProps) {
               <X className="h-4 w-4" />
             </button>
 
-            <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-[#1C3D2A]/8">
+            <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-[#0A1628]/8">
               <FileText className="h-5 w-5 text-foreground" />
             </div>
 
@@ -117,7 +117,7 @@ export function CoaButton({ coaUrl, theme = 'default' }: CoaButtonProps) {
               <Button
                 type="submit"
                 disabled={submitting}
-                className="w-full bg-[#1C3D2A] text-white hover:bg-[#1C3D2A]/90"
+                className="w-full bg-[#0A1628] text-white hover:bg-[#0A1628]/90"
               >
                 {submitting ? 'Submitting…' : 'Notify Me'}
               </Button>

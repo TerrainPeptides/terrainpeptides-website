@@ -11,7 +11,7 @@ const cormorant = Cormorant_Garamond({
 
 export function HeroSection() {
   return (
-    <section className="relative overflow-hidden bg-section-subtle">
+    <section className="relative overflow-hidden bg-white">
       <div className="mx-auto max-w-7xl px-4 pb-0 pt-6 sm:px-6 sm:pt-8 lg:px-8 lg:pt-10">
         <div className="flex flex-col gap-14 lg:gap-20 xl:flex-row xl:items-center xl:justify-between xl:gap-24">
           {/* Copy — own column, room to breathe */}
@@ -44,13 +44,13 @@ export function HeroSection() {
             <div className="mt-10">
               <Link
                 href="/shop"
-                className="hero-cta-enter group relative inline-flex min-w-[min(100%,280px)] items-center justify-center overflow-hidden rounded-full border-2 border-black bg-primary px-16 py-3.5 text-sm font-semibold shadow-md sm:min-w-[300px] sm:px-20"
+                className="hero-cta-enter group relative inline-flex min-w-[min(100%,280px)] items-center justify-center overflow-hidden rounded-full border-2 border-[#0A1628] bg-[#0A1628] px-16 py-3.5 text-sm font-semibold shadow-md sm:min-w-[300px] sm:px-20"
               >
                 <span
-                  className="absolute inset-0 origin-left scale-x-0 bg-neutral-100 transition-transform duration-500 ease-out group-hover:scale-x-100"
+                  className="absolute inset-0 origin-left scale-x-0 bg-white/15 transition-transform duration-500 ease-out group-hover:scale-x-100"
                   aria-hidden
                 />
-                <span className="relative z-10 text-white transition-colors duration-300 group-hover:text-primary">
+                <span className="relative z-10 text-white transition-colors duration-300 group-hover:text-white">
                   Shop Now
                 </span>
               </Link>

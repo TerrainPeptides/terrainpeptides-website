@@ -2,7 +2,15 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Outfit } from 'next/font/google'
 import { Button } from '@/components/ui/button'
-import { ArrowRight, Shield, Warehouse, FileCheck, Truck } from 'lucide-react'
+import {
+  ArrowRight,
+  PackageCheck,
+  Microscope,
+  Snowflake,
+  BadgeCheck,
+  Warehouse,
+  ShieldCheck,
+} from 'lucide-react'
 
 const outfit = Outfit({
   subsets: ['latin'],
@@ -12,24 +20,40 @@ const outfit = Outfit({
 
 const trustCards = [
   {
-    icon: Shield,
+    icon: PackageCheck,
+    title: 'Always in Stock',
+    description:
+      'Top peptides like BPC-157, GHK-Cu, and MT2 ready to ship. No backorders, no waiting.',
+  },
+  {
+    icon: Microscope,
+    title: 'Third-Party Tested',
+    description:
+      'Every batch HPLC and Mass Spec verified by US labs. Full COA included with every order.',
+  },
+  {
+    icon: Snowflake,
+    title: 'Safe & Protected Shipping',
+    description:
+      'Cold-pack shipping keeps peptides stable. Discreet packaging with full tracking on every order.',
+  },
+  {
+    icon: BadgeCheck,
     title: '99%+ Purity Guaranteed',
-    description: 'Every batch independently verified by third-party labs',
+    description:
+      'Rigorous quality standards on every compound, every batch, no exceptions.',
   },
   {
     icon: Warehouse,
     title: 'USA Warehouse',
-    description: 'Ships domestically for fast, reliable delivery',
+    description:
+      'Ships domestically for fast, reliable delivery straight to your door.',
   },
   {
-    icon: FileCheck,
-    title: 'Third-Party Tested',
-    description: 'Full Certificate of Analysis with every order',
-  },
-  {
-    icon: Truck,
-    title: 'Fast Shipping',
-    description: 'Orders processed and shipped within 1-2 business days',
+    icon: ShieldCheck,
+    title: 'Shipment Protection',
+    description:
+      'Every order includes free shipment protection. Lost, damaged, or stolen packages reshipped at no cost.',
   },
 ] as const
 
@@ -46,7 +70,7 @@ export function AboutTerrainSection() {
         {/* Two columns: image left (rounded), text right — white background, reference layout */}
         <div className="grid gap-10 md:grid-cols-2 md:items-center md:gap-12 lg:gap-16">
           <div className="relative w-full">
-            <div className="relative aspect-[3/4] w-full overflow-hidden rounded-3xl bg-section-subtle shadow-[0_8px_40px_rgba(28,61,42,0.08)] sm:aspect-[4/5]">
+            <div className="relative aspect-[3/4] w-full overflow-hidden rounded-3xl bg-white shadow-[0_8px_40px_rgba(0,0,0,0.06)] sm:aspect-[4/5]">
               <Image
                 src="/images/about-standard-ghk-cu-forest.png"
                 alt="GHK-Cu research vial among moss and forest greenery"
@@ -97,22 +121,13 @@ export function AboutTerrainSection() {
         </div>
       </div>
 
-      <div className="bg-section-subtle pb-14 pt-12 sm:pb-20 sm:pt-16 lg:pb-24">
+      <div className="bg-white pb-14 pt-12 sm:pb-20 sm:pt-16 lg:pb-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h2 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-              Why TerrainPeptides?
-            </h2>
-            <p className="mx-auto mt-3 max-w-2xl text-foreground/60">
-              We set the standard for quality, transparency, and reliability in research peptides.
-            </p>
-          </div>
-
-          <div className="mt-8 grid gap-5 sm:mt-10 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
             {trustCards.map((card) => (
               <div
                 key={card.title}
-                className="group flex flex-col rounded-2xl border border-border bg-[#F4FAF5] p-8 text-foreground shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md sm:p-9"
+                className="group flex flex-col rounded-2xl border border-border bg-white p-8 text-foreground shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md sm:p-9"
               >
                 <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-primary/[0.06] transition-colors group-hover:bg-primary/10">
                   <card.icon className="h-6 w-6 text-primary" aria-hidden />

@@ -308,7 +308,7 @@ function PaymentStep({
                   <Button
                     type="submit"
                     disabled={isProcessing || !stripe || !elements}
-                    className="mt-6 w-full bg-[#1C3D2A] hover:bg-[#1C3D2A]/90"
+                    className="mt-6 w-full bg-[#0A1628] hover:bg-[#0A1628]/90"
                     size="lg"
                   >
                     {isProcessing ? 'Processing...' : `Pay ${formatPrice(totalCents)}`}
@@ -457,7 +457,7 @@ export default function CheckoutPage() {
             <h1 className="mt-6 text-2xl font-bold text-foreground">Your cart is empty</h1>
             <p className="mt-2 text-muted-foreground">Add items to your cart before checking out.</p>
             <Link href="/shop">
-              <Button className="mt-6 bg-[#1C3D2A] hover:bg-[#1C3D2A]/90">Browse Products</Button>
+              <Button className="mt-6 bg-[#0A1628] hover:bg-[#0A1628]/90">Browse Products</Button>
             </Link>
           </div>
         </div>
@@ -640,7 +640,7 @@ export default function CheckoutPage() {
                     )}
                   >
                     {selectedPaymentMethod === 'bank-transfer' ? (
-                      <span className="absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full bg-[#1C3D2A] text-white">
+                      <span className="absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full bg-[#0A1628] text-white">
                         <Check className="h-3.5 w-3.5" strokeWidth={2.5} />
                       </span>
                     ) : null}
@@ -678,7 +678,7 @@ export default function CheckoutPage() {
                     )}
                   >
                     {selectedPaymentMethod === 'paypal' ? (
-                      <span className="absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full bg-[#1C3D2A] text-white">
+                      <span className="absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full bg-[#0A1628] text-white">
                         <Check className="h-3.5 w-3.5" strokeWidth={2.5} />
                       </span>
                     ) : null}
@@ -710,7 +710,7 @@ export default function CheckoutPage() {
                     )}
                   >
                     {selectedPaymentMethod === 'cash' ? (
-                      <span className="absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full bg-[#1C3D2A] text-white">
+                      <span className="absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full bg-[#0A1628] text-white">
                         <Check className="h-3.5 w-3.5" strokeWidth={2.5} />
                       </span>
                     ) : null}
@@ -732,7 +732,7 @@ export default function CheckoutPage() {
                                 className={cn(
                                   'flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-sm font-medium transition-colors',
                                   cashSubMethod === 'zelle'
-                                    ? 'border-primary bg-[#1C3D2A] text-white'
+                                    ? 'border-primary bg-[#0A1628] text-white'
                                     : 'border-border bg-background text-foreground hover:bg-muted/40'
                                 )}
                               >
@@ -747,7 +747,7 @@ export default function CheckoutPage() {
                                 className={cn(
                                   'flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-sm font-medium transition-colors',
                                   cashSubMethod === 'wise'
-                                    ? 'border-primary bg-[#1C3D2A] text-white'
+                                    ? 'border-primary bg-[#0A1628] text-white'
                                     : 'border-border bg-background text-foreground hover:bg-muted/40'
                                 )}
                               >
@@ -775,7 +775,7 @@ export default function CheckoutPage() {
                     )}
                   >
                     {selectedPaymentMethod === 'crypto' ? (
-                      <span className="absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full bg-[#1C3D2A] text-white">
+                      <span className="absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full bg-[#0A1628] text-white">
                         <Check className="h-3.5 w-3.5" strokeWidth={2.5} />
                       </span>
                     ) : null}
@@ -789,7 +789,7 @@ export default function CheckoutPage() {
                             {(['BTC', 'ETH', 'USDT', 'LTC', 'USDC'] as const).map((coin) => (
                               <span
                                 key={coin}
-                                className="rounded-md border border-border/20 bg-[#1C3D2A]/5 px-2.5 py-1 text-xs font-semibold tabular-nums text-foreground"
+                                className="rounded-md border border-border/20 bg-[#0A1628]/5 px-2.5 py-1 text-xs font-semibold tabular-nums text-foreground"
                               >
                                 {coin}
                               </span>
@@ -821,7 +821,7 @@ export default function CheckoutPage() {
                   <Button
                     type="submit"
                     disabled={isProcessing}
-                    className="mt-6 w-full bg-[#1C3D2A] hover:bg-[#1C3D2A]/90"
+                    className="mt-6 w-full bg-[#0A1628] hover:bg-[#0A1628]/90"
                     size="lg"
                   >
                     {isProcessing

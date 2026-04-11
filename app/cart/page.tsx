@@ -98,7 +98,7 @@ export default function CartPage() {
             <h1 className="mt-6 text-2xl font-bold text-foreground">Your cart is empty</h1>
             <p className="mt-2 text-muted-foreground">Browse our products and add items to your cart.</p>
             <Link href="/shop">
-              <Button className="mt-6 gap-2 bg-[#1C3D2A] hover:bg-[#1C3D2A]/90">
+              <Button className="mt-6 gap-2 bg-[#0A1628] hover:bg-[#0A1628]/90">
                 Shop Now
                 <ArrowRight className="h-4 w-4" />
               </Button>
@@ -162,7 +162,7 @@ export default function CartPage() {
                           <p className="text-sm text-muted-foreground">{dose}</p>
                         )}
                         {showVials && (
-                          <div className="mt-1.5 inline-flex items-center gap-1.5 rounded-md bg-[#1C3D2A]/8 px-2.5 py-1 text-xs font-semibold text-foreground">
+                          <div className="mt-1.5 inline-flex items-center gap-1.5 rounded-md bg-[#0A1628]/8 px-2.5 py-1 text-xs font-semibold text-foreground">
                             <Package className="h-3.5 w-3.5 shrink-0" />
                             {item.quantity === 1
                               ? '1 research vial'
@@ -310,7 +310,7 @@ export default function CartPage() {
               <p className="mt-1 text-xs text-muted-foreground">Tax (if applicable) calculated at checkout</p>
 
               <Link href="/checkout" className="mt-5 block">
-                <Button className="w-full gap-2 bg-[#1C3D2A] hover:bg-[#1C3D2A]/90" size="lg">
+                <Button className="w-full gap-2 bg-[#0A1628] hover:bg-[#0A1628]/90" size="lg">
                   Proceed to Checkout
                   <ArrowRight className="h-4 w-4" />
                 </Button>
