@@ -46,9 +46,6 @@ import {
 
 const SHIPPING_CENTS = 2500
 const HST_RATE = 0.13
-const CHECKOUT_VIALS_PER_PRODUCT_UNIT = 10
-
-const NO_TEN_VIAL_COPY_SLUGS = new Set(['syringe-kit', 'capsule-stack'])
 
 interface ShippingInfo {
   name: string
@@ -90,10 +87,7 @@ function OrderSummary({
       <div className="space-y-4">
         {items.map((item) => {
           const dose = displayDosageLabel(item.product, item.dosage_variant_id)
-          const slug = item.product.slug
           const imageSrc = resolveProductImageSrc(item.product)
-          const showTenVials = !NO_TEN_VIAL_COPY_SLUGS.has(slug)
-          const totalVials = showTenVials ? CHECKOUT_VIALS_PER_PRODUCT_UNIT * item.quantity : null
           return (
             <div
               key={`${item.product.id}-${item.dosage_variant_id}`}
@@ -118,25 +112,10 @@ function OrderSummary({
               </div>
               <div className="min-w-0 flex-1">
                 <p className="font-medium text-foreground">{item.product.name}</p>
-                {showTenVials ? (
-                  <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                    {dose ? <span className="font-medium text-foreground">{dose}</span> : null}
-                    {dose ? ' · ' : null}
-                    <span className="font-semibold text-foreground">
-                      Includes {CHECKOUT_VIALS_PER_PRODUCT_UNIT} research vials per unit
-                    </span>
-                    {item.quantity > 1 ? (
-                      <>
-                        {' '}
-                        ({totalVials} vials total for quantity {item.quantity})
-                      </>
-                    ) : null}
-                  </p>
-                ) : (
-                  <p className="mt-1 text-xs text-muted-foreground">
-                    {dose ? `${dose} · ` : ''}Quantity: {item.quantity}
-                  </p>
-                )}
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {dose ? `${dose} · ` : ''}
+                  {item.quantity === 1 ? '1 research vial' : `${item.quantity} research vials`}
+                </p>
               </div>
               <p className="shrink-0 font-semibold tabular-nums text-foreground">
                 {formatPrice(
@@ -146,16 +125,6 @@ function OrderSummary({
             </div>
           )
         })}
-      </div>
-
-      <div className="rounded-lg border border-[#0A1931]/15 bg-[#0A1931]/5 px-4 py-3">
-        <div className="flex items-start gap-2 text-sm font-semibold text-[#0A1931]">
-          <Package className="mt-0.5 h-4 w-4 shrink-0" />
-          <span>
-            Each peptide line item includes <strong>10 research-grade vials</strong> per unit you order (not 1). Your
-            summary above shows exactly what you are receiving.
-          </span>
-        </div>
       </div>
 
       <Separator />
@@ -339,7 +308,7 @@ function PaymentStep({
                   <Button
                     type="submit"
                     disabled={isProcessing || !stripe || !elements}
-                    className="mt-6 w-full bg-[#0A1931] hover:bg-[#0A1931]/90"
+                    className="mt-6 w-full bg-[#1C3D2A] hover:bg-[#1C3D2A]/90"
                     size="lg"
                   >
                     {isProcessing ? 'Processing...' : `Pay ${formatPrice(totalCents)}`}
@@ -488,7 +457,7 @@ export default function CheckoutPage() {
             <h1 className="mt-6 text-2xl font-bold text-foreground">Your cart is empty</h1>
             <p className="mt-2 text-muted-foreground">Add items to your cart before checking out.</p>
             <Link href="/shop">
-              <Button className="mt-6 bg-[#0A1931] hover:bg-[#0A1931]/90">Browse Products</Button>
+              <Button className="mt-6 bg-[#1C3D2A] hover:bg-[#1C3D2A]/90">Browse Products</Button>
             </Link>
           </div>
         </div>
@@ -538,15 +507,15 @@ export default function CheckoutPage() {
         {/* Trust bar */}
         <div className="mb-8 grid grid-cols-3 gap-4 rounded-xl border border-border/60 bg-muted/30 px-4 py-3">
           <div className="flex items-center justify-center gap-2 text-xs font-medium text-muted-foreground sm:text-sm">
-            <Shield className="h-4 w-4 text-[#0A1931]" />
+            <Shield className="h-4 w-4 text-foreground" />
             Secure Checkout
           </div>
           <div className="flex items-center justify-center gap-2 text-xs font-medium text-muted-foreground sm:text-sm">
-            <Truck className="h-4 w-4 text-[#0A1931]" />
+            <Truck className="h-4 w-4 text-foreground" />
             Fast Shipping
           </div>
           <div className="flex items-center justify-center gap-2 text-xs font-medium text-muted-foreground sm:text-sm">
-            <Package className="h-4 w-4 text-[#0A1931]" />
+            <Package className="h-4 w-4 text-foreground" />
             10 Vials / Product
           </div>
         </div>
@@ -666,17 +635,17 @@ export default function CheckoutPage() {
                     className={cn(
                       'relative w-full rounded-lg border p-4 text-left transition-colors',
                       selectedPaymentMethod === 'bank-transfer'
-                        ? 'border-[#0A1931] bg-muted/30 shadow-sm'
+                        ? 'border-primary bg-muted/30 shadow-sm'
                         : 'border-border hover:bg-muted/30'
                     )}
                   >
                     {selectedPaymentMethod === 'bank-transfer' ? (
-                      <span className="absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full bg-[#0A1931] text-white">
+                      <span className="absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full bg-[#1C3D2A] text-white">
                         <Check className="h-3.5 w-3.5" strokeWidth={2.5} />
                       </span>
                     ) : null}
                     <div className="flex gap-3 pr-10">
-                      <Building2 className="mt-0.5 h-5 w-5 shrink-0 text-[#0A1931]" />
+                      <Building2 className="mt-0.5 h-5 w-5 shrink-0 text-foreground" />
                       <div className="min-w-0 flex-1">
                         <p className="font-medium text-foreground">Bank Transfer</p>
                         <p className="text-sm text-muted-foreground">
@@ -704,17 +673,17 @@ export default function CheckoutPage() {
                     className={cn(
                       'relative w-full rounded-lg border p-4 text-left transition-colors',
                       selectedPaymentMethod === 'paypal'
-                        ? 'border-[#0A1931] bg-muted/30 shadow-sm'
+                        ? 'border-primary bg-muted/30 shadow-sm'
                         : 'border-border hover:bg-muted/30'
                     )}
                   >
                     {selectedPaymentMethod === 'paypal' ? (
-                      <span className="absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full bg-[#0A1931] text-white">
+                      <span className="absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full bg-[#1C3D2A] text-white">
                         <Check className="h-3.5 w-3.5" strokeWidth={2.5} />
                       </span>
                     ) : null}
                     <div className="flex gap-3 pr-10">
-                      <CreditCard className="mt-0.5 h-5 w-5 shrink-0 text-[#0A1931]" />
+                      <CreditCard className="mt-0.5 h-5 w-5 shrink-0 text-foreground" />
                       <div className="min-w-0 flex-1">
                         <p className="font-medium text-foreground">Card Payments</p>
                         <p className="text-sm text-muted-foreground">
@@ -736,17 +705,17 @@ export default function CheckoutPage() {
                     className={cn(
                       'relative w-full rounded-lg border p-4 text-left transition-colors',
                       selectedPaymentMethod === 'cash'
-                        ? 'border-[#0A1931] bg-muted/30 shadow-sm'
+                        ? 'border-primary bg-muted/30 shadow-sm'
                         : 'border-border hover:bg-muted/30'
                     )}
                   >
                     {selectedPaymentMethod === 'cash' ? (
-                      <span className="absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full bg-[#0A1931] text-white">
+                      <span className="absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full bg-[#1C3D2A] text-white">
                         <Check className="h-3.5 w-3.5" strokeWidth={2.5} />
                       </span>
                     ) : null}
                     <div className="flex gap-3 pr-10">
-                      <Banknote className="mt-0.5 h-5 w-5 shrink-0 text-[#0A1931]" />
+                      <Banknote className="mt-0.5 h-5 w-5 shrink-0 text-foreground" />
                       <div className="min-w-0 flex-1">
                         <p className="font-medium text-foreground">Pay with Cash</p>
                         <p className="text-sm text-muted-foreground">
@@ -763,7 +732,7 @@ export default function CheckoutPage() {
                                 className={cn(
                                   'flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-sm font-medium transition-colors',
                                   cashSubMethod === 'zelle'
-                                    ? 'border-[#0A1931] bg-[#0A1931] text-white'
+                                    ? 'border-primary bg-[#1C3D2A] text-white'
                                     : 'border-border bg-background text-foreground hover:bg-muted/40'
                                 )}
                               >
@@ -778,7 +747,7 @@ export default function CheckoutPage() {
                                 className={cn(
                                   'flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-sm font-medium transition-colors',
                                   cashSubMethod === 'wise'
-                                    ? 'border-[#0A1931] bg-[#0A1931] text-white'
+                                    ? 'border-primary bg-[#1C3D2A] text-white'
                                     : 'border-border bg-background text-foreground hover:bg-muted/40'
                                 )}
                               >
@@ -801,17 +770,17 @@ export default function CheckoutPage() {
                     className={cn(
                       'relative w-full rounded-lg border p-4 text-left transition-colors',
                       selectedPaymentMethod === 'crypto'
-                        ? 'border-[#0A1931] bg-muted/30 shadow-sm'
+                        ? 'border-primary bg-muted/30 shadow-sm'
                         : 'border-border hover:bg-muted/30'
                     )}
                   >
                     {selectedPaymentMethod === 'crypto' ? (
-                      <span className="absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full bg-[#0A1931] text-white">
+                      <span className="absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full bg-[#1C3D2A] text-white">
                         <Check className="h-3.5 w-3.5" strokeWidth={2.5} />
                       </span>
                     ) : null}
                     <div className="flex gap-3 pr-10">
-                      <Bitcoin className="mt-0.5 h-5 w-5 shrink-0 text-[#0A1931]" />
+                      <Bitcoin className="mt-0.5 h-5 w-5 shrink-0 text-foreground" />
                       <div className="min-w-0 flex-1">
                         <p className="font-medium text-foreground">Cryptocurrency</p>
                         <p className="text-sm text-muted-foreground">Pay anonymously with crypto</p>
@@ -820,7 +789,7 @@ export default function CheckoutPage() {
                             {(['BTC', 'ETH', 'USDT', 'LTC', 'USDC'] as const).map((coin) => (
                               <span
                                 key={coin}
-                                className="rounded-md border border-[#0A1931]/20 bg-[#0A1931]/5 px-2.5 py-1 text-xs font-semibold tabular-nums text-[#0A1931]"
+                                className="rounded-md border border-border/20 bg-[#1C3D2A]/5 px-2.5 py-1 text-xs font-semibold tabular-nums text-foreground"
                               >
                                 {coin}
                               </span>
@@ -852,7 +821,7 @@ export default function CheckoutPage() {
                   <Button
                     type="submit"
                     disabled={isProcessing}
-                    className="mt-6 w-full bg-[#0A1931] hover:bg-[#0A1931]/90"
+                    className="mt-6 w-full bg-[#1C3D2A] hover:bg-[#1C3D2A]/90"
                     size="lg"
                   >
                     {isProcessing

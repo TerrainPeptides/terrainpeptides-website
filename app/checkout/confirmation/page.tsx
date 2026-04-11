@@ -76,7 +76,7 @@ function ConfirmationContent() {
         <div className="mx-auto max-w-xl px-4 py-24 sm:px-6 lg:px-8">
           <Card>
             <CardContent className="flex flex-col items-center p-8 text-center">
-              <Loader2 className="h-12 w-12 animate-spin text-[#0A1931]" />
+              <Loader2 className="h-12 w-12 animate-spin text-foreground" />
               <h1 className="mt-6 text-xl font-bold text-foreground">Confirming your payment…</h1>
               <p className="mt-2 text-sm text-muted-foreground">
                 Please wait while we capture your PayPal payment.
@@ -108,7 +108,7 @@ function ConfirmationContent() {
               )}
               <div className="mt-8 w-full space-y-3">
                 <Link href="/checkout" className="block">
-                  <Button className="w-full bg-[#0A1931] hover:bg-[#0A1931]/90">
+                  <Button className="w-full bg-[#1C3D2A] hover:bg-[#1C3D2A]/90">
                     Return to Checkout
                   </Button>
                 </Link>
@@ -160,7 +160,7 @@ function ConfirmationContent() {
               </div>
 
               <Link href="/track" className="block">
-                <Button className="w-full gap-2 bg-[#0A1931] hover:bg-[#0A1931]/90">
+                <Button className="w-full gap-2 bg-[#1C3D2A] hover:bg-[#1C3D2A]/90">
                   Track Your Order
                   <ArrowRight className="h-4 w-4" />
                 </Button>
@@ -184,7 +184,7 @@ export default function CheckoutConfirmationPage() {
     <Suspense
       fallback={
         <div className="flex min-h-screen items-center justify-center">
-          <Loader2 className="h-8 w-8 animate-spin text-[#0A1931]" />
+          <Loader2 className="h-8 w-8 animate-spin text-foreground" />
         </div>
       }
     >

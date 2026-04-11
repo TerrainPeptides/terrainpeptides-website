@@ -164,7 +164,7 @@ export default function AffiliatesPage() {
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <a
               href="#apply"
-              className="inline-flex items-center gap-2 rounded-lg px-8 py-3.5 text-base font-semibold text-[#0A1931] shadow-lg transition-opacity hover:opacity-90"
+              className="inline-flex items-center gap-2 rounded-lg px-8 py-3.5 text-base font-semibold text-foreground shadow-lg transition-opacity hover:opacity-90"
               style={{ background: GOLD }}
             >
               Apply Now

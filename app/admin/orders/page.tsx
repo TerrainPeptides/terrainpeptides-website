@@ -20,7 +20,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { toast } from 'sonner'
-import { Eye, Package } from 'lucide-react'
+import { Eye, Package, X } from 'lucide-react'
 import type { Order, OrderItem } from '@/lib/types'
 
 const statusColors: Record<string, string> = {
@@ -114,6 +114,27 @@ export default function AdminOrdersPage() {
     }
   }
 
+  const handleDeleteOrder = async (orderId: string) => {
+    if (!confirm('Delete this order? This cannot be undone.')) return
+    try {
+      const res = await fetch(`/api/admin/orders?id=${orderId}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('terrain-admin-token')}`,
+        },
+      })
+      if (res.ok) {
+        toast.success('Order deleted')
+        fetchOrders()
+        if (selectedOrder?.id === orderId) setSelectedOrder(null)
+      } else {
+        toast.error('Failed to delete order')
+      }
+    } catch {
+      toast.error('An error occurred')
+    }
+  }
+
   const sendShippingEmail = () => {
     if (!selectedOrder) return
     const tn = trackingNumber.trim() || selectedOrder.tracking_number || ''
@@ -194,16 +215,26 @@ export default function AdminOrdersPage() {
                       {formatPrice(order.total_cents)}
                     </p>
                   </div>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => {
-                      setSelectedOrder(order)
-                      setTrackingNumber(order.tracking_number || '')
-                    }}
-                  >
-                    <Eye className="h-4 w-4" />
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() => {
+                        setSelectedOrder(order)
+                        setTrackingNumber(order.tracking_number || '')
+                      }}
+                    >
+                      <Eye className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="text-destructive hover:bg-destructive/10"
+                      onClick={() => handleDeleteOrder(order.id)}
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
               ))}
             </div>

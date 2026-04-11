@@ -83,18 +83,18 @@ export function ProductScience({ product, vouches = [] }: ProductScienceProps) {
 
       <Tabs defaultValue={isKiss ? 'research' : 'overview'} className="w-full">
         {isKiss ? (
-          <TabsList className="mb-6 h-14 flex-wrap gap-2 bg-[#0A1931]/5 p-2">
-            <TabsTrigger value="research" className="gap-2 px-6 py-3 text-base data-[state=active]:bg-white data-[state=active]:text-[#0A1931]">
+          <TabsList className="mb-6 h-14 flex-wrap gap-2 bg-[#1C3D2A]/5 p-2">
+            <TabsTrigger value="research" className="gap-2 px-6 py-3 text-base data-[state=active]:bg-white data-[state=active]:text-foreground">
               <FileText className="h-4 w-4" />
               Research
             </TabsTrigger>
             {product.coa_url && (
-              <TabsTrigger value="coa" className="gap-2 px-6 py-3 text-base data-[state=active]:bg-white data-[state=active]:text-[#0A1931]">
+              <TabsTrigger value="coa" className="gap-2 px-6 py-3 text-base data-[state=active]:bg-white data-[state=active]:text-foreground">
                 <FileText className="h-4 w-4" />
                 COA
               </TabsTrigger>
             )}
-            <TabsTrigger value="reviews" className="gap-2 px-6 py-3 text-base data-[state=active]:bg-white data-[state=active]:text-[#0A1931]">
+            <TabsTrigger value="reviews" className="gap-2 px-6 py-3 text-base data-[state=active]:bg-white data-[state=active]:text-foreground">
               <Star className="h-4 w-4" />
               Reviews
             </TabsTrigger>
@@ -212,7 +212,7 @@ export function ProductScience({ product, vouches = [] }: ProductScienceProps) {
                       </div>
                     </CardContent>
                   </Card>
-                  <Card className="border-0 bg-[#0A1931] lg:col-span-2 text-white">
+                  <Card className="border-0 bg-[#1C3D2A] lg:col-span-2 text-white">
                     <CardContent className="p-6">
                       <p className="text-xs font-medium uppercase tracking-wider text-white/70">Key discovery</p>
                       <h3 className="mt-2 font-bold">Master Switch for Human Reproduction</h3>
@@ -323,7 +323,7 @@ export function ProductScience({ product, vouches = [] }: ProductScienceProps) {
                       </table>
                     </CardContent>
                   </Card>
-                  <Card className="border-0 bg-[#0A1931] text-white">
+                  <Card className="border-0 bg-[#1C3D2A] text-white">
                     <CardContent className="p-6">
                       <p className="text-xs font-medium uppercase tracking-wider text-white/70">Safety advantage</p>
                       <h4 className="mt-2 font-bold">Physiology-Mimicking Hormone Control</h4>
@@ -369,7 +369,7 @@ export function ProductScience({ product, vouches = [] }: ProductScienceProps) {
                       </div>
                     </CardContent>
                   </Card>
-                  <Card className="border-0 bg-[#0A1931] text-white">
+                  <Card className="border-0 bg-[#1C3D2A] text-white">
                     <CardContent className="p-6">
                       <p className="text-xs font-medium uppercase tracking-wider text-white/70"><FileText className="h-3.5 w-3.5 inline mr-1" /> REGULATORY STATUS</p>
                       <h4 className="mt-3 font-bold">Where It Stands</h4>
@@ -429,38 +429,38 @@ export function ProductScience({ product, vouches = [] }: ProductScienceProps) {
 
         {isKiss && product.coa_url && (
           <TabsContent value="coa" className="mt-0">
-            <p className="text-xs font-medium uppercase tracking-wider text-[#0A1931]/60">🧪 Certificate of Analysis</p>
-            <p className="mt-0.5 text-sm text-[#0A1931]/60">Third party tested.</p>
-            <CoaDocumentPanel coaUrl={product.coa_url} frameClassName="border-[#0A1931]/10" />
+            <p className="text-xs font-medium uppercase tracking-wider text-foreground/60">🧪 Certificate of Analysis</p>
+            <p className="mt-0.5 text-sm text-foreground/60">Third party tested.</p>
+            <CoaDocumentPanel coaUrl={product.coa_url} frameClassName="border-border/10" />
           </TabsContent>
         )}
 
         {isKiss && (
           <TabsContent value="reviews" className="mt-0">
-            <p className="text-xs font-medium uppercase tracking-wider text-[#0A1931]/60">⭐ Reviews</p>
-            <p className="mt-0.5 text-sm text-[#0A1931]/60">Customer feedback.</p>
+            <p className="text-xs font-medium uppercase tracking-wider text-foreground/60">⭐ Reviews</p>
+            <p className="mt-0.5 text-sm text-foreground/60">Customer feedback.</p>
             <div className="mt-4 space-y-4">
               {productVouches.length > 0 ? (
                 productVouches.map((v) => (
-                  <Card key={v.id} className="border-[#0A1931]/10">
+                  <Card key={v.id} className="border-border/10">
                     <CardContent className="p-6">
                       <div className="flex items-center gap-2 mb-2">
                         <div className="flex">
                           {[1, 2, 3, 4, 5].map((i) => (
-                            <Star key={i} className={`h-4 w-4 ${i <= v.rating ? 'fill-amber-400 text-amber-400' : 'text-[#0A1931]/20'}`} />
+                            <Star key={i} className={`h-4 w-4 ${i <= v.rating ? 'fill-amber-400 text-amber-400' : 'text-foreground/20'}`} />
                           ))}
                         </div>
-                        <span className="font-medium text-[#0A1931]">{v.author_name}</span>
-                        {v.verified && <span className="text-xs text-[#0A1931]/60">Verified</span>}
+                        <span className="font-medium text-foreground">{v.author_name}</span>
+                        {v.verified && <span className="text-xs text-foreground/60">Verified</span>}
                       </div>
-                      <p className="text-sm text-[#0A1931]/80">{v.content}</p>
+                      <p className="text-sm text-foreground/80">{v.content}</p>
                     </CardContent>
                   </Card>
                 ))
               ) : (
-                <Card className="border-[#0A1931]/10">
+                <Card className="border-border/10">
                   <CardContent className="p-6">
-                    <p className="text-sm text-[#0A1931]/80">No reviews yet for this product.</p>
+                    <p className="text-sm text-foreground/80">No reviews yet for this product.</p>
                   </CardContent>
                 </Card>
               )}

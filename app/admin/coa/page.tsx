@@ -13,7 +13,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { toast } from 'sonner'
-import { Upload, FileText, Loader2 } from 'lucide-react'
+import { Upload, FileText, Loader2, X } from 'lucide-react'
 import type { Product } from '@/lib/types'
 
 const MAX_PDF_BYTES = 15 * 1024 * 1024
@@ -108,6 +108,27 @@ export default function AdminCOAPage() {
         <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
       </div>
     )
+  }
+
+  const handleRemoveCOA = async (productId: string) => {
+    try {
+      const res = await fetch('/api/admin/products', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('terrain-admin-token')}`,
+        },
+        body: JSON.stringify({ id: productId, coa_url: null }),
+      })
+      if (res.ok) {
+        toast.success('COA removed')
+        fetchProducts()
+      } else {
+        toast.error('Failed to remove COA')
+      }
+    } catch {
+      toast.error('An error occurred')
+    }
   }
 
   const productsWithCOA = products.filter((p) => p.coa_url)
@@ -206,14 +227,24 @@ export default function AdminCOAPage() {
                       </p>
                     </div>
                   </div>
-                  <a
-                    href={product.coa_url || '#'}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="shrink-0 text-sm text-primary hover:underline ml-2"
-                  >
-                    Open
-                  </a>
+                  <div className="flex items-center gap-2 shrink-0 ml-2">
+                    <a
+                      href={product.coa_url || '#'}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-primary hover:underline"
+                    >
+                      Open
+                    </a>
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveCOA(product.id)}
+                      className="flex h-7 w-7 items-center justify-center rounded-full text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors"
+                      title="Remove COA"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>

@@ -96,11 +96,11 @@ export function Mt2Product({ product, relatedProducts = [], vouches = [] }: Mt2P
   const imageSrc = product.image_url || '/images/mt-2-vial.png'
 
   return (
-    <div className="min-h-screen bg-white text-[#0A1931]">
+    <div className="min-h-screen bg-white text-foreground">
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <Link
           href="/shop"
-          className="mb-6 inline-flex items-center gap-1 text-sm text-[#0A1931]/70 transition-colors hover:text-[#0A1931]"
+          className="mb-6 inline-flex items-center gap-1 text-sm text-foreground/70 transition-colors hover:text-foreground"
         >
           <ChevronLeft className="h-4 w-4" />
           Back to Shop
@@ -112,7 +112,7 @@ export function Mt2Product({ product, relatedProducts = [], vouches = [] }: Mt2P
             ref={section1.ref}
             className={`transition-all duration-500 ease-out ${section1.visible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}
           >
-            <Card className="overflow-hidden border-[#0A1931]/10 bg-[#f8f9fa]">
+            <Card className="overflow-hidden border-border/10 bg-[#f8f9fa]">
               <CardContent className="flex min-h-[320px] items-center justify-center p-8 sm:min-h-[400px] lg:min-h-[440px]">
                 {imageSrc ? (
                   <div className="relative h-[280px] w-full max-w-[280px] transition-transform duration-300 ease-out hover:scale-[1.02] sm:h-[340px] sm:max-w-[340px] lg:h-[380px] lg:max-w-[380px]">
@@ -127,7 +127,7 @@ export function Mt2Product({ product, relatedProducts = [], vouches = [] }: Mt2P
                     />
                   </div>
                 ) : (
-                  <FlaskConical className="h-32 w-32 text-[#0A1931]/20" />
+                  <FlaskConical className="h-32 w-32 text-foreground/20" />
                 )}
               </CardContent>
             </Card>
@@ -142,18 +142,18 @@ export function Mt2Product({ product, relatedProducts = [], vouches = [] }: Mt2P
           className={`mt-16 transition-all duration-500 ease-out ${section2.visible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}
         >
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="mb-6 h-14 flex-wrap gap-2 bg-[#0A1931]/5 p-2">
-              <TabsTrigger value="research" className="gap-2 px-6 py-3 text-base data-[state=active]:bg-white data-[state=active]:text-[#0A1931]">
+            <TabsList className="mb-6 h-14 flex-wrap gap-2 bg-[#1C3D2A]/5 p-2">
+              <TabsTrigger value="research" className="gap-2 px-6 py-3 text-base data-[state=active]:bg-white data-[state=active]:text-foreground">
                 <FileText className="h-4 w-4" />
                 Research
               </TabsTrigger>
               {product.coa_url && (
-                <TabsTrigger value="coa" className="gap-2 px-6 py-3 text-base data-[state=active]:bg-white data-[state=active]:text-[#0A1931]">
+                <TabsTrigger value="coa" className="gap-2 px-6 py-3 text-base data-[state=active]:bg-white data-[state=active]:text-foreground">
                   <FileText className="h-4 w-4" />
                   COA
                 </TabsTrigger>
               )}
-              <TabsTrigger value="reviews" className="gap-2 px-6 py-3 text-base data-[state=active]:bg-white data-[state=active]:text-[#0A1931]">
+              <TabsTrigger value="reviews" className="gap-2 px-6 py-3 text-base data-[state=active]:bg-white data-[state=active]:text-foreground">
                 <Star className="h-4 w-4" />
                 Reviews
               </TabsTrigger>
@@ -162,15 +162,15 @@ export function Mt2Product({ product, relatedProducts = [], vouches = [] }: Mt2P
             <TabsContent value="research" className="mt-0 space-y-12 text-[1.1em]">
               {/* Stat cards — 5 cards */}
               <div>
-                <p className="text-xs font-medium uppercase tracking-wider text-[#0A1931]/60">✨ Clinical outcomes</p>
-                <p className="mt-0.5 text-sm text-[#0A1931]/60">Key research metrics.</p>
+                <p className="text-xs font-medium uppercase tracking-wider text-foreground/60">✨ Clinical outcomes</p>
+                <p className="mt-0.5 text-sm text-foreground/60">Key research metrics.</p>
                 <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
                   {STAT_CARDS.map((s) => (
-                    <Card key={s.label} className="border-[#0A1931]/10">
+                    <Card key={s.label} className="border-border/10">
                       <CardContent className="p-6 text-center">
                         <p className="text-2xl font-bold" style={{ color: GREEN }}>{s.value}</p>
-                        <p className="mt-1 text-xs font-medium uppercase tracking-wider text-[#0A1931]/80">{s.label}</p>
-                        <p className="mt-1 text-xs text-[#0A1931]/60">{s.subtext}</p>
+                        <p className="mt-1 text-xs font-medium uppercase tracking-wider text-foreground/80">{s.label}</p>
+                        <p className="mt-1 text-xs text-foreground/60">{s.subtext}</p>
                       </CardContent>
                     </Card>
                   ))}
@@ -179,20 +179,20 @@ export function Mt2Product({ product, relatedProducts = [], vouches = [] }: Mt2P
 
               {/* How it Works — mechanism diagram + Key Discovery */}
               <div>
-                <p className="text-xs font-medium uppercase tracking-wider text-[#0A1931]/60">🧬 How it works</p>
-                <p className="mt-0.5 text-sm text-[#0A1931]/60">Non-selective melanocortin receptor agonism.</p>
+                <p className="text-xs font-medium uppercase tracking-wider text-foreground/60">🧬 How it works</p>
+                <p className="mt-0.5 text-sm text-foreground/60">Non-selective melanocortin receptor agonism.</p>
                 <div className="mt-4 grid gap-6 lg:grid-cols-5">
-                  <Card className="border-[#0A1931]/10 lg:col-span-3">
+                  <Card className="border-border/10 lg:col-span-3">
                     <CardContent className="p-6">
-                      <p className="text-xs font-medium uppercase tracking-wider text-[#0A1931]/60">The science, simplified</p>
-                      <h3 className="mt-2 font-bold text-[#0A1931]">Multi-Receptor Melanocortin Agonism</h3>
+                      <p className="text-xs font-medium uppercase tracking-wider text-foreground/60">The science, simplified</p>
+                      <h3 className="mt-2 font-bold text-foreground">Multi-Receptor Melanocortin Agonism</h3>
                       <div className="mt-6 flex flex-wrap items-start justify-between gap-6">
                         {MECHANISM_NODES.map((n) => (
                           <div key={n.id} className="flex flex-1 min-w-[140px] flex-col items-center text-center">
-                            <div className={`h-14 w-14 rounded-full ${n.color} flex items-center justify-center text-xs font-semibold text-[#0A1931]`}>{n.label}</div>
-                            <p className="mt-1 text-xs font-medium uppercase tracking-wider text-[#0A1931]/60">{n.badge}</p>
-                            <p className="mt-2 font-semibold text-[#0A1931]">{n.title}</p>
-                            <ul className="mt-2 space-y-0.5 text-left text-xs text-[#0A1931]/70">
+                            <div className={`h-14 w-14 rounded-full ${n.color} flex items-center justify-center text-xs font-semibold text-foreground`}>{n.label}</div>
+                            <p className="mt-1 text-xs font-medium uppercase tracking-wider text-foreground/60">{n.badge}</p>
+                            <p className="mt-2 font-semibold text-foreground">{n.title}</p>
+                            <ul className="mt-2 space-y-0.5 text-left text-xs text-foreground/70">
                               {n.bullets.map((b) => (
                                 <li key={b}>• {b}</li>
                               ))}
@@ -200,10 +200,10 @@ export function Mt2Product({ product, relatedProducts = [], vouches = [] }: Mt2P
                           </div>
                         ))}
                       </div>
-                      <p className="mt-6 text-xs text-[#0A1931]/50">Source: Peer-reviewed literature.</p>
+                      <p className="mt-6 text-xs text-foreground/50">Source: Peer-reviewed literature.</p>
                     </CardContent>
                   </Card>
-                  <Card className="border-0 bg-[#0A1931] lg:col-span-2">
+                  <Card className="border-0 bg-[#1C3D2A] lg:col-span-2">
                     <CardContent className="p-6 text-white">
                       <p className="text-xs font-medium uppercase tracking-wider text-white/70">Key discovery</p>
                       <h3 className="mt-2 font-bold">Non-Selective Melanocortin Agonism</h3>
@@ -220,35 +220,35 @@ export function Mt2Product({ product, relatedProducts = [], vouches = [] }: Mt2P
 
               {/* What Research Has Shown */}
               <div>
-                <p className="text-xs font-medium uppercase tracking-wider text-[#0A1931]/60">📊 What research has shown</p>
-                <p className="mt-0.5 text-sm text-[#0A1931]/60">Summary of early human and preclinical melanocortin research.</p>
+                <p className="text-xs font-medium uppercase tracking-wider text-foreground/60">📊 What research has shown</p>
+                <p className="mt-0.5 text-sm text-foreground/60">Summary of early human and preclinical melanocortin research.</p>
                 <div className="mt-4 grid gap-6 lg:grid-cols-2">
-                  <Card className="border-[#0A1931]/10">
+                  <Card className="border-border/10">
                     <CardContent className="p-6">
-                      <span className="rounded-full bg-[#0A1931]/5 px-3 py-1 text-xs text-[#0A1931]/70">Early Human and Preclinical Melanocortin Research</span>
+                      <span className="rounded-full bg-[#1C3D2A]/5 px-3 py-1 text-xs text-foreground/70">Early Human and Preclinical Melanocortin Research</span>
                       <p className="mt-4 text-4xl font-bold" style={{ color: GREEN }}>Robust activation</p>
-                      <p className="text-xs font-medium uppercase tracking-wider text-[#0A1931]/70">Of MC1/MC4 melanocortin receptors in vitro and in vivo models</p>
-                      <div className="mt-4 text-sm font-semibold text-[#0A1931]">Comparison</div>
+                      <p className="text-xs font-medium uppercase tracking-wider text-foreground/70">Of MC1/MC4 melanocortin receptors in vitro and in vivo models</p>
+                      <div className="mt-4 text-sm font-semibold text-foreground">Comparison</div>
                       <div className="mt-3 space-y-3">
                         {COMPARISON_ROWS.map((r) => (
                           <div key={r.label} className="flex items-center gap-3">
-                            <span className="w-48 shrink-0 text-xs text-[#0A1931]/70">{r.label}</span>
-                            <div className="h-3 flex-1 overflow-hidden rounded-full bg-[#0A1931]/10">
-                              <div className="h-full rounded-full" style={{ width: `${r.bar}%`, backgroundColor: r.bar > 0 ? GREEN : '#0A1931' }} />
+                            <span className="w-48 shrink-0 text-xs text-foreground/70">{r.label}</span>
+                            <div className="h-3 flex-1 overflow-hidden rounded-full bg-[#1C3D2A]/10">
+                              <div className="h-full rounded-full" style={{ width: `${r.bar}%`, backgroundColor: r.bar > 0 ? GREEN : '#1C3D2A' }} />
                             </div>
-                            <span className="text-xs font-medium text-[#0A1931]/80">{r.value}</span>
+                            <span className="text-xs font-medium text-foreground/80">{r.value}</span>
                           </div>
                         ))}
                       </div>
-                      <div className="mt-4 rounded-lg bg-[#0A1931]/5 p-3 text-xs text-[#0A1931]/60">
+                      <div className="mt-4 rounded-lg bg-[#1C3D2A]/5 p-3 text-xs text-foreground/60">
                         MT-2 originated from academic programs exploring synthetic α-MSH analogues to increase tanning and investigate centrally mediated sexual responses. Controlled investigations describe increased skin pigmentation and sexual arousal, but trials have been small and heterogeneous, not pursued through full regulatory pathways, so effect sizes and population-level safety are not fully characterized.
                       </div>
                     </CardContent>
                   </Card>
-                  <Card className="border-[#0A1931]/10">
+                  <Card className="border-border/10">
                     <CardContent className="p-6">
-                      <p className="text-xs font-medium uppercase tracking-wider text-[#0A1931]/60">📝 Findings</p>
-                      <h3 className="mt-2 font-bold text-[#0A1931]">Key Findings</h3>
+                      <p className="text-xs font-medium uppercase tracking-wider text-foreground/60">📝 Findings</p>
+                      <h3 className="mt-2 font-bold text-foreground">Key Findings</h3>
                       <div className="mt-6 space-y-6">
                         {RIGHT_SIDE_FINDINGS.map((f) => (
                           <div key={f.title}>
@@ -258,13 +258,13 @@ export function Mt2Product({ product, relatedProducts = [], vouches = [] }: Mt2P
                                 f.badge === 'Observed' ? 'bg-blue-100 text-blue-700' :
                                 'bg-amber-100 text-amber-700'
                               }`}>{f.badge}</span>
-                              <span className="font-bold text-[#0A1931]">{f.title}</span>
+                              <span className="font-bold text-foreground">{f.title}</span>
                             </div>
-                            <p className="mt-2 text-sm text-[#0A1931]/80">{f.desc}</p>
+                            <p className="mt-2 text-sm text-foreground/80">{f.desc}</p>
                           </div>
                         ))}
                       </div>
-                      <div className="mt-6 rounded-lg bg-[#0A1931]/5 p-3 text-xs text-[#0A1931]/60">
+                      <div className="mt-6 rounded-lg bg-[#1C3D2A]/5 p-3 text-xs text-foreground/60">
                         💡 Note: Outcomes from early human and preclinical research. Effect sizes not fully characterized.
                       </div>
                     </CardContent>
@@ -274,15 +274,15 @@ export function Mt2Product({ product, relatedProducts = [], vouches = [] }: Mt2P
 
               {/* Beyond Pigmentation — 4 highlight cards */}
               <div>
-                <p className="text-xs font-medium uppercase tracking-wider text-[#0A1931]/60">✨ Beyond pigmentation</p>
-                <p className="mt-0.5 text-sm text-[#0A1931]/60">Additional research applications.</p>
+                <p className="text-xs font-medium uppercase tracking-wider text-foreground/60">✨ Beyond pigmentation</p>
+                <p className="mt-0.5 text-sm text-foreground/60">Additional research applications.</p>
                 <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                   {BEYOND_PIGMENTATION.map((b) => (
-                    <Card key={b.title} className={`border-[#0A1931]/10 ${b.highlight ? 'bg-[#16a34a]/5' : ''}`}>
+                    <Card key={b.title} className={`border-border/10 ${b.highlight ? 'bg-[#16a34a]/5' : ''}`}>
                       <CardContent className="p-6">
-                        <p className="text-xs font-medium uppercase tracking-wider text-[#0A1931]/60">{b.label}</p>
-                        <h4 className="mt-2 font-bold text-[#0A1931]">{b.title}</h4>
-                        <p className="mt-2 text-sm text-[#0A1931]/70">{b.desc}</p>
+                        <p className="text-xs font-medium uppercase tracking-wider text-foreground/60">{b.label}</p>
+                        <h4 className="mt-2 font-bold text-foreground">{b.title}</h4>
+                        <p className="mt-2 text-sm text-foreground/70">{b.desc}</p>
                       </CardContent>
                     </Card>
                   ))}
@@ -291,19 +291,19 @@ export function Mt2Product({ product, relatedProducts = [], vouches = [] }: Mt2P
 
               {/* 3 Detailed Cards */}
               <div>
-                <p className="text-xs font-medium uppercase tracking-wider text-[#0A1931]/60">📋 Detailed findings</p>
-                <p className="mt-0.5 text-sm text-[#0A1931]/60">Study-specific outcomes.</p>
+                <p className="text-xs font-medium uppercase tracking-wider text-foreground/60">📋 Detailed findings</p>
+                <p className="mt-0.5 text-sm text-foreground/60">Study-specific outcomes.</p>
                 <div className="mt-4 grid gap-6 lg:grid-cols-3">
                   {DETAILED_CARDS.map((d) => (
-                    <Card key={d.title} className="border-[#0A1931]/10">
+                    <Card key={d.title} className="border-border/10">
                       <CardContent className="p-6">
-                        <h4 className="font-bold text-[#0A1931]">{d.title}</h4>
-                        <ul className="mt-4 space-y-2 text-sm text-[#0A1931]/80">
+                        <h4 className="font-bold text-foreground">{d.title}</h4>
+                        <ul className="mt-4 space-y-2 text-sm text-foreground/80">
                           {d.metrics.map((m) => (
                             <li key={m}>• {m}</li>
                           ))}
                         </ul>
-                        <div className={`mt-4 rounded-lg border-l-4 ${d.calloutBorder} bg-[#0A1931]/5 p-3 text-xs text-[#0A1931]/80`}>
+                        <div className={`mt-4 rounded-lg border-l-4 ${d.calloutBorder} bg-[#1C3D2A]/5 p-3 text-xs text-foreground/80`}>
                           {d.callout}
                         </div>
                       </CardContent>
@@ -314,26 +314,26 @@ export function Mt2Product({ product, relatedProducts = [], vouches = [] }: Mt2P
 
               {/* Safety Profile */}
               <div>
-                <p className="text-xs font-medium uppercase tracking-wider text-[#0A1931]/60">🛡️ Safety profile</p>
-                <p className="mt-0.5 text-sm text-[#0A1931]/60">Reported effects from early studies and off-label use.</p>
+                <p className="text-xs font-medium uppercase tracking-wider text-foreground/60">🛡️ Safety profile</p>
+                <p className="mt-0.5 text-sm text-foreground/60">Reported effects from early studies and off-label use.</p>
                 <div className="mt-4 grid gap-6 lg:grid-cols-2">
-                  <Card className="border-[#0A1931]/10">
+                  <Card className="border-border/10">
                     <CardContent className="p-6">
                       <div className="overflow-x-auto">
                         <table className="w-full text-sm">
                           <thead>
-                            <tr className="border-b border-[#0A1931]/10">
-                              <th className="pb-3 text-left font-medium text-[#0A1931]/70">Effect</th>
-                              <th className="pb-3 text-left font-medium text-[#0A1931]/70">Frequency</th>
-                              <th className="pb-3 text-left font-medium text-[#0A1931]/70">Severity</th>
+                            <tr className="border-b border-border/10">
+                              <th className="pb-3 text-left font-medium text-foreground/70">Effect</th>
+                              <th className="pb-3 text-left font-medium text-foreground/70">Frequency</th>
+                              <th className="pb-3 text-left font-medium text-foreground/70">Severity</th>
                             </tr>
                           </thead>
                           <tbody>
                             {SAFETY_ROWS.map((r) => (
-                              <tr key={r.effect} className="border-b border-[#0A1931]/5">
-                                <td className="py-3 text-[#0A1931]/80">{r.effect}</td>
-                                <td className="py-3 text-[#0A1931]/80">{r.freq}</td>
-                                <td className="py-3 text-[#0A1931]/80">{r.severity}</td>
+                              <tr key={r.effect} className="border-b border-border/5">
+                                <td className="py-3 text-foreground/80">{r.effect}</td>
+                                <td className="py-3 text-foreground/80">{r.freq}</td>
+                                <td className="py-3 text-foreground/80">{r.severity}</td>
                               </tr>
                             ))}
                           </tbody>
@@ -341,7 +341,7 @@ export function Mt2Product({ product, relatedProducts = [], vouches = [] }: Mt2P
                       </div>
                     </CardContent>
                   </Card>
-                  <Card className="border-0 bg-[#0A1931]">
+                  <Card className="border-0 bg-[#1C3D2A]">
                     <CardContent className="p-6 text-white">
                       <p className="text-xs font-medium uppercase tracking-wider text-white/70">Safety consideration</p>
                       <h4 className="mt-2 font-bold">Non-Hormonal Peptide Mechanism</h4>
@@ -361,48 +361,48 @@ export function Mt2Product({ product, relatedProducts = [], vouches = [] }: Mt2P
 
               {/* Compound Information */}
               <div>
-                <p className="text-xs font-medium uppercase tracking-wider text-[#0A1931]/60">🧪 Compound information</p>
-                <p className="mt-0.5 text-sm text-[#0A1931]/60">Technical specifications.</p>
+                <p className="text-xs font-medium uppercase tracking-wider text-foreground/60">🧪 Compound information</p>
+                <p className="mt-0.5 text-sm text-foreground/60">Technical specifications.</p>
                 <div className="mt-4 grid gap-6 lg:grid-cols-3">
-                  <Card className="border-[#0A1931]/10">
+                  <Card className="border-border/10">
                     <CardContent className="p-6">
-                      <p className="text-xs font-medium uppercase tracking-wider text-[#0A1931]/60 flex items-center gap-1">
+                      <p className="text-xs font-medium uppercase tracking-wider text-foreground/60 flex items-center gap-1">
                         <Beaker className="h-3.5 w-3.5" /> MOLECULAR PROFILE
                       </p>
-                      <h4 className="mt-3 font-bold text-[#0A1931]">What Is MT-2?</h4>
-                      <div className="mt-4 rounded-lg bg-[#0A1931]/5 p-4 space-y-2 text-sm">
-                        <div className="flex justify-between"><span className="text-[#0A1931]/60">Type</span><span className="font-medium">Synthetic cyclic heptapeptide, α-MSH analogue</span></div>
-                        <div className="flex justify-between"><span className="text-[#0A1931]/60">CAS</span><span className="font-medium">121062-08-6</span></div>
-                        <div className="flex justify-between"><span className="text-[#0A1931]/60">Formula</span><span className="font-medium">C52H73N15O11</span></div>
-                        <div className="flex justify-between"><span className="text-[#0A1931]/60">Weight</span><span className="font-medium">≈1084.2 g/mol</span></div>
-                        <div className="flex justify-between"><span className="text-[#0A1931]/60">Amino acids</span><span className="font-medium">Ac-Nle-Asp-His-D-Phe-Arg-Trp-Lys-NH2 (cyclic lactam between Asp and Lys)</span></div>
-                        <div className="flex justify-between"><span className="text-[#0A1931]/60">Sequence</span><span className="font-mono text-xs">Ac-Nle-cyclo[Asp-His-D-Phe-Arg-Trp-Lys]-NH2</span></div>
+                      <h4 className="mt-3 font-bold text-foreground">What Is MT-2?</h4>
+                      <div className="mt-4 rounded-lg bg-[#1C3D2A]/5 p-4 space-y-2 text-sm">
+                        <div className="flex justify-between"><span className="text-foreground/60">Type</span><span className="font-medium">Synthetic cyclic heptapeptide, α-MSH analogue</span></div>
+                        <div className="flex justify-between"><span className="text-foreground/60">CAS</span><span className="font-medium">121062-08-6</span></div>
+                        <div className="flex justify-between"><span className="text-foreground/60">Formula</span><span className="font-medium">C52H73N15O11</span></div>
+                        <div className="flex justify-between"><span className="text-foreground/60">Weight</span><span className="font-medium">≈1084.2 g/mol</span></div>
+                        <div className="flex justify-between"><span className="text-foreground/60">Amino acids</span><span className="font-medium">Ac-Nle-Asp-His-D-Phe-Arg-Trp-Lys-NH2 (cyclic lactam between Asp and Lys)</span></div>
+                        <div className="flex justify-between"><span className="text-foreground/60">Sequence</span><span className="font-mono text-xs">Ac-Nle-cyclo[Asp-His-D-Phe-Arg-Trp-Lys]-NH2</span></div>
                       </div>
                     </CardContent>
                   </Card>
-                  <Card className="border-[#0A1931]/10">
+                  <Card className="border-border/10">
                     <CardContent className="p-6">
-                      <p className="text-xs font-medium uppercase tracking-wider text-[#0A1931]/60 flex items-center gap-1">
+                      <p className="text-xs font-medium uppercase tracking-wider text-foreground/60 flex items-center gap-1">
                         <Package className="h-3.5 w-3.5" /> STORAGE REQUIREMENTS
                       </p>
-                      <h4 className="mt-3 font-bold text-[#0A1931]">Stability Information</h4>
+                      <h4 className="mt-3 font-bold text-foreground">Stability Information</h4>
                       <div className="mt-4 space-y-3">
-                        <div className="rounded-lg bg-[#0A1931]/5 p-3 flex items-center gap-2">
-                          <span className="text-sm text-[#0A1931]/80">Lyophilized:</span>
+                        <div className="rounded-lg bg-[#1C3D2A]/5 p-3 flex items-center gap-2">
+                          <span className="text-sm text-foreground/80">Lyophilized:</span>
                           <span className="text-sm font-medium">Frozen -20°C</span>
                         </div>
-                        <div className="rounded-lg bg-[#0A1931]/5 p-3 flex items-center gap-2">
-                          <span className="text-sm text-[#0A1931]/80">Reconstituted:</span>
+                        <div className="rounded-lg bg-[#1C3D2A]/5 p-3 flex items-center gap-2">
+                          <span className="text-sm text-foreground/80">Reconstituted:</span>
                           <span className="text-sm font-medium">Refrigerated after reconstitution</span>
                         </div>
-                        <div className="rounded-lg bg-[#0A1931]/5 p-3 flex items-center gap-2">
-                          <span className="text-sm text-[#0A1931]/80">Note:</span>
+                        <div className="rounded-lg bg-[#1C3D2A]/5 p-3 flex items-center gap-2">
+                          <span className="text-sm text-foreground/80">Note:</span>
                           <span className="text-sm font-medium">Follow supplier COA</span>
                         </div>
                       </div>
                     </CardContent>
                   </Card>
-                  <Card className="border-0 bg-[#0A1931]">
+                  <Card className="border-0 bg-[#1C3D2A]">
                     <CardContent className="p-6 text-white">
                       <p className="text-xs font-medium uppercase tracking-wider text-white/70 flex items-center gap-1">
                         <FileText className="h-3.5 w-3.5" /> REGULATORY STATUS
@@ -419,42 +419,42 @@ export function Mt2Product({ product, relatedProducts = [], vouches = [] }: Mt2P
 
             {product.coa_url && (
               <TabsContent value="coa" className="mt-0">
-                <p className="text-xs font-medium uppercase tracking-wider text-[#0A1931]/60">🧪 Certificate of Analysis</p>
-                <p className="mt-0.5 text-sm text-[#0A1931]/60">Third party tested.</p>
-                <CoaDocumentPanel coaUrl={product.coa_url} frameClassName="border-[#0A1931]/10" />
+                <p className="text-xs font-medium uppercase tracking-wider text-foreground/60">🧪 Certificate of Analysis</p>
+                <p className="mt-0.5 text-sm text-foreground/60">Third party tested.</p>
+                <CoaDocumentPanel coaUrl={product.coa_url} frameClassName="border-border/10" />
               </TabsContent>
             )}
 
             <TabsContent value="reviews" className="mt-0">
-              <p className="text-xs font-medium uppercase tracking-wider text-[#0A1931]/60">⭐ Reviews</p>
-              <p className="mt-0.5 text-sm text-[#0A1931]/60">Customer feedback.</p>
+              <p className="text-xs font-medium uppercase tracking-wider text-foreground/60">⭐ Reviews</p>
+              <p className="mt-0.5 text-sm text-foreground/60">Customer feedback.</p>
               <div className="mt-4 space-y-4">
                 {productVouches.length > 0 ? (
                   productVouches.map((v) => (
-                    <Card key={v.id} className="border-[#0A1931]/10">
+                    <Card key={v.id} className="border-border/10">
                       <CardContent className="p-6">
                         <div className="flex items-center gap-2 mb-2">
                           <div className="flex">
                             {[1, 2, 3, 4, 5].map((i) => (
                               <Star
                                 key={i}
-                                className={`h-4 w-4 ${i <= v.rating ? 'fill-amber-400 text-amber-400' : 'text-[#0A1931]/20'}`}
+                                className={`h-4 w-4 ${i <= v.rating ? 'fill-amber-400 text-amber-400' : 'text-foreground/20'}`}
                               />
                             ))}
                           </div>
-                          <span className="font-medium text-[#0A1931]">{v.author_name}</span>
+                          <span className="font-medium text-foreground">{v.author_name}</span>
                           {v.verified && (
-                            <span className="text-xs text-[#0A1931]/60">Verified</span>
+                            <span className="text-xs text-foreground/60">Verified</span>
                           )}
                         </div>
-                        <p className="text-sm text-[#0A1931]/80">{v.content}</p>
+                        <p className="text-sm text-foreground/80">{v.content}</p>
                       </CardContent>
                     </Card>
                   ))
                 ) : (
-                  <Card className="border-[#0A1931]/10">
+                  <Card className="border-border/10">
                     <CardContent className="p-6">
-                      <p className="text-sm text-[#0A1931]/80">No reviews yet for this product.</p>
+                      <p className="text-sm text-foreground/80">No reviews yet for this product.</p>
                     </CardContent>
                   </Card>
                 )}
@@ -463,12 +463,12 @@ export function Mt2Product({ product, relatedProducts = [], vouches = [] }: Mt2P
           </Tabs>
         </div>
 
-        <p className="mt-12 text-center text-xs text-[#0A1931]/50">
+        <p className="mt-12 text-center text-xs text-foreground/50">
           For research purposes only. Not for human consumption.
         </p>
 
         {relatedProducts.length > 0 && (
-          <div className="mt-16 border-t border-[#0A1931]/10 pt-12">
+          <div className="mt-16 border-t border-border/10 pt-12">
             <RelatedProducts products={relatedProducts} />
           </div>
         )}

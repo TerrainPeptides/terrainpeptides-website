@@ -1,53 +1,72 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { Button } from '@/components/ui/button'
-import { ArrowRight } from 'lucide-react'
+import { Cormorant_Garamond } from 'next/font/google'
+
+const cormorant = Cormorant_Garamond({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  style: ['normal', 'italic'],
+  display: 'swap',
+})
 
 export function HeroSection() {
   return (
-    <section className="relative overflow-hidden bg-white text-[#0A1931]">
-      <div className="relative mx-auto max-w-7xl px-4 pb-20 pt-16 sm:px-6 sm:pb-28 sm:pt-20 lg:px-8 lg:pb-36 lg:pt-24">
-        <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
-          <div className="flex flex-col text-left">
-            <h1 className="text-balance text-4xl font-extrabold tracking-tight text-[#0A1931] sm:text-5xl lg:text-6xl">
-              Research-Grade Peptides.{' '}
-              <span className="text-[#0A1931]/70">Trusted by Scientists.</span>
+    <section className="relative overflow-hidden bg-section-subtle">
+      <div className="mx-auto max-w-7xl px-4 pb-0 pt-6 sm:px-6 sm:pt-8 lg:px-8 lg:pt-10">
+        <div className="flex flex-col gap-14 lg:gap-20 xl:flex-row xl:items-center xl:justify-between xl:gap-24">
+          {/* Copy — own column, room to breathe */}
+          <div className="flex max-w-xl flex-shrink-0 flex-col xl:max-w-[28rem]">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs font-semibold uppercase tracking-[0.12em] text-foreground/70 sm:text-sm">
+              <span className="flex items-center gap-1.5">
+                <span className="inline-block h-1.5 w-1.5 rounded-full bg-primary" />
+                US Made
+              </span>
+              <span className="flex items-center gap-1.5">
+                <span className="inline-block h-1.5 w-1.5 rounded-full bg-primary" />
+                ≥ 99% Purity
+              </span>
+            </div>
+
+            <h1
+              className={`${cormorant.className} mt-8 text-4xl font-normal leading-[1.15] tracking-tight text-foreground sm:text-5xl lg:text-[3.25rem] lg:leading-[1.12]`}
+            >
+              <span className="hero-headline-line1 block">Peptides that are</span>
+              <span className="hero-headline-line2 mt-2 block sm:mt-3">
+                <span className="font-semibold italic">pure</span>
+                {' '}&amp; <span className="font-semibold not-italic">trusted</span>
+              </span>
             </h1>
 
-            <p className="mt-6 max-w-lg text-pretty text-lg leading-relaxed text-[#0A1931]/75 sm:text-xl">
-              99%+ purity, third-party tested, shipped from our USA warehouse. The standard your research demands.
+            <p className="hero-subhead-enter mt-8 max-w-lg text-base leading-[1.7] text-foreground/85 sm:text-[1.05rem]">
+              Shop US Made, ≥99% purity RUO (Research Use Only) peptides with a focus on purity &amp; transparency.
             </p>
 
-            <div className="mt-10 flex flex-col items-start gap-4 sm:flex-row">
-              <Link href="/shop">
-                <Button
-                  size="lg"
-                  className="rounded-lg bg-[#0A1931] px-8 text-white shadow-lg hover:bg-[#0A1931]/90"
-                >
+            <div className="mt-10">
+              <Link
+                href="/shop"
+                className="hero-cta-enter group relative inline-flex min-w-[min(100%,280px)] items-center justify-center overflow-hidden rounded-full border-2 border-black bg-primary px-16 py-3.5 text-sm font-semibold shadow-md sm:min-w-[300px] sm:px-20"
+              >
+                <span
+                  className="absolute inset-0 origin-left scale-x-0 bg-neutral-100 transition-transform duration-500 ease-out group-hover:scale-x-100"
+                  aria-hidden
+                />
+                <span className="relative z-10 text-white transition-colors duration-300 group-hover:text-primary">
                   Shop Now
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
-              <Link href="/faq">
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="rounded-lg border-[#0A1931]/20 text-[#0A1931] hover:bg-[#0A1931]/5"
-                >
-                  Learn More
-                </Button>
+                </span>
               </Link>
             </div>
           </div>
 
-          <div className="relative flex min-h-[320px] items-center justify-center lg:min-h-[480px]">
-            <div className="relative h-[320px] w-[320px] sm:h-[400px] sm:w-[400px] lg:h-[480px] lg:w-[480px]">
+          {/* Image — separated column, larger, no colored frame */}
+          <div className="flex w-full flex-1 justify-center xl:min-w-0 xl:justify-end">
+            <div className="relative aspect-square w-full max-w-[min(100%,520px)] sm:max-w-[580px] lg:max-w-[640px] xl:max-w-[min(52vw,680px)]">
               <Image
-                src="/images/home-hero-ghk-cu.png"
-                alt="GHK-Cu peptide vial — Terrain Peptides"
+                src="/images/hero-ghk-cu-vial.png"
+                alt="GHK-Cu research peptide vial"
                 fill
-                className="object-contain drop-shadow-xl"
+                className="object-contain object-center"
                 priority
+                sizes="(max-width: 1280px) 90vw, 680px"
               />
             </div>
           </div>

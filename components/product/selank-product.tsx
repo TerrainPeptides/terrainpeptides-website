@@ -284,8 +284,8 @@ function RiskComparisonBarRow({
 }) {
   return (
     <div className="flex items-center gap-2 sm:gap-3">
-      <span className="w-36 shrink-0 text-xs leading-snug text-[#0A1931]/70 sm:w-48">{label}</span>
-      <div className="h-3 min-w-0 flex-1 overflow-hidden rounded-full bg-[#0A1931]/10">
+      <span className="w-36 shrink-0 text-xs leading-snug text-foreground/70 sm:w-48">{label}</span>
+      <div className="h-3 min-w-0 flex-1 overflow-hidden rounded-full bg-[#1C3D2A]/10">
         <div className="h-full rounded-full" style={{ width: `${barWidth}%`, backgroundColor: barColor }} />
       </div>
       <span className="shrink-0 text-xs font-medium" style={{ color: barColor }}>
@@ -304,11 +304,11 @@ export function SelankProduct({ product, relatedProducts = [], vouches = [] }: S
   const imageSrc = product.image_url || '/images/selank-vial.png'
 
   return (
-    <div className="min-h-screen bg-white text-[#0A1931]">
+    <div className="min-h-screen bg-white text-foreground">
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <Link
           href="/shop"
-          className="mb-6 inline-flex items-center gap-1 text-sm text-[#0A1931]/70 transition-colors hover:text-[#0A1931]"
+          className="mb-6 inline-flex items-center gap-1 text-sm text-foreground/70 transition-colors hover:text-foreground"
         >
           <ChevronLeft className="h-4 w-4" />
           Back to Shop
@@ -319,7 +319,7 @@ export function SelankProduct({ product, relatedProducts = [], vouches = [] }: S
             ref={section1.ref}
             className={`transition-all duration-500 ease-out ${section1.visible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}
           >
-            <Card className="overflow-hidden border-[#0A1931]/10 bg-[#f8f9fa]">
+            <Card className="overflow-hidden border-border/10 bg-[#f8f9fa]">
               <CardContent className="flex min-h-[320px] items-center justify-center p-8 sm:min-h-[400px] lg:min-h-[440px]">
                 {imageSrc ? (
                   <div className="relative h-[280px] w-full max-w-[280px] transition-transform duration-300 ease-out hover:scale-[1.02] sm:h-[340px] sm:max-w-[340px] lg:h-[380px] lg:max-w-[380px]">
@@ -334,7 +334,7 @@ export function SelankProduct({ product, relatedProducts = [], vouches = [] }: S
                     />
                   </div>
                 ) : (
-                  <FlaskConical className="h-32 w-32 text-[#0A1931]/20" />
+                  <FlaskConical className="h-32 w-32 text-foreground/20" />
                 )}
               </CardContent>
             </Card>
@@ -348,10 +348,10 @@ export function SelankProduct({ product, relatedProducts = [], vouches = [] }: S
           className={`mt-16 transition-all duration-500 ease-out ${section2.visible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}
         >
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="mb-6 h-14 flex-wrap gap-2 bg-[#0A1931]/5 p-2">
+            <TabsList className="mb-6 h-14 flex-wrap gap-2 bg-[#1C3D2A]/5 p-2">
               <TabsTrigger
                 value="research"
-                className="gap-2 px-6 py-3 text-base data-[state=active]:bg-white data-[state=active]:text-[#0A1931]"
+                className="gap-2 px-6 py-3 text-base data-[state=active]:bg-white data-[state=active]:text-foreground"
               >
                 <FileText className="h-4 w-4" />
                 Research
@@ -359,7 +359,7 @@ export function SelankProduct({ product, relatedProducts = [], vouches = [] }: S
               {product.coa_url && (
                 <TabsTrigger
                   value="coa"
-                  className="gap-2 px-6 py-3 text-base data-[state=active]:bg-white data-[state=active]:text-[#0A1931]"
+                  className="gap-2 px-6 py-3 text-base data-[state=active]:bg-white data-[state=active]:text-foreground"
                 >
                   <FileText className="h-4 w-4" />
                   COA
@@ -367,7 +367,7 @@ export function SelankProduct({ product, relatedProducts = [], vouches = [] }: S
               )}
               <TabsTrigger
                 value="reviews"
-                className="gap-2 px-6 py-3 text-base data-[state=active]:bg-white data-[state=active]:text-[#0A1931]"
+                className="gap-2 px-6 py-3 text-base data-[state=active]:bg-white data-[state=active]:text-foreground"
               >
                 <Star className="h-4 w-4" />
                 Reviews
@@ -376,21 +376,21 @@ export function SelankProduct({ product, relatedProducts = [], vouches = [] }: S
 
             <TabsContent value="research" className="mt-0 space-y-12 text-[1.1em]">
               <div>
-                <p className="text-xs font-medium uppercase tracking-wider text-[#0A1931]/60">
+                <p className="text-xs font-medium uppercase tracking-wider text-foreground/60">
                   ✨ Clinical outcomes
                 </p>
-                <p className="mt-0.5 text-sm text-[#0A1931]/60">Key research metrics.</p>
+                <p className="mt-0.5 text-sm text-foreground/60">Key research metrics.</p>
                 <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
                   {STAT_CARDS.map((s) => (
-                    <Card key={s.label} className="border-[#0A1931]/10">
+                    <Card key={s.label} className="border-border/10">
                       <CardContent className="p-6 text-center">
                         <p className="text-2xl font-bold" style={{ color: GREEN }}>
                           {s.value}
                         </p>
-                        <p className="mt-1 text-xs font-medium uppercase tracking-wider text-[#0A1931]/80">
+                        <p className="mt-1 text-xs font-medium uppercase tracking-wider text-foreground/80">
                           {s.label}
                         </p>
-                        <p className="mt-1 text-xs text-[#0A1931]/60">{s.subtext}</p>
+                        <p className="mt-1 text-xs text-foreground/60">{s.subtext}</p>
                       </CardContent>
                     </Card>
                   ))}
@@ -399,19 +399,19 @@ export function SelankProduct({ product, relatedProducts = [], vouches = [] }: S
 
               {/* How it Works — 3-circle pathways + Key Discovery (matches Semax / GHK-Cu) */}
               <div>
-                <p className="text-xs font-medium uppercase tracking-wider text-[#0A1931]/60">
+                <p className="text-xs font-medium uppercase tracking-wider text-foreground/60">
                   🧬 How Selank Works
                 </p>
-                <p className="mt-0.5 text-sm text-[#0A1931]/60">
+                <p className="mt-0.5 text-sm text-foreground/60">
                   What&apos;s actually happening in your brain
                 </p>
                 <div className="mt-4 grid gap-6 lg:grid-cols-5">
-                  <Card className="border-[#0A1931]/10 lg:col-span-3">
+                  <Card className="border-border/10 lg:col-span-3">
                     <CardContent className="p-6">
-                      <p className="text-xs font-medium uppercase tracking-wider text-[#0A1931]/60">
+                      <p className="text-xs font-medium uppercase tracking-wider text-foreground/60">
                         The science, simplified
                       </p>
-                      <h3 className="mt-2 font-bold text-[#0A1931]">Multi-Pathway Calm Support</h3>
+                      <h3 className="mt-2 font-bold text-foreground">Multi-Pathway Calm Support</h3>
                       <div className="mt-6 flex flex-wrap items-start justify-between gap-6">
                         {MECHANISM_NODES.map((n) => (
                           <div
@@ -419,13 +419,13 @@ export function SelankProduct({ product, relatedProducts = [], vouches = [] }: S
                             className="flex min-w-[140px] flex-1 flex-col items-center text-center"
                           >
                             <div
-                              className={`flex h-14 w-14 items-center justify-center rounded-full text-xs font-semibold text-[#0A1931] ${n.color}`}
+                              className={`flex h-14 w-14 items-center justify-center rounded-full text-xs font-semibold text-foreground ${n.color}`}
                             >
                               {n.label}
                             </div>
-                            <p className="mt-2 font-semibold text-[#0A1931]">{n.title}</p>
-                            <p className="text-xs text-[#0A1931]/70">{n.sub}</p>
-                            <ul className="mt-2 space-y-0.5 text-left text-xs text-[#0A1931]/70">
+                            <p className="mt-2 font-semibold text-foreground">{n.title}</p>
+                            <p className="text-xs text-foreground/70">{n.sub}</p>
+                            <ul className="mt-2 space-y-0.5 text-left text-xs text-foreground/70">
                               {n.bullets.map((b) => (
                                 <li key={b}>• {b}</li>
                               ))}
@@ -433,10 +433,10 @@ export function SelankProduct({ product, relatedProducts = [], vouches = [] }: S
                           </div>
                         ))}
                       </div>
-                      <p className="mt-6 text-xs text-[#0A1931]/50">Source: Peer-reviewed literature.</p>
+                      <p className="mt-6 text-xs text-foreground/50">Source: Peer-reviewed literature.</p>
                     </CardContent>
                   </Card>
-                  <Card className="border-0 bg-[#0A1931] lg:col-span-2">
+                  <Card className="border-0 bg-[#1C3D2A] lg:col-span-2">
                     <CardContent className="p-6 text-white">
                       <p className="text-xs font-medium uppercase tracking-wider text-white/70">
                         Key discovery
@@ -455,30 +455,30 @@ export function SelankProduct({ product, relatedProducts = [], vouches = [] }: S
 
               {/* What research has shown — matches Semax / GHK-Cu two-column layout */}
               <div>
-                <p className="text-xs font-medium uppercase tracking-wider text-[#0A1931]/60">
+                <p className="text-xs font-medium uppercase tracking-wider text-foreground/60">
                   📊 What Research Has Shown
                 </p>
-                <p className="mt-0.5 text-sm text-[#0A1931]/60">Real results from real studies</p>
+                <p className="mt-0.5 text-sm text-foreground/60">Real results from real studies</p>
                 <div className="mt-4 grid gap-6 lg:grid-cols-2">
-                  <Card className="border-[#0A1931]/10">
+                  <Card className="border-border/10">
                     <CardContent className="p-6">
-                      <span className="rounded-full bg-[#0A1931]/5 px-3 py-1 text-xs text-[#0A1931]/70">
+                      <span className="rounded-full bg-[#1C3D2A]/5 px-3 py-1 text-xs text-foreground/70">
                         🗓️ {SELANK_STUDY_CONTEXT}
                       </span>
                       <p className="mt-4 text-4xl font-bold" style={{ color: GREEN }}>
                         63%
                       </p>
-                      <p className="text-xs font-medium uppercase tracking-wider text-[#0A1931]/70">
+                      <p className="text-xs font-medium uppercase tracking-wider text-foreground/70">
                         OF PATIENTS REPORTED SIGNIFICANTLY LOWER ANXIETY AFTER 7 DAYS
                       </p>
-                      <p className="mt-4 text-sm font-semibold text-[#0A1931]">Clinical comparison</p>
+                      <p className="mt-4 text-sm font-semibold text-foreground">Clinical comparison</p>
                       <div className="mt-3 space-y-3">
                         {SELANK_COMPARISON_ROWS.map((row) => (
                           <div key={row.label} className="flex items-center gap-2 sm:gap-3">
-                            <span className="w-28 shrink-0 text-xs leading-snug text-[#0A1931]/70 sm:w-44">
+                            <span className="w-28 shrink-0 text-xs leading-snug text-foreground/70 sm:w-44">
                               {row.label}
                             </span>
-                            <div className="h-3 min-w-0 flex-1 overflow-hidden rounded-full bg-[#0A1931]/10">
+                            <div className="h-3 min-w-0 flex-1 overflow-hidden rounded-full bg-[#1C3D2A]/10">
                               <div
                                 className="h-full rounded-full"
                                 style={{ width: `${row.barWidth}%`, backgroundColor: GREEN }}
@@ -490,35 +490,35 @@ export function SelankProduct({ product, relatedProducts = [], vouches = [] }: S
                           </div>
                         ))}
                       </div>
-                      <p className="mt-4 text-sm leading-relaxed text-[#0A1931]/80">{SELANK_STUDY_DETAILS}</p>
-                      <div className="mt-4 rounded-lg bg-[#0A1931]/5 p-3 text-xs text-[#0A1931]/60">
+                      <p className="mt-4 text-sm leading-relaxed text-foreground/80">{SELANK_STUDY_DETAILS}</p>
+                      <div className="mt-4 rounded-lg bg-[#1C3D2A]/5 p-3 text-xs text-foreground/60">
                         💡 Note: Outcomes summarized from published clinical research; approval status refers to
                         Russia.
                       </div>
                     </CardContent>
                   </Card>
-                  <Card className="border-[#0A1931]/10">
+                  <Card className="border-border/10">
                     <CardContent className="p-6">
-                      <p className="text-xs font-medium uppercase tracking-wider text-[#0A1931]/60">
+                      <p className="text-xs font-medium uppercase tracking-wider text-foreground/60">
                         📝 Key trial results
                       </p>
-                      <h3 className="mt-2 font-bold text-[#0A1931]">Key Trial Results</h3>
+                      <h3 className="mt-2 font-bold text-foreground">Key Trial Results</h3>
                       <div className="mt-6 space-y-6">
                         {SELANK_KEY_TRIAL_FINDINGS.map((t) => (
                           <div key={t.label}>
                             <div className="flex justify-between text-sm">
-                              <span className="font-bold text-[#0A1931]">{t.stat}</span>
-                              <span className="max-w-[55%] text-right text-[#0A1931]/70">{t.label}</span>
+                              <span className="font-bold text-foreground">{t.stat}</span>
+                              <span className="max-w-[55%] text-right text-foreground/70">{t.label}</span>
                             </div>
-                            <p className="text-sm text-[#0A1931]/80">{t.sub}</p>
+                            <p className="text-sm text-foreground/80">{t.sub}</p>
                             <Progress
                               value={t.progress}
-                              className="progress-green mt-2 h-2 bg-[#0A1931]/10"
+                              className="progress-green mt-2 h-2 bg-[#1C3D2A]/10"
                             />
                           </div>
                         ))}
                       </div>
-                      <div className="mt-6 rounded-lg bg-[#0A1931]/5 p-3 text-xs text-[#0A1931]/60">
+                      <div className="mt-6 rounded-lg bg-[#1C3D2A]/5 p-3 text-xs text-foreground/60">
                         💡 Note: Measurement methods vary by study. Outcomes from published clinical and preclinical
                         research.
                       </div>
@@ -529,24 +529,24 @@ export function SelankProduct({ product, relatedProducts = [], vouches = [] }: S
 
               {/* Beyond Anxiety Relief — same pattern as Semax Beyond focus */}
               <div>
-                <p className="text-xs font-medium uppercase tracking-wider text-[#0A1931]/60">
+                <p className="text-xs font-medium uppercase tracking-wider text-foreground/60">
                   ✨ Beyond anxiety relief
                 </p>
-                <p className="mt-0.5 text-sm text-[#0A1931]/60">
+                <p className="mt-0.5 text-sm text-foreground/60">
                   Other areas Selank has shown results in research
                 </p>
                 <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                   {BEYOND_ANXIETY_HIGHLIGHTS.map((b) => (
                     <Card
                       key={b.title}
-                      className={`border-[#0A1931]/10 ${b.highlight ? 'bg-[#16a34a]/5' : ''}`}
+                      className={`border-border/10 ${b.highlight ? 'bg-[#16a34a]/5' : ''}`}
                     >
                       <CardContent className="p-6">
-                        <p className="text-xs font-medium uppercase tracking-wider text-[#0A1931]/60">
+                        <p className="text-xs font-medium uppercase tracking-wider text-foreground/60">
                           {b.label}
                         </p>
-                        <h4 className="mt-2 font-bold text-[#0A1931]">{b.title}</h4>
-                        <p className="mt-2 text-sm text-[#0A1931]/70">{b.desc}</p>
+                        <h4 className="mt-2 font-bold text-foreground">{b.title}</h4>
+                        <p className="mt-2 text-sm text-foreground/70">{b.desc}</p>
                       </CardContent>
                     </Card>
                   ))}
@@ -554,23 +554,23 @@ export function SelankProduct({ product, relatedProducts = [], vouches = [] }: S
               </div>
 
               <div>
-                <p className="text-xs font-medium uppercase tracking-wider text-[#0A1931]/60">
+                <p className="text-xs font-medium uppercase tracking-wider text-foreground/60">
                   📋 Detailed findings
                 </p>
-                <p className="mt-0.5 text-sm text-[#0A1931]/60">Study-specific outcomes.</p>
+                <p className="mt-0.5 text-sm text-foreground/60">Study-specific outcomes.</p>
                 <div className="mt-4 grid gap-6 lg:grid-cols-3">
                   {BEYOND_ANXIETY_DETAILED.map((d) => (
-                    <Card key={d.title} className="border-[#0A1931]/10">
+                    <Card key={d.title} className="border-border/10">
                       <CardContent className="p-6">
-                        <h4 className="font-bold text-[#0A1931]">{d.title}</h4>
-                        <p className="mt-3 text-sm leading-relaxed text-[#0A1931]/80">{d.body}</p>
-                        <ul className="mt-4 space-y-2 text-sm text-[#0A1931]/80">
+                        <h4 className="font-bold text-foreground">{d.title}</h4>
+                        <p className="mt-3 text-sm leading-relaxed text-foreground/80">{d.body}</p>
+                        <ul className="mt-4 space-y-2 text-sm text-foreground/80">
                           {d.metrics.map((m) => (
                             <li key={m}>• {m}</li>
                           ))}
                         </ul>
                         <div
-                          className={`mt-4 rounded-lg border-l-4 ${d.calloutBorder} bg-[#0A1931]/5 p-3 text-xs text-[#0A1931]/80`}
+                          className={`mt-4 rounded-lg border-l-4 ${d.calloutBorder} bg-[#1C3D2A]/5 p-3 text-xs text-foreground/80`}
                         >
                           {d.callout}
                         </div>
@@ -582,30 +582,30 @@ export function SelankProduct({ product, relatedProducts = [], vouches = [] }: S
 
               {/* Safety Profile — table + dark callout (Semax pattern) */}
               <div>
-                <p className="text-xs font-medium uppercase tracking-wider text-[#0A1931]/60">
+                <p className="text-xs font-medium uppercase tracking-wider text-foreground/60">
                   🛡️ Safety Profile
                 </p>
-                <p className="mt-0.5 text-sm text-[#0A1931]/60">
+                <p className="mt-0.5 text-sm text-foreground/60">
                   What the research actually shows about risk
                 </p>
                 <div className="mt-4 grid gap-6 lg:grid-cols-2">
-                  <Card className="border-[#0A1931]/10">
+                  <Card className="border-border/10">
                     <CardContent className="p-6">
                       <div className="overflow-x-auto">
                         <table className="w-full text-sm">
                           <thead>
-                            <tr className="border-b border-[#0A1931]/10">
-                              <th className="pb-3 text-left font-medium text-[#0A1931]/70">Effect</th>
-                              <th className="pb-3 text-left font-medium text-[#0A1931]/70">Frequency</th>
-                              <th className="pb-3 text-left font-medium text-[#0A1931]/70">Severity</th>
+                            <tr className="border-b border-border/10">
+                              <th className="pb-3 text-left font-medium text-foreground/70">Effect</th>
+                              <th className="pb-3 text-left font-medium text-foreground/70">Frequency</th>
+                              <th className="pb-3 text-left font-medium text-foreground/70">Severity</th>
                             </tr>
                           </thead>
                           <tbody>
                             {SELANK_SAFETY_TABLE_ROWS.map((r) => (
-                              <tr key={r.effect} className="border-b border-[#0A1931]/5">
-                                <td className="py-3 text-[#0A1931]/80">{r.effect}</td>
-                                <td className="py-3 text-[#0A1931]/80">{r.freq}</td>
-                                <td className="py-3 text-[#0A1931]/80">{r.severity}</td>
+                              <tr key={r.effect} className="border-b border-border/5">
+                                <td className="py-3 text-foreground/80">{r.effect}</td>
+                                <td className="py-3 text-foreground/80">{r.freq}</td>
+                                <td className="py-3 text-foreground/80">{r.severity}</td>
                               </tr>
                             ))}
                           </tbody>
@@ -613,7 +613,7 @@ export function SelankProduct({ product, relatedProducts = [], vouches = [] }: S
                       </div>
                     </CardContent>
                   </Card>
-                  <Card className="border-0 bg-[#0A1931]">
+                  <Card className="border-0 bg-[#1C3D2A]">
                     <CardContent className="p-6 text-white">
                       <p className="text-xs font-medium uppercase tracking-wider text-white/70">
                         Safety advantage
@@ -630,19 +630,19 @@ export function SelankProduct({ product, relatedProducts = [], vouches = [] }: S
               </div>
 
               <div>
-                <p className="text-xs font-medium uppercase tracking-wider text-[#0A1931]/60">
+                <p className="text-xs font-medium uppercase tracking-wider text-foreground/60">
                   ✅ Safety advantages
                 </p>
-                <p className="mt-0.5 text-sm text-[#0A1931]/60">
+                <p className="mt-0.5 text-sm text-foreground/60">
                   Mechanistic reasons Selank is well tolerated in research.
                 </p>
                 <div className="mt-4 grid gap-6 lg:grid-cols-3">
                   {SELANK_SAFETY_ADVANTAGE_CARDS.map((c) => (
-                    <Card key={c.title} className="border-[#0A1931]/10">
+                    <Card key={c.title} className="border-border/10">
                       <CardContent className="p-6">
-                        <h4 className="font-bold text-[#0A1931]">{c.title}</h4>
-                        <p className="mt-3 text-sm leading-relaxed text-[#0A1931]/80">{c.body}</p>
-                        <ul className="mt-4 space-y-2 text-sm text-[#0A1931]/80">
+                        <h4 className="font-bold text-foreground">{c.title}</h4>
+                        <p className="mt-3 text-sm leading-relaxed text-foreground/80">{c.body}</p>
+                        <ul className="mt-4 space-y-2 text-sm text-foreground/80">
                           {c.bullets.map((b) => (
                             <li key={b}>• {b}</li>
                           ))}
@@ -654,17 +654,17 @@ export function SelankProduct({ product, relatedProducts = [], vouches = [] }: S
               </div>
 
               <div>
-                <p className="text-xs font-medium uppercase tracking-wider text-[#0A1931]/60">
+                <p className="text-xs font-medium uppercase tracking-wider text-foreground/60">
                   📊 Side effect risk
                 </p>
-                <p className="mt-0.5 text-sm font-semibold text-[#0A1931]">
+                <p className="mt-0.5 text-sm font-semibold text-foreground">
                   How Selank Compares to Common Alternatives
                 </p>
-                <Card className="mt-4 border-[#0A1931]/10">
+                <Card className="mt-4 border-border/10">
                   <CardContent className="p-6">
                     <div className="rounded-xl border border-green-600/25 bg-green-600/[0.06] p-4">
-                      <p className="text-xs font-semibold uppercase tracking-wider text-[#0A1931]">Selank</p>
-                      <p className="mt-0.5 text-xs text-[#0A1931]/60">This product — reported risk in research</p>
+                      <p className="text-xs font-semibold uppercase tracking-wider text-foreground">Selank</p>
+                      <p className="mt-0.5 text-xs text-foreground/60">This product — reported risk in research</p>
                       <div className="mt-4">
                         <RiskComparisonBarRow
                           label={SELANK_RISK_ROW.label}
@@ -675,11 +675,11 @@ export function SelankProduct({ product, relatedProducts = [], vouches = [] }: S
                       </div>
                     </div>
 
-                    <div className="mt-8 border-t border-[#0A1931]/10 pt-8">
-                      <p className="text-xs font-semibold uppercase tracking-wider text-[#0A1931]/70">
+                    <div className="mt-8 border-t border-border/10 pt-8">
+                      <p className="text-xs font-semibold uppercase tracking-wider text-foreground/70">
                         Common alternatives
                       </p>
-                      <p className="mt-0.5 text-xs text-[#0A1931]/60">
+                      <p className="mt-0.5 text-xs text-foreground/60">
                         Typical anxiety treatments — for context only, not equivalent products
                       </p>
                       <div className="mt-4 space-y-3">
@@ -701,44 +701,44 @@ export function SelankProduct({ product, relatedProducts = [], vouches = [] }: S
 
             {product.coa_url && (
               <TabsContent value="coa" className="mt-0">
-                <p className="text-xs font-medium uppercase tracking-wider text-[#0A1931]/60">
+                <p className="text-xs font-medium uppercase tracking-wider text-foreground/60">
                   🧪 Certificate of Analysis
                 </p>
-                <p className="mt-0.5 text-sm text-[#0A1931]/60">Third party tested.</p>
-                <CoaDocumentPanel coaUrl={product.coa_url} frameClassName="border-[#0A1931]/10" />
+                <p className="mt-0.5 text-sm text-foreground/60">Third party tested.</p>
+                <CoaDocumentPanel coaUrl={product.coa_url} frameClassName="border-border/10" />
               </TabsContent>
             )}
 
             <TabsContent value="reviews" className="mt-0">
-              <p className="text-xs font-medium uppercase tracking-wider text-[#0A1931]/60">⭐ Reviews</p>
-              <p className="mt-0.5 text-sm text-[#0A1931]/60">Customer feedback.</p>
+              <p className="text-xs font-medium uppercase tracking-wider text-foreground/60">⭐ Reviews</p>
+              <p className="mt-0.5 text-sm text-foreground/60">Customer feedback.</p>
               <div className="mt-4 space-y-4">
                 {productVouches.length > 0 ? (
                   productVouches.map((v) => (
-                    <Card key={v.id} className="border-[#0A1931]/10">
+                    <Card key={v.id} className="border-border/10">
                       <CardContent className="p-6">
                         <div className="mb-2 flex items-center gap-2">
                           <div className="flex">
                             {[1, 2, 3, 4, 5].map((i) => (
                               <Star
                                 key={i}
-                                className={`h-4 w-4 ${i <= v.rating ? 'fill-amber-400 text-amber-400' : 'text-[#0A1931]/20'}`}
+                                className={`h-4 w-4 ${i <= v.rating ? 'fill-amber-400 text-amber-400' : 'text-foreground/20'}`}
                               />
                             ))}
                           </div>
-                          <span className="font-medium text-[#0A1931]">{v.author_name}</span>
+                          <span className="font-medium text-foreground">{v.author_name}</span>
                           {v.verified && (
-                            <span className="text-xs text-[#0A1931]/60">Verified</span>
+                            <span className="text-xs text-foreground/60">Verified</span>
                           )}
                         </div>
-                        <p className="text-sm text-[#0A1931]/80">{v.content}</p>
+                        <p className="text-sm text-foreground/80">{v.content}</p>
                       </CardContent>
                     </Card>
                   ))
                 ) : (
-                  <Card className="border-[#0A1931]/10">
+                  <Card className="border-border/10">
                     <CardContent className="p-6">
-                      <p className="text-sm text-[#0A1931]/80">No reviews yet for this product.</p>
+                      <p className="text-sm text-foreground/80">No reviews yet for this product.</p>
                     </CardContent>
                   </Card>
                 )}
@@ -747,12 +747,12 @@ export function SelankProduct({ product, relatedProducts = [], vouches = [] }: S
           </Tabs>
         </div>
 
-        <p className="mt-12 text-center text-xs text-[#0A1931]/50">
+        <p className="mt-12 text-center text-xs text-foreground/50">
           For research purposes only. Not for human consumption.
         </p>
 
         {relatedProducts.length > 0 ? (
-          <div className="mt-16 border-t border-[#0A1931]/10 pt-12">
+          <div className="mt-16 border-t border-border/10 pt-12">
             <RelatedProducts products={relatedProducts} />
           </div>
         ) : null}

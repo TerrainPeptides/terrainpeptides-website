@@ -636,11 +636,13 @@ export default function AdminProductsPage() {
                     }
                     placeholder="1 = 1 vial per unit"
                   />
-                  <p className="text-xs text-muted-foreground">Price × quantity × count at checkout</p>
+                  <p className="text-xs text-muted-foreground">
+                    Shown on the product page when &gt; 1. Totals are per-vial price × vial quantity in cart.
+                  </p>
                 </div>
               </div>
 
-              <div className="flex gap-6">
+              <div className="flex flex-wrap gap-6">
                 <div className="flex items-center gap-2">
                   <Switch
                     id="in_stock"
@@ -671,6 +673,18 @@ export default function AdminProductsPage() {
                   />
                   <Label htmlFor="hidden" className="text-muted-foreground" title="Hidden products won't appear in the shop">
                     Hidden from shop
+                  </Label>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Switch
+                    id="ten_vial_package"
+                    checked={formData.vial_count === 10}
+                    onCheckedChange={(checked) =>
+                      setFormData({ ...formData, vial_count: checked ? 10 : 1 })
+                    }
+                  />
+                  <Label htmlFor="ten_vial_package" title="Sets vials-per-unit to 10 for product detail display">
+                    10 Vial Package
                   </Label>
                 </div>
               </div>

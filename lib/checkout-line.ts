@@ -56,15 +56,12 @@ export function orderLineFromCheckoutItem(
     })
     throw new Error('INVALID_VARIANT')
   }
-  const vialCount = product.vial_count ?? 1
-  const totalVials = item.quantity * vialCount
-  const lineTotalCents = variant.price_cents * vialCount * item.quantity
+  const lineTotalCents = variant.price_cents * item.quantity
   const doseSuffix = variant.label ? ` — ${variant.label}` : ''
-  const vialSuffix = vialCount > 1 ? ` (${totalVials} vials)` : ''
   return {
     product_id: product.id,
-    product_name: `${product.name}${doseSuffix}${vialSuffix}`,
-    quantity: totalVials,
+    product_name: `${product.name}${doseSuffix}`,
+    quantity: item.quantity,
     price_cents: variant.price_cents,
     lineTotalCents,
   }

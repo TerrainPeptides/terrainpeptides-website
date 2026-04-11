@@ -1,7 +1,14 @@
 import { Suspense } from 'react'
+import { Cormorant_Garamond } from 'next/font/google'
 import { ShopContent } from '@/components/shop/shop-content'
-import { PartnerCTA } from '@/components/partner-cta'
 import { getProductsAsync } from '@/lib/data'
+
+const cormorant = Cormorant_Garamond({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  style: ['normal', 'italic'],
+  display: 'swap',
+})
 
 export const metadata = {
   title: 'Shop | Terrain Peptides',
@@ -13,14 +20,19 @@ export default async function ShopPage() {
 
   return (
     <>
-      <div className="bg-background">
+      <div className="bg-white">
         <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
           {/* Header */}
-          <div className="mb-10">
-            <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-              Shop Research Peptides
+          <div className="mb-10 text-center">
+            <p className={`${cormorant.className} text-[0.7rem] font-medium uppercase tracking-[0.28em] text-foreground/45 sm:text-xs`}>
+              Catalog
+            </p>
+            <h1
+              className={`${cormorant.className} mt-3 text-4xl font-bold tracking-tight text-foreground sm:text-5xl sm:tracking-tighter`}
+            >
+              Research Peptides
             </h1>
-            <p className="mt-2 text-muted-foreground">
+            <p className="mx-auto mt-4 max-w-lg text-sm leading-relaxed text-foreground/60">
               All products are third-party tested with 99%+ purity guaranteed.
             </p>
           </div>
@@ -30,7 +42,6 @@ export default async function ShopPage() {
           </Suspense>
         </div>
       </div>
-      <PartnerCTA />
     </>
   )
 }

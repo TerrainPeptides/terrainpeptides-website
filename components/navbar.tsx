@@ -37,11 +37,11 @@ function NavbarTickerPeriod({ duplicate }: { duplicate?: boolean }) {
     >
       {TICKER_ITEMS.map((text) => (
         <Fragment key={duplicate ? `d-${text}` : text}>
-          <span className="whitespace-nowrap text-xs font-semibold uppercase tracking-[0.12em] text-white sm:text-[13px] md:text-sm">
+          <span className="whitespace-nowrap text-[11px] font-semibold uppercase tracking-[0.12em] text-foreground/85 sm:text-xs md:text-[13px]">
             {text}
           </span>
           <span
-            className="shrink-0 select-none px-1 text-sm font-medium text-white sm:text-[15px] md:text-base"
+            className="shrink-0 select-none px-1 text-sm font-medium text-foreground/40 sm:text-[15px] md:text-base"
             aria-hidden
           >
             →
@@ -57,89 +57,91 @@ export function Navbar() {
   const { totalItems } = useCart()
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <nav className="mx-auto grid h-16 max-w-7xl grid-cols-[auto_1fr_auto] items-center px-4 sm:px-6 lg:px-8">
-        {/* Logo */}
-        <Link href="/" className="flex items-center justify-self-start">
-          <Image
-            src="/images/terrain-wordmark.png"
-            alt="Terrain Peptides"
-            width={220}
-            height={59}
-            className="h-9 w-auto contrast-[1.12] md:h-10"
-            priority
-          />
-        </Link>
-
-        {/* Desktop Navigation */}
-        <div className="hidden items-center justify-self-center gap-10 lg:gap-12 md:flex">
-          {navLinks.map(link => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="text-sm font-medium text-foreground/80 transition-colors hover:text-foreground"
-            >
-              {link.label}
-            </Link>
-          ))}
-        </div>
-
-        {/* Desktop Actions */}
-        <div className="hidden items-center justify-self-end gap-4 md:flex">
-          <Link href="/cart">
-            <Button variant="ghost" size="icon" className="relative">
-              <ShoppingCart className="h-5 w-5" />
-              {totalItems > 0 && (
-                <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs font-medium text-primary-foreground">
-                  {totalItems}
-                </span>
-              )}
-              <span className="sr-only">Cart</span>
-            </Button>
+    <header className="sticky top-0 z-50 w-full border-b border-black/10">
+      <div className="w-full bg-[#1C3D2A]">
+        <nav className="mx-auto grid h-[3.5rem] max-w-7xl grid-cols-[auto_1fr_auto] items-center px-4 sm:h-[3.75rem] sm:px-6 lg:px-8">
+          {/* Logo — white treatment on dark bar */}
+          <Link href="/" className="flex items-center justify-self-start">
+            <Image
+              src="/images/terrain-wordmark.png"
+              alt="Terrain Peptides"
+              width={200}
+              height={54}
+              className="h-9 w-auto brightness-0 invert sm:h-10"
+              priority
+            />
           </Link>
-        </div>
 
-        {/* Mobile Navigation */}
-        <div className="flex items-center justify-self-end gap-2 md:hidden">
-          <Link href="/cart">
-            <Button variant="ghost" size="icon" className="relative">
-              <ShoppingCart className="h-5 w-5" />
-              {totalItems > 0 && (
-                <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs font-medium text-primary-foreground">
-                  {totalItems}
-                </span>
-              )}
-              <span className="sr-only">Cart</span>
-            </Button>
-          </Link>
-          <Sheet open={isOpen} onOpenChange={setIsOpen}>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <Menu className="h-5 w-5" />
-                <span className="sr-only">Menu</span>
+          {/* Desktop Navigation */}
+          <div className="hidden items-center justify-self-center gap-8 lg:gap-12 md:flex">
+            {navLinks.map(link => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="text-sm font-medium text-white/90 transition-colors hover:text-white"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </div>
+
+          {/* Desktop Actions */}
+          <div className="hidden items-center justify-self-end gap-4 md:flex">
+            <Link href="/cart">
+              <Button variant="ghost" size="icon" className="relative text-white hover:bg-white/10 hover:text-white">
+                <ShoppingCart className="h-5 w-5" />
+                {totalItems > 0 && (
+                  <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs font-medium text-primary-foreground">
+                    {totalItems}
+                  </span>
+                )}
+                <span className="sr-only">Cart</span>
               </Button>
-            </SheetTrigger>
-            <SheetContent side="right" className="w-[300px] bg-background">
-              <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
-              <div className="flex flex-col gap-6 pt-6">
-                {navLinks.map(link => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    onClick={() => setIsOpen(false)}
-                    className="text-lg font-medium text-foreground/80 transition-colors hover:text-foreground"
-                  >
-                    {link.label}
-                  </Link>
-                ))}
-              </div>
-            </SheetContent>
-          </Sheet>
-        </div>
-      </nav>
+            </Link>
+          </div>
+
+          {/* Mobile Navigation */}
+          <div className="flex items-center justify-self-end gap-2 md:hidden">
+            <Link href="/cart">
+              <Button variant="ghost" size="icon" className="relative text-white hover:bg-white/10 hover:text-white">
+                <ShoppingCart className="h-5 w-5" />
+                {totalItems > 0 && (
+                  <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs font-medium text-primary-foreground">
+                    {totalItems}
+                  </span>
+                )}
+                <span className="sr-only">Cart</span>
+              </Button>
+            </Link>
+            <Sheet open={isOpen} onOpenChange={setIsOpen}>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 hover:text-white">
+                  <Menu className="h-5 w-5" />
+                  <span className="sr-only">Menu</span>
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-[300px] bg-background">
+                <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
+                <div className="flex flex-col gap-6 pt-6">
+                  {navLinks.map(link => (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      onClick={() => setIsOpen(false)}
+                      className="text-lg font-medium text-foreground/80 transition-colors hover:text-foreground"
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
+        </nav>
+      </div>
 
       <div
-        className="navbar-ticker w-full bg-[#1a2f4e] py-2 sm:py-2.5"
+        className="navbar-ticker navbar-ticker--rolling w-full border-t border-[#b8d9be] py-2.5 sm:py-3"
         role="region"
         aria-label="Announcements"
       >

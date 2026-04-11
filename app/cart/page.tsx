@@ -25,7 +25,6 @@ import { useState } from 'react'
 import { toast } from 'sonner'
 
 const SHIPPING_CENTS = 2500
-const VIALS_PER_UNIT = 10
 const NO_VIAL_COPY_SLUGS = new Set(['syringe-kit', 'capsule-stack'])
 
 function formatPrice(cents: number) {
@@ -99,7 +98,7 @@ export default function CartPage() {
             <h1 className="mt-6 text-2xl font-bold text-foreground">Your cart is empty</h1>
             <p className="mt-2 text-muted-foreground">Browse our products and add items to your cart.</p>
             <Link href="/shop">
-              <Button className="mt-6 gap-2 bg-[#0A1931] hover:bg-[#0A1931]/90">
+              <Button className="mt-6 gap-2 bg-[#1C3D2A] hover:bg-[#1C3D2A]/90">
                 Shop Now
                 <ArrowRight className="h-4 w-4" />
               </Button>
@@ -125,7 +124,6 @@ export default function CartPage() {
               const dose = displayDosageLabel(item.product, item.dosage_variant_id)
               const imageSrc = resolveProductImageSrc(item.product)
               const showVials = !NO_VIAL_COPY_SLUGS.has(item.product.slug)
-              const totalVials = VIALS_PER_UNIT * item.quantity
               const lineTotal = packageLineTotalCents(item.product, item.quantity, item.dosage_variant_id)
 
               return (
@@ -156,7 +154,7 @@ export default function CartPage() {
                       <div className="min-w-0">
                         <Link
                           href={`/product/${item.product.slug}`}
-                          className="text-base font-semibold text-foreground hover:text-[#0A1931] hover:underline"
+                          className="text-base font-semibold text-foreground hover:text-foreground hover:underline"
                         >
                           {item.product.name}
                         </Link>
@@ -164,11 +162,11 @@ export default function CartPage() {
                           <p className="text-sm text-muted-foreground">{dose}</p>
                         )}
                         {showVials && (
-                          <div className="mt-1.5 inline-flex items-center gap-1.5 rounded-md bg-[#0A1931]/8 px-2.5 py-1 text-xs font-semibold text-[#0A1931]">
+                          <div className="mt-1.5 inline-flex items-center gap-1.5 rounded-md bg-[#1C3D2A]/8 px-2.5 py-1 text-xs font-semibold text-foreground">
                             <Package className="h-3.5 w-3.5 shrink-0" />
-                            {item.quantity > 1
-                              ? `${totalVials} research vials (${VIALS_PER_UNIT} × ${item.quantity} units)`
-                              : `${VIALS_PER_UNIT} research vials per unit`}
+                            {item.quantity === 1
+                              ? '1 research vial'
+                              : `${item.quantity} research vials`}
                           </div>
                         )}
                       </div>
@@ -222,15 +220,15 @@ export default function CartPage() {
             {/* Trust bar */}
             <div className="mt-2 grid grid-cols-3 gap-3 rounded-xl border border-border/50 bg-muted/20 px-4 py-3">
               <div className="flex items-center justify-center gap-2 text-xs font-medium text-muted-foreground">
-                <Shield className="h-4 w-4 text-[#0A1931]" />
+                <Shield className="h-4 w-4 text-foreground" />
                 Secure Checkout
               </div>
               <div className="flex items-center justify-center gap-2 text-xs font-medium text-muted-foreground">
-                <FlaskConical className="h-4 w-4 text-[#0A1931]" />
+                <FlaskConical className="h-4 w-4 text-foreground" />
                 99%+ Purity
               </div>
               <div className="flex items-center justify-center gap-2 text-xs font-medium text-muted-foreground">
-                <Truck className="h-4 w-4 text-[#0A1931]" />
+                <Truck className="h-4 w-4 text-foreground" />
                 USA Warehouse
               </div>
             </div>
@@ -312,7 +310,7 @@ export default function CartPage() {
               <p className="mt-1 text-xs text-muted-foreground">Tax (if applicable) calculated at checkout</p>
 
               <Link href="/checkout" className="mt-5 block">
-                <Button className="w-full gap-2 bg-[#0A1931] hover:bg-[#0A1931]/90" size="lg">
+                <Button className="w-full gap-2 bg-[#1C3D2A] hover:bg-[#1C3D2A]/90" size="lg">
                   Proceed to Checkout
                   <ArrowRight className="h-4 w-4" />
                 </Button>

@@ -78,6 +78,28 @@ export async function GET(request: Request) {
   }
 }
 
+export async function DELETE(request: Request) {
+  const authResult = await verifyAdmin(request)
+  if (!authResult.valid) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  try {
+    const { searchParams } = new URL(request.url)
+    const id = searchParams.get('id')
+    if (!id) return NextResponse.json({ error: 'ID required' }, { status: 400 })
+
+    const supabase = supabaseAdmin()
+    await supabase.from('order_items').delete().eq('order_id', id)
+    const { error } = await supabase.from('orders').delete().eq('id', id)
+    if (error) return NextResponse.json({ error: error.message }, { status: 400 })
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    console.error('Admin orders DELETE error:', error)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+  }
+}
+
 export async function PUT(request: Request) {
   const authResult = await verifyAdmin(request)
   if (!authResult.valid) {

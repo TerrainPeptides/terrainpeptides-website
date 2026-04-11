@@ -4,7 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Suspense, useState, type ReactNode } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { ArrowLeft, Copy, ExternalLink, FlaskConical, Package, Truck, X } from 'lucide-react'
+import { ArrowLeft, Copy, ExternalLink, FlaskConical, Truck, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -23,8 +23,7 @@ const WISE_TUTORIAL_BTN_BG = '#1e293b'
 
 const SHIPPING_CENTS = 2500
 const HST_RATE = 0.13
-const CHECKOUT_VIALS_PER_PRODUCT_UNIT = 10
-const NO_TEN_VIAL_COPY_SLUGS = new Set(['syringe-kit', 'capsule-stack'])
+const NO_VIAL_LINE_COPY_SLUGS = new Set(['syringe-kit', 'capsule-stack'])
 
 const WISE_RECIPIENT_EMAIL = 'terrainpayments@gmail.com'
 const WISE_REGISTER_URL = 'https://wise.com/register#/email'
@@ -78,8 +77,7 @@ function OrderSummary({
           const dose = displayDosageLabel(item.product, item.dosage_variant_id)
           const slug = item.product.slug
           const imageSrc = resolveProductImageSrc(item.product)
-          const showTenVials = !NO_TEN_VIAL_COPY_SLUGS.has(slug)
-          const totalVials = showTenVials ? CHECKOUT_VIALS_PER_PRODUCT_UNIT * item.quantity : null
+          const showVialLine = !NO_VIAL_LINE_COPY_SLUGS.has(slug)
           return (
             <div
               key={`${item.product.id}-${item.dosage_variant_id}`}
@@ -104,19 +102,10 @@ function OrderSummary({
               </div>
               <div className="min-w-0 flex-1">
                 <p className="font-medium text-foreground">{item.product.name}</p>
-                {showTenVials ? (
-                  <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                    {dose ? <span className="font-medium text-foreground">{dose}</span> : null}
-                    {dose ? ' · ' : null}
-                    <span className="font-semibold text-foreground">
-                      Includes {CHECKOUT_VIALS_PER_PRODUCT_UNIT} research vials per unit
-                    </span>
-                    {item.quantity > 1 ? (
-                      <>
-                        {' '}
-                        ({totalVials} vials total for quantity {item.quantity})
-                      </>
-                    ) : null}
+                {showVialLine ? (
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    {dose ? `${dose} · ` : ''}
+                    {item.quantity === 1 ? '1 research vial' : `${item.quantity} research vials`}
                   </p>
                 ) : (
                   <p className="mt-1 text-xs text-muted-foreground">
@@ -132,16 +121,6 @@ function OrderSummary({
             </div>
           )
         })}
-      </div>
-
-      <div className="rounded-lg border border-[#0f172a]/15 bg-[#0f172a]/5 px-4 py-3">
-        <div className="flex items-start gap-2 text-sm font-semibold text-[#0f172a]">
-          <Package className="mt-0.5 h-4 w-4 shrink-0" />
-          <span>
-            Each peptide line item includes <strong>10 research-grade vials</strong> per unit you order (not 1). Your
-            summary above shows exactly what you are receiving.
-          </span>
-        </div>
       </div>
 
       <Separator />

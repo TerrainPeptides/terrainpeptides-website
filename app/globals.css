@@ -4,11 +4,15 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Terrain Peptides Navy/White Theme */
+  /* Terrain Peptides — footer navy preserved via --navy* */
   --navy: #0A1931;
   --navy-light: #132744;
   --navy-dark: #060f1f;
   --white: #FFFFFF;
+  --forest: #1C3D2A;
+  --section-subtle: #F4F7F4;
+  --divider: #E2E8E2;
+  --body-text: #2D2D2D;
   --gray-50: #F9FAFB;
   --gray-100: #F3F4F6;
   --gray-200: #E5E7EB;
@@ -18,38 +22,38 @@
   --gray-600: #4B5563;
   
   --background: var(--white);
-  --foreground: var(--navy);
+  --foreground: var(--body-text);
   --card: var(--white);
-  --card-foreground: var(--navy);
+  --card-foreground: var(--body-text);
   --popover: var(--white);
-  --popover-foreground: var(--navy);
-  --primary: var(--navy);
+  --popover-foreground: var(--body-text);
+  --primary: var(--forest);
   --primary-foreground: var(--white);
-  --secondary: var(--gray-100);
-  --secondary-foreground: var(--navy);
-  --muted: var(--gray-100);
+  --secondary: var(--section-subtle);
+  --secondary-foreground: var(--body-text);
+  --muted: var(--section-subtle);
   --muted-foreground: var(--gray-500);
-  --accent: var(--gray-100);
-  --accent-foreground: var(--navy);
+  --accent: var(--section-subtle);
+  --accent-foreground: var(--body-text);
   --destructive: #DC2626;
   --destructive-foreground: var(--white);
-  --border: var(--gray-200);
-  --input: var(--gray-200);
-  --ring: var(--navy);
-  --chart-1: var(--navy);
+  --border: var(--divider);
+  --input: var(--divider);
+  --ring: var(--forest);
+  --chart-1: var(--forest);
   --chart-2: #1E40AF;
   --chart-3: #3B82F6;
   --chart-4: #60A5FA;
   --chart-5: #93C5FD;
   --radius: 0.75rem;
-  --sidebar: var(--gray-50);
-  --sidebar-foreground: var(--navy);
-  --sidebar-primary: var(--navy);
+  --sidebar: var(--section-subtle);
+  --sidebar-foreground: var(--body-text);
+  --sidebar-primary: var(--forest);
   --sidebar-primary-foreground: var(--white);
   --sidebar-accent: var(--gray-100);
-  --sidebar-accent-foreground: var(--navy);
-  --sidebar-border: var(--gray-200);
-  --sidebar-ring: var(--navy);
+  --sidebar-accent-foreground: var(--body-text);
+  --sidebar-border: var(--divider);
+  --sidebar-ring: var(--forest);
 }
 
 .dark {
@@ -124,6 +128,8 @@
   --color-navy: var(--navy);
   --color-navy-light: var(--navy-light);
   --color-navy-dark: var(--navy-dark);
+  --color-forest: var(--forest);
+  --color-section-subtle: var(--section-subtle);
 }
 
 @layer base {
@@ -142,21 +148,21 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--gray-100);
+  background: var(--section-subtle);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--gray-300);
+  background: var(--divider);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--gray-400);
+  background: color-mix(in srgb, var(--forest) 35%, var(--divider));
 }
 
-/* GHK-Cu / AminoClub style: green progress bars */
+/* Product research progress bars — primary forest */
 .progress-green[data-slot="progress"] [data-slot="progress-indicator"] {
-  background-color: #16a34a;
+  background-color: var(--forest);
 }
 
 /* Global: pointer cursor on all clickable elements */
@@ -187,9 +193,153 @@ a {
   animation-play-state: paused;
 }
 
+/* Marquee strip — animated light green while scrolling */
+@keyframes navbar-ticker-bg-roll {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+.navbar-ticker--rolling {
+  background: linear-gradient(
+    90deg,
+    #e8f5e9 0%,
+    #dcedc8 20%,
+    #f1f8e9 40%,
+    #c8e6c9 60%,
+    #e8f5e9 80%,
+    #dcedc8 100%
+  );
+  background-size: 200% 100%;
+  animation: navbar-ticker-bg-roll 14s linear infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .navbar-ticker__track {
     animation: none;
+  }
+  .navbar-ticker--rolling {
+    animation: none;
+    background: #e8f5e9;
+  }
+}
+
+/* Homepage hero — flowing staggered headline (line 1 → line 2) */
+@keyframes hero-headline-line1 {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes hero-headline-line2 {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-headline-line1 {
+  animation: hero-headline-line1 0.95s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  opacity: 0;
+}
+
+.hero-headline-line2 {
+  animation: hero-headline-line2 0.95s cubic-bezier(0.22, 1, 0.36, 1) 0.38s forwards;
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-headline-line1,
+  .hero-headline-line2 {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Hero — Shop Now from left, subhead from right */
+@keyframes hero-cta-from-left {
+  from {
+    opacity: 0;
+    transform: translateX(-2rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes hero-subhead-from-right {
+  from {
+    opacity: 0;
+    transform: translateX(2rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.hero-cta-enter {
+  animation: hero-cta-from-left 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.55s both;
+}
+
+.hero-subhead-enter {
+  animation: hero-subhead-from-right 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.4s both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-cta-enter,
+  .hero-subhead-enter {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Product page — add to cart: light mint base, left-to-right fill to deep green on hover */
+.product-add-to-cart {
+  background: #e8f0e4;
+  isolation: isolate;
+}
+
+.product-add-to-cart::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: #1a2f1a;
+  transform: translateX(-100%);
+  transition: transform 0.42s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.product-add-to-cart:hover:not(:disabled)::before {
+  transform: translateX(0);
+}
+
+.product-add-to-cart:hover:not(:disabled) {
+  border-color: #000;
+}
+
+.product-add-to-cart:disabled::before {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .product-add-to-cart::before {
+    transition: none;
   }
 }
 

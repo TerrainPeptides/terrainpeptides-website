@@ -1,9 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Button } from '@/components/ui/button'
 import { useCart } from '@/lib/cart-context'
-import { formatPriceVial, formatUsdCents } from '@/lib/format-price'
+import { formatUsdCents } from '@/lib/format-price'
 import { packageLineTotalCents } from '@/lib/product-price'
 import { getSeededProductReviewDisplay } from '@/lib/product-review-display'
 import {
@@ -14,22 +13,24 @@ import {
 } from '@/lib/dosage-variants'
 import { toast } from 'sonner'
 import {
-  ShoppingCart,
-  Minus,
-  Plus,
   Star,
-  ShieldCheck,
-  BadgeCheck,
-  CircleCheckBig,
-  type LucideIcon,
+  ChevronDown,
+  X,
 } from 'lucide-react'
-import type { Product } from '@/lib/types'
 import { CoaButton } from '@/components/product/coa-button'
+import type { Product } from '@/lib/types'
 
-const TRUST_BADGES: { label: string; Icon: LucideIcon }[] = [
-  { label: 'HPLC Tested', Icon: ShieldCheck },
-  { label: 'Mass Spectrometry Verified', Icon: BadgeCheck },
-  { label: 'COA Available', Icon: CircleCheckBig },
+const QUANTITY_OPTIONS = [
+  { qty: 1, label: '1 Vial', discount: 0 },
+  { qty: 3, label: '3 Vials (10% off)', discount: 0.10 },
+  { qty: 5, label: '5 Vials (15% off)', discount: 0.15 },
+]
+
+const TRUST_BADGES = [
+  { emoji: '•', label: 'Third-party Tested' },
+  { emoji: 'us', label: 'American Sourced' },
+  { emoji: '◎', label: '>99% Purity' },
+  { emoji: '📦', label: 'Secure Packaging' },
 ]
 
 interface ProductNamePanelProps {
@@ -38,18 +39,21 @@ interface ProductNamePanelProps {
 }
 
 export function ProductNamePanel({ product, theme = 'navy' }: ProductNamePanelProps) {
-  const [quantity, setQuantity] = useState(1)
   const [selectedVariantId, setSelectedVariantId] = useState(() =>
     getDefaultDosageVariantId(product)
   )
+  const [selectedQtyIndex, setSelectedQtyIndex] = useState<number | null>(null)
   const { addItem } = useCart()
 
   useEffect(() => {
     setSelectedVariantId(getDefaultDosageVariantId(product))
-    setQuantity(1)
+    setSelectedQtyIndex(null)
   }, [product.id])
 
   const { rating, reviewCount } = getSeededProductReviewDisplay(product.id)
+
+  const quantity = selectedQtyIndex !== null ? QUANTITY_OPTIONS[selectedQtyIndex].qty : 1
+  const discount = selectedQtyIndex !== null ? QUANTITY_OPTIONS[selectedQtyIndex].discount : 0
 
   const handleAddToCart = () => {
     addItem(product, quantity, selectedVariantId)
@@ -59,34 +63,33 @@ export function ProductNamePanel({ product, theme = 'navy' }: ProductNamePanelPr
     )
   }
 
-  const vialCount = product.vial_count ?? 1
-  const totalCents = packageLineTotalCents(product, quantity, selectedVariantId)
   const perVial = perVialPriceCentsForVariant(product, selectedVariantId)
+  const baseTotalCents = packageLineTotalCents(product, quantity, selectedVariantId)
+  const discountedCents = Math.round(baseTotalCents * (1 - discount))
   const multiDose = hasDosageVariants(product)
   const variants = product.dosage_variants ?? []
 
   const isNavy = theme === 'navy'
-  const text = isNavy ? 'text-[#0A1931]' : 'text-foreground'
-  const muted = isNavy ? 'text-[#0A1931]/70' : 'text-muted-foreground'
+  const text = isNavy ? 'text-foreground' : 'text-foreground'
+  const muted = isNavy ? 'text-foreground/60' : 'text-muted-foreground'
+
+  const fieldShell =
+    'w-full rounded-lg border border-black/35 bg-white px-4 py-3 text-sm font-medium text-foreground outline-none transition-[box-shadow,border-color] focus-visible:border-black/55 focus-visible:ring-2 focus-visible:ring-black/15'
 
   return (
     <div className="flex flex-col">
-      <h1 className={`text-3xl font-bold tracking-tight sm:text-4xl ${text}`}>
+      {/* Title */}
+      <h1 className={`text-2xl font-bold tracking-tight sm:text-3xl ${text}`}>
         {product.name}
       </h1>
 
-      {product.overview && (
-        <p className={`mt-2 text-lg ${muted}`}>
-          {product.overview}
-        </p>
-      )}
-
-      <div className="mt-3 flex items-center gap-2">
+      {/* Stars + In Stock */}
+      <div className="mt-2 flex items-center gap-3">
         <div className="flex">
           {[1, 2, 3, 4, 5].map((i) => (
             <Star
               key={i}
-              className={`h-5 w-5 ${
+              className={`h-4 w-4 ${
                 i <= Math.floor(rating)
                   ? 'fill-amber-400 text-amber-400'
                   : i === Math.ceil(rating) && rating % 1 > 0
@@ -96,142 +99,128 @@ export function ProductNamePanel({ product, theme = 'navy' }: ProductNamePanelPr
             />
           ))}
         </div>
-        <span className={`text-sm font-medium ${text}`}>{rating.toFixed(1)}</span>
-        <span className={`text-sm ${muted}`}>({reviewCount} reviews)</span>
-      </div>
-
-      <div className="mt-4 flex flex-wrap gap-6">
-        <div className="flex min-w-[140px] flex-col gap-2">
-          <span className={`text-sm font-bold uppercase tracking-wider ${muted}`}>Dosage</span>
-          {multiDose ? (
-            <div className="flex flex-wrap gap-2">
-              {variants.map((v) => {
-                const active = v.id === selectedVariantId
-                return (
-                  <button
-                    key={v.id}
-                    type="button"
-                    onClick={() => setSelectedVariantId(v.id)}
-                    className={`rounded-full px-4 py-1.5 text-sm font-semibold uppercase tracking-wide transition-colors ${
-                      active
-                        ? isNavy
-                          ? 'bg-[#0A1931] text-white'
-                          : 'bg-foreground text-background'
-                        : isNavy
-                          ? 'border-2 border-[#0A1931]/30 text-[#0A1931] hover:bg-[#0A1931]/10'
-                          : 'border-2 border-border text-foreground hover:bg-muted'
-                    }`}
-                  >
-                    {v.label}
-                  </button>
-                )
-              })}
-            </div>
-          ) : (
-            <span
-              className={`inline-flex w-fit items-center rounded-full px-4 py-1.5 text-sm font-semibold uppercase tracking-wide ${
-                isNavy ? 'bg-[#0A1931] text-white' : 'bg-foreground text-background'
-              }`}
-            >
-              {product.dosage || '—'}
-            </span>
-          )}
-        </div>
-        <div className="flex flex-col gap-2">
-          <span className={`text-sm font-bold uppercase tracking-wider ${muted}`}>Count</span>
-          <span className={`text-base font-medium ${text}`}>
-            {vialCount} {vialCount === 1 ? 'vial' : 'vials'} per package
+        {product.in_stock ? (
+          <span className="flex items-center gap-1.5 text-sm font-medium text-green-600">
+            <span className="h-2 w-2 rounded-full bg-green-500" />
+            In Stock
           </span>
-        </div>
-      </div>
-
-      <div className="mt-6 flex flex-col gap-2">
-        <span className={`text-sm font-bold uppercase tracking-wider ${muted}`}>Quantity</span>
-        <div className="flex w-fit items-center gap-2">
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-            disabled={quantity <= 1}
-            className={
-              isNavy
-                ? 'border-2 border-[#0A1931]/75 text-[#0A1931] hover:bg-[#0A1931]/10 hover:text-[#0A1931]'
-                : 'border-2 border-primary/70 text-primary hover:bg-primary/10 hover:text-primary'
-            }
-          >
-            <Minus className="h-4 w-4" />
-          </Button>
-          <span className={`w-10 text-center font-medium ${text}`}>{quantity}</span>
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => setQuantity((q) => q + 1)}
-            className={
-              isNavy
-                ? 'border-2 border-[#0A1931]/75 text-[#0A1931] hover:bg-[#0A1931]/10 hover:text-[#0A1931]'
-                : 'border-2 border-primary/70 text-primary hover:bg-primary/10 hover:text-primary'
-            }
-          >
-            <Plus className="h-4 w-4" />
-          </Button>
-        </div>
-      </div>
-
-      <div className="mt-6">
-        <p className={`text-4xl font-bold tracking-tight tabular-nums ${text}`}>
-          {formatPriceVial(perVial)}
-        </p>
-      </div>
-
-      <Button
-        onClick={handleAddToCart}
-        disabled={!product.in_stock}
-        size="lg"
-        className={`mt-6 w-full ${isNavy ? 'gap-2 rounded-lg bg-[#0A1931] px-6 text-white hover:bg-[#0A1931]/90 disabled:opacity-50' : 'gap-2'}`}
-      >
-        <ShoppingCart className="h-4 w-4" />
-        {product.in_stock ? 'Add to Cart' : 'Out of Stock'}
-      </Button>
-
-      <p className={`mt-3 text-sm font-semibold tabular-nums ${text}`}>
-        Total: {formatUsdCents(totalCents)}
-        {vialCount > 1 && (
-          <span className="ml-1">({quantity * vialCount} vials)</span>
+        ) : (
+          <span className="flex items-center gap-1.5 text-sm font-medium text-red-500">
+            <span className="h-2 w-2 rounded-full bg-red-500" />
+            Out of Stock
+          </span>
         )}
+      </div>
+
+      {/* Description */}
+      {product.description && (
+        <p className={`mt-3 text-sm leading-relaxed ${muted}`}>
+          {product.description}
+        </p>
+      )}
+
+      {/* Price */}
+      <p className={`mt-4 text-2xl font-bold tabular-nums ${text}`}>
+        {formatUsdCents(perVial)}
       </p>
 
-      <CoaButton coaUrl={product.coa_url} theme={theme} />
-
-      <div
-        className={`mt-8 border-t pt-6 ${isNavy ? 'border-[#0A1931]/15' : 'border-border'}`}
-      >
-        <div className="grid grid-cols-3 gap-2 sm:gap-3">
-          {TRUST_BADGES.map(({ label, Icon }) => (
-            <div
-              key={label}
-              className={
-                isNavy
-                  ? 'flex flex-col items-center gap-2 rounded-xl border border-[#0A1931]/28 bg-[#0A1931]/[0.1] px-2 py-3 text-center shadow-sm sm:px-3 sm:py-4'
-                  : 'flex flex-col items-center gap-2 rounded-xl border border-[#0A1931]/22 bg-[#0A1931]/[0.08] px-2 py-3 text-center shadow-sm sm:px-3 sm:py-4'
-              }
+      {/* Dosage */}
+      <div className="mt-5 space-y-2">
+        <p className={`text-sm font-medium ${text}`}>Dosage:</p>
+        <div className="relative">
+          {multiDose ? (
+            <select
+              value={selectedVariantId}
+              onChange={(e) => setSelectedVariantId(e.target.value)}
+              className={`${fieldShell} appearance-none pr-10`}
             >
-              <div
-                className={
-                  isNavy
-                    ? 'flex h-9 w-9 items-center justify-center rounded-lg bg-[#0A1931]/14 text-[#0A1931]'
-                    : 'flex h-9 w-9 items-center justify-center rounded-lg bg-[#0A1931]/12 text-[#0A1931]'
-                }
-              >
-                <Icon className="h-4 w-4 shrink-0" strokeWidth={2.25} aria-hidden />
-              </div>
-              <span
-                className={`text-[10px] font-bold leading-tight tracking-tight sm:text-xs ${text}`}
-              >
-                {label}
-              </span>
-            </div>
-          ))}
+              {variants.map((v) => (
+                <option key={v.id} value={v.id}>
+                  {v.label}
+                </option>
+              ))}
+            </select>
+          ) : (
+            <div className={fieldShell}>{product.dosage || 'Standard'}</div>
+          )}
+          {multiDose && (
+            <ChevronDown className={`pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 ${muted}`} />
+          )}
         </div>
+      </div>
+
+      {/* Quantity */}
+      <div className="relative mt-4 flex items-start gap-2">
+        <div className="min-w-0 flex-1 space-y-2">
+          <p className={`text-sm font-medium ${text}`}>Quantity:</p>
+          <div className="relative">
+            <select
+              value={selectedQtyIndex ?? ''}
+              onChange={(e) => {
+                const v = e.target.value
+                setSelectedQtyIndex(v === '' ? null : Number(v))
+              }}
+              className={`${fieldShell} appearance-none pr-10`}
+            >
+            <option value="">1 Vial</option>
+            {QUANTITY_OPTIONS.filter((o) => o.qty > 1).map((o, idx) => (
+              <option key={o.qty} value={idx + 1}>
+                {o.label}
+              </option>
+            ))}
+            </select>
+            <ChevronDown className={`pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 ${muted}`} />
+          </div>
+        </div>
+        {selectedQtyIndex !== null && (
+          <button
+            type="button"
+            onClick={() => setSelectedQtyIndex(null)}
+            className={`mt-7 flex shrink-0 items-center gap-1 self-start text-xs ${muted} hover:text-foreground`}
+          >
+            <X className="h-3.5 w-3.5" />
+            Clear
+          </button>
+        )}
+      </div>
+
+      {/* Total price with discount */}
+      {discount > 0 && (
+        <div className="mt-3 flex items-center gap-2 text-sm">
+          <span className={`line-through ${muted}`}>{formatUsdCents(baseTotalCents)}</span>
+          <span className={`font-bold ${text}`}>{formatUsdCents(discountedCents)}</span>
+        </div>
+      )}
+
+      {/* Add to Cart */}
+      <button
+        type="button"
+        onClick={handleAddToCart}
+        disabled={!product.in_stock}
+        className="product-add-to-cart group relative mt-5 w-full overflow-hidden rounded-full border border-black/20 py-3.5 text-sm font-semibold text-[#1A2F1A] disabled:opacity-50"
+      >
+        <span className="relative z-10 block text-[#1A2F1A] transition-colors duration-300 enabled:group-hover:text-white">
+          {product.in_stock ? 'Add to cart' : 'Out of Stock'}
+        </span>
+      </button>
+
+      <CoaButton coaUrl={product.coa_url} theme={isNavy ? 'navy' : 'default'} />
+
+      {/* Trust Badges */}
+      <div className="mt-5 grid grid-cols-2 gap-2">
+        {TRUST_BADGES.map((b) => (
+          <div
+            key={b.label}
+            className={`flex items-center gap-2 rounded-lg border px-3 py-2.5 text-xs font-medium ${
+              isNavy
+                ? 'border-border/12 text-foreground'
+                : 'border-border text-foreground'
+            }`}
+          >
+            <span>{b.emoji}</span>
+            {b.label}
+          </div>
+        ))}
       </div>
     </div>
   )
