@@ -1,75 +1,161 @@
-import Link from 'next/link'
-import Image from 'next/image'
-import { Cormorant_Garamond } from 'next/font/google'
+'use client'
 
-const cormorant = Cormorant_Garamond({
-  subsets: ['latin'],
-  weight: ['400', '500', '600'],
-  style: ['normal', 'italic'],
-  display: 'swap',
-})
+import Link from 'next/link'
+import { useEffect, useRef } from 'react'
 
 export function HeroSection() {
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+
+    let animFrame: number
+    let w = 0
+    let h = 0
+
+    interface Particle {
+      x: number
+      y: number
+      r: number
+      speed: number
+      opacity: number
+      opacityDir: number
+    }
+
+    const particles: Particle[] = []
+
+    function resize() {
+      if (!canvas) return
+      w = canvas.offsetWidth
+      h = canvas.offsetHeight
+      canvas.width = w
+      canvas.height = h
+    }
+
+    function spawn(): Particle {
+      return {
+        x: Math.random() * w,
+        y: h + Math.random() * 60,
+        r: Math.random() * 3 + 1.5,
+        speed: Math.random() * 0.4 + 0.15,
+        opacity: Math.random() * 0.25 + 0.05,
+        opacityDir: (Math.random() > 0.5 ? 1 : -1) * 0.003,
+      }
+    }
+
+    function init() {
+      resize()
+      particles.length = 0
+      const count = Math.floor((w * h) / 14000)
+      for (let i = 0; i < count; i++) {
+        const p = spawn()
+        p.y = Math.random() * h
+        particles.push(p)
+      }
+    }
+
+    function draw() {
+      if (!ctx || !canvas) return
+      ctx.clearRect(0, 0, w, h)
+
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i]
+        p.y -= p.speed
+        p.opacity += p.opacityDir
+        if (p.opacity > 0.3) p.opacityDir = -Math.abs(p.opacityDir)
+        if (p.opacity < 0.03) p.opacityDir = Math.abs(p.opacityDir)
+
+        if (p.y + p.r < 0) {
+          particles[i] = spawn()
+          continue
+        }
+
+        ctx.beginPath()
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2)
+        ctx.fillStyle = `rgba(10, 22, 40, ${p.opacity})`
+        ctx.fill()
+      }
+
+      animFrame = requestAnimationFrame(draw)
+    }
+
+    init()
+    draw()
+
+    const ro = new ResizeObserver(() => {
+      init()
+    })
+    ro.observe(canvas)
+
+    return () => {
+      cancelAnimationFrame(animFrame)
+      ro.disconnect()
+    }
+  }, [])
+
   return (
-    <section className="relative overflow-hidden bg-white">
-      <div className="mx-auto max-w-7xl px-4 pb-0 pt-6 sm:px-6 sm:pt-8 lg:px-8 lg:pt-10">
-        <div className="flex flex-col gap-14 lg:gap-20 xl:flex-row xl:items-center xl:justify-between xl:gap-24">
-          {/* Copy — own column, room to breathe */}
-          <div className="flex max-w-xl flex-shrink-0 flex-col xl:max-w-[28rem]">
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs font-semibold uppercase tracking-[0.12em] text-foreground/70 sm:text-sm">
-              <span className="flex items-center gap-1.5">
-                <span className="inline-block h-1.5 w-1.5 rounded-full bg-primary" />
-                US Made
-              </span>
-              <span className="flex items-center gap-1.5">
-                <span className="inline-block h-1.5 w-1.5 rounded-full bg-primary" />
-                ≥ 99% Purity
+    <section className="relative overflow-hidden bg-[#F2F5F8] py-20 sm:py-28 lg:py-36">
+      {/* Animated particle canvas */}
+      <canvas
+        ref={canvasRef}
+        className="pointer-events-none absolute inset-0 h-full w-full"
+        aria-hidden
+      />
+
+      <div className="relative mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
+        {/* Eyebrow */}
+        <span className="inline-block rounded-full bg-[#0A1628]/10 px-4 py-1 text-[0.65rem] font-bold uppercase tracking-[0.22em] text-[#0A1628]">
+          Research-Grade Compounds
+        </span>
+
+        {/* Headline */}
+        <h1 className="mt-6 text-balance text-4xl font-extrabold leading-[1.08] tracking-tight text-[#0A1628] sm:text-5xl lg:text-[3.75rem]">
+          High Quality, Lab&nbsp;Tested,
+          <br />
+          Affordable&nbsp;Compounds.
+        </h1>
+
+        {/* Sub-copy */}
+        <p className="mx-auto mt-7 max-w-lg text-base leading-relaxed text-[#0A1628]/65 sm:text-lg">
+          Purity you can count on. Premium research compounds certified to 99%+&nbsp;purity.
+          Relied on by researchers worldwide. Shipped fast from&nbsp;U.S.
+        </p>
+
+        {/* CTAs */}
+        <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
+          <Link
+            href="/shop"
+            className="group relative inline-flex min-w-[200px] items-center justify-center overflow-hidden rounded-full bg-[#0A1628] px-10 py-3.5 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:bg-[#132744] hover:shadow-xl active:scale-[0.97]"
+          >
+            <span className="absolute inset-0 origin-left scale-x-0 bg-white/10 transition-transform duration-500 ease-out group-hover:scale-x-100" aria-hidden />
+            <span className="relative z-10">SHOP NOW →</span>
+          </Link>
+          <Link
+            href="/admin/coa"
+            className="text-sm font-semibold text-[#0A1628]/70 underline-offset-4 transition-colors hover:text-[#0A1628] hover:underline"
+          >
+            View COAs →
+          </Link>
+        </div>
+
+        {/* Stats bar */}
+        <div className="mx-auto mt-14 flex max-w-xl flex-wrap items-center justify-center gap-x-8 gap-y-4 border-t border-[#0A1628]/10 pt-10">
+          {[
+            { value: '99%+', label: 'Purity' },
+            { value: '$250+', label: 'Free Shipping' },
+            { value: 'Lab', label: 'Certified' },
+            { value: 'US', label: 'USA' },
+          ].map((stat) => (
+            <div key={stat.label} className="flex flex-col items-center">
+              <span className="text-xl font-extrabold text-[#0A1628]">{stat.value}</span>
+              <span className="mt-0.5 text-[0.7rem] font-semibold uppercase tracking-widest text-[#0A1628]/50">
+                {stat.label}
               </span>
             </div>
-
-            <h1
-              className={`${cormorant.className} mt-8 text-4xl font-normal leading-[1.15] tracking-tight text-foreground sm:text-5xl lg:text-[3.25rem] lg:leading-[1.12]`}
-            >
-              <span className="hero-headline-line1 block">Peptides that are</span>
-              <span className="hero-headline-line2 mt-2 block sm:mt-3">
-                <span className="font-semibold italic">pure</span>
-                {' '}&amp; <span className="font-semibold not-italic">trusted</span>
-              </span>
-            </h1>
-
-            <p className="hero-subhead-enter mt-8 max-w-lg text-base leading-[1.7] text-foreground/85 sm:text-[1.05rem]">
-              Shop US Made, ≥99% purity RUO (Research Use Only) peptides with a focus on purity &amp; transparency.
-            </p>
-
-            <div className="mt-10">
-              <Link
-                href="/shop"
-                className="hero-cta-enter group relative inline-flex min-w-[min(100%,280px)] items-center justify-center overflow-hidden rounded-full border-2 border-[#0A1628] bg-[#0A1628] px-16 py-3.5 text-sm font-semibold shadow-md sm:min-w-[300px] sm:px-20"
-              >
-                <span
-                  className="absolute inset-0 origin-left scale-x-0 bg-white/15 transition-transform duration-500 ease-out group-hover:scale-x-100"
-                  aria-hidden
-                />
-                <span className="relative z-10 text-white transition-colors duration-300 group-hover:text-white">
-                  Shop Now
-                </span>
-              </Link>
-            </div>
-          </div>
-
-          {/* Image — separated column, larger, no colored frame */}
-          <div className="flex w-full flex-1 justify-center xl:min-w-0 xl:justify-end">
-            <div className="relative aspect-square w-full max-w-[min(100%,520px)] sm:max-w-[580px] lg:max-w-[640px] xl:max-w-[min(52vw,680px)]">
-              <Image
-                src="/images/hero-ghk-cu-vial.png"
-                alt="GHK-Cu research peptide vial"
-                fill
-                className="object-contain object-center"
-                priority
-                sizes="(max-width: 1280px) 90vw, 680px"
-              />
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </section>

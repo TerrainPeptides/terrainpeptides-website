@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation'
 import { ProductDetails } from '@/components/product/product-details'
+import { ProductQualitySection } from '@/components/product/product-quality-section'
 import { ProductTabs } from '@/components/product/product-tabs'
 import { RelatedProducts } from '@/components/product/related-products'
 import { GhkCuResearch } from '@/components/product/research/ghk-cu-research'
@@ -119,6 +120,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
       <div className="min-h-screen bg-white text-foreground">
         <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
           <ProductDetails product={product as Product} />
+          <ProductQualitySection product={product as Product} />
           <ProductTabs
             product={product as Product}
             hasFullResearch={hasFullResearch}

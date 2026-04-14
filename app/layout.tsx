@@ -9,6 +9,7 @@ import { CartProvider } from '@/lib/cart-context'
 import { Toaster } from '@/components/ui/sonner'
 import { AuthProvider } from '@/components/auth-provider'
 import { SiteBottomPromoGate } from '@/components/site-bottom-promo-gate'
+import { PromoPopup } from '@/components/promo-popup'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 const geistMono = Geist_Mono({ subsets: ['latin'], variable: '--font-geist-mono' })
@@ -39,6 +40,7 @@ export default function RootLayout({
             <Navbar />
             <main className="min-h-screen">{children}</main>
             <SiteBottomPromoGate />
+            <PromoPopup />
             <Footer />
             <Toaster />
           </CartProvider>
