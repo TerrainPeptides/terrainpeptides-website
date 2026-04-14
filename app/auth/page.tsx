@@ -51,12 +51,28 @@ function AuthPageSkeleton() {
   )
 }
 
+function saveClaimedPromo(code: string, percent: number) {
+  try {
+    const existing = JSON.parse(localStorage.getItem('terrain-saved-discounts') ?? '[]')
+    const already = existing.some((d: { code: string }) => d.code === code)
+    if (!already) {
+      existing.push({ code, percent, claimedAt: new Date().toISOString() })
+      localStorage.setItem('terrain-saved-discounts', JSON.stringify(existing))
+    }
+    // Also pre-load into the cart discount keys so it applies immediately
+    localStorage.setItem('terrain-referral', code)
+    localStorage.setItem('terrain-discount', String(percent))
+  } catch { /* silent */ }
+}
+
 function AuthPageInner() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const callbackUrl = searchParams.get('callbackUrl') ?? '/'
+  const claimPromo = searchParams.get('claimPromo')
+  const promoPercent = claimPromo === 'WELCOME15' ? 15 : null
 
-  const [tab, setTab] = useState<Tab>('signin')
+  const [tab, setTab] = useState<Tab>(claimPromo ? 'signup' : 'signin')
   const [loading, setLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
@@ -151,7 +167,10 @@ function AuthPageInner() {
         setTab('signin')
         setErrors({ general: 'Account created! Please sign in.' })
       } else {
-        router.push(callbackUrl)
+        if (claimPromo && promoPercent) {
+          saveClaimedPromo(claimPromo, promoPercent)
+        }
+        router.push('/account')
         router.refresh()
       }
     } catch {
@@ -219,6 +238,27 @@ function AuthPageInner() {
               className="h-8 w-auto"
             />
           </div>
+
+          {/* Promo claim banner */}
+          {claimPromo && promoPercent && (
+            <div className="mb-6 rounded-2xl bg-[#0A1628] px-5 py-4 text-white">
+              <div className="flex items-start gap-3">
+                <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/10">
+                  <span className="text-sm">🎁</span>
+                </div>
+                <div>
+                  <p className="text-sm font-bold">
+                    {promoPercent}% off waiting for you
+                  </p>
+                  <p className="mt-0.5 text-xs leading-relaxed text-white/60">
+                    Create your account and code{' '}
+                    <span className="font-mono font-bold text-white">{claimPromo}</span>{' '}
+                    will be saved automatically.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Tab switcher */}
           <div className="mb-8 border-b border-gray-200">

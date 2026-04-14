@@ -15,9 +15,19 @@ import {
   X,
   Package,
   ChevronRight,
+  Tag,
+  Copy,
+  Check,
+  ShoppingCart,
 } from 'lucide-react'
 
-type Tab = 'profile' | 'addresses' | 'partner'
+type Tab = 'profile' | 'addresses' | 'discounts'
+
+interface SavedDiscount {
+  code: string
+  percent: number
+  claimedAt: string
+}
 
 interface Address {
   id: string
@@ -61,6 +71,31 @@ export default function AccountPage() {
 
   const [orders, setOrders] = useState<Order[]>([])
   const [ordersLoading, setOrdersLoading] = useState(false)
+
+  const [savedDiscounts, setSavedDiscounts] = useState<SavedDiscount[]>([])
+  const [copiedCode, setCopiedCode] = useState<string | null>(null)
+  const [appliedCode, setAppliedCode] = useState<string | null>(null)
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem('terrain-saved-discounts')
+      if (raw) setSavedDiscounts(JSON.parse(raw))
+    } catch { /* silent */ }
+  }, [])
+
+  function copyDiscountCode(code: string) {
+    navigator.clipboard.writeText(code).then(() => {
+      setCopiedCode(code)
+      setTimeout(() => setCopiedCode(null), 2000)
+    })
+  }
+
+  function applyToCart(code: string, percent: number) {
+    localStorage.setItem('terrain-referral', code)
+    localStorage.setItem('terrain-discount', String(percent))
+    setAppliedCode(code)
+    setTimeout(() => setAppliedCode(null), 3000)
+  }
 
   const [addForm, setAddForm] = useState({
     first_name: '', last_name: '', country: 'United States',
@@ -181,20 +216,20 @@ export default function AccountPage() {
           {([
             { id: 'profile', icon: User, label: 'Profile', sub: 'Edit your details' },
             { id: 'addresses', icon: MapPin, label: 'Addresses', sub: 'Manage addresses' },
-            { id: 'partner', icon: Gift, label: 'Partner Program', sub: 'Earn commissions' },
-          ] as const).map(({ id, icon: Icon, label, sub }) => (
+            { id: 'discounts', icon: Tag, label: 'Discounts', sub: `${savedDiscounts.length} saved`, badge: savedDiscounts.length > 0 },
+          ] as const).map(({ id, icon: Icon, label, sub, badge }) => (
             <button
               key={id}
-              onClick={() => {
-                if (id === 'partner') { router.push('/affiliates'); return }
-                setActiveTab(id)
-              }}
-              className={`flex flex-col items-start gap-1.5 rounded-2xl border p-4 text-left transition ${
+              onClick={() => setActiveTab(id as Tab)}
+              className={`relative flex flex-col items-start gap-1.5 rounded-2xl border p-4 text-left transition ${
                 activeTab === id
                   ? 'border-[#6c5ce7] bg-[#6c5ce7] text-white'
                   : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300 hover:shadow-sm'
               }`}
             >
+              {badge && activeTab !== id && (
+                <span className="absolute right-3 top-3 flex h-2 w-2 rounded-full bg-emerald-500" />
+              )}
               <Icon className="h-5 w-5 opacity-80" />
               <span className="text-sm font-semibold">{label}</span>
               <span className={`text-xs ${activeTab === id ? 'text-white/70' : 'text-gray-400'}`}>{sub}</span>
@@ -272,6 +307,79 @@ export default function AccountPage() {
                     Add address
                   </button>
                 </>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* ── Discounts tab ────────────────────────────── */}
+        {activeTab === 'discounts' && (
+          <div className="mt-5 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-base font-semibold text-gray-900">Your Discount Codes</h2>
+                <p className="mt-0.5 text-xs text-gray-400">
+                  Codes are applied automatically to your cart when you click &quot;Apply to Cart&quot;.
+                </p>
+              </div>
+            </div>
+
+            {appliedCode && (
+              <div className="mt-4 flex items-center gap-2 rounded-xl bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+                <Check className="h-4 w-4 shrink-0" />
+                <span>
+                  <strong>{appliedCode}</strong> applied to your cart!
+                </span>
+              </div>
+            )}
+
+            <div className="mt-5 space-y-3">
+              {savedDiscounts.length === 0 ? (
+                <div className="flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-gray-200 py-10 text-center text-gray-400">
+                  <Tag className="h-8 w-8 opacity-40" />
+                  <p className="text-sm font-medium">No discount codes yet</p>
+                  <p className="text-xs">Discount codes you claim will appear here.</p>
+                </div>
+              ) : (
+                savedDiscounts.map((d) => (
+                  <div
+                    key={d.code}
+                    className="flex items-center justify-between rounded-xl border border-gray-100 bg-gray-50 p-4"
+                  >
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="font-mono text-base font-extrabold tracking-widest text-[#0A1628]">
+                          {d.code}
+                        </span>
+                        <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[0.65rem] font-bold text-emerald-700">
+                          {d.percent}% OFF
+                        </span>
+                      </div>
+                      <p className="mt-0.5 text-xs text-gray-400">
+                        Claimed {new Date(d.claimedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => copyDiscountCode(d.code)}
+                        className="flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs font-semibold text-gray-600 transition hover:border-gray-300 hover:shadow-sm"
+                      >
+                        {copiedCode === d.code ? (
+                          <><Check className="h-3.5 w-3.5 text-emerald-500" />Copied</>
+                        ) : (
+                          <><Copy className="h-3.5 w-3.5" />Copy</>
+                        )}
+                      </button>
+                      <button
+                        onClick={() => applyToCart(d.code, d.percent)}
+                        className="flex items-center gap-1.5 rounded-lg bg-[#0A1628] px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-[#132744]"
+                      >
+                        <ShoppingCart className="h-3.5 w-3.5" />
+                        Apply to Cart
+                      </button>
+                    </div>
+                  </div>
+                ))
               )}
             </div>
           </div>

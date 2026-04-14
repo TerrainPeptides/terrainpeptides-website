@@ -427,7 +427,7 @@ a {
   }
 }
 
-/* Product page — add to cart: light base, fill to brand navy on hover */
+/* Product page — add to cart: light base, slightly darker hover fill */
 .product-add-to-cart {
   background: #e8eaef;
   isolation: isolate;
@@ -438,7 +438,7 @@ a {
   position: absolute;
   inset: 0;
   z-index: 0;
-  background: #0a1628;
+  background: #d9dde6;
   transform: translateX(-100%);
   transition: transform 0.42s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -448,7 +448,7 @@ a {
 }
 
 .product-add-to-cart:hover:not(:disabled) {
-  border-color: #0a1628;
+  border-color: rgba(0, 0, 0, 0.22);
 }
 
 .product-add-to-cart:disabled::before {

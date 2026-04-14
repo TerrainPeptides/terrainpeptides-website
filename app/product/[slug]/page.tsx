@@ -1,6 +1,5 @@
 import { notFound } from 'next/navigation'
 import { ProductDetails } from '@/components/product/product-details'
-import { ProductQualitySection } from '@/components/product/product-quality-section'
 import { ProductTabs } from '@/components/product/product-tabs'
 import { RelatedProducts } from '@/components/product/related-products'
 import { GhkCuResearch } from '@/components/product/research/ghk-cu-research'
@@ -12,7 +11,7 @@ import { Tb500Research } from '@/components/product/research/tb-500-research'
 import { Aod9604Research } from '@/components/product/research/aod-9604-research'
 import { SemaxResearch } from '@/components/product/research/semax-research'
 import { SelankResearch } from '@/components/product/research/selank-research'
-import { getProductBySlugAsync, getRelatedProductsAsync, getVouchesForProduct } from '@/lib/data'
+import { getFaqs, getProductBySlugAsync, getRelatedProductsAsync, getVouchesForProduct } from '@/lib/data'
 import type { Product, Vouch } from '@/lib/types'
 import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
@@ -113,6 +112,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
   const relatedProducts = await getRelatedProductsAsync(product, 4)
   const vouches = getVouchesForProduct(product.id)
+  const faqs = getFaqs()
   const { content: researchContent, hasFullResearch } = getResearchContent(slug, product as Product, vouches)
 
   return (
@@ -120,11 +120,11 @@ export default async function ProductPage({ params }: ProductPageProps) {
       <div className="min-h-screen bg-white text-foreground">
         <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
           <ProductDetails product={product as Product} />
-          <ProductQualitySection product={product as Product} />
           <ProductTabs
             product={product as Product}
             hasFullResearch={hasFullResearch}
             researchContent={researchContent}
+            faqs={faqs}
           />
           {relatedProducts.length > 0 && (
             <div className="mt-16 border-t border-border/10 pt-12">

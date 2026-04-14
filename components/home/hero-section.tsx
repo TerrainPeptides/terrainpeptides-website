@@ -134,7 +134,7 @@ export function HeroSection() {
             <span className="relative z-10">SHOP NOW →</span>
           </Link>
           <Link
-            href="/admin/coa"
+            href="/shop"
             className="text-sm font-semibold text-[#0A1628]/70 underline-offset-4 transition-colors hover:text-[#0A1628] hover:underline"
           >
             View COAs →

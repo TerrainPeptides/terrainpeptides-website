@@ -199,7 +199,7 @@ export function ProductNamePanel({ product, theme = 'navy' }: ProductNamePanelPr
         disabled={!product.in_stock}
         className="product-add-to-cart group relative mt-5 w-full overflow-hidden rounded-full border border-black/15 py-3.5 text-sm font-semibold text-[#0A1628] disabled:opacity-50"
       >
-        <span className="relative z-10 block text-[#0A1628] transition-colors duration-300 enabled:group-hover:text-white">
+        <span className="relative z-10 block text-[#0A1628] transition-colors duration-300 enabled:group-hover:text-[#0A1628]">
           {product.in_stock ? 'Add to cart' : 'Out of Stock'}
         </span>
       </button>
