@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { LEGACY_LOCAL_STORAGE_KEYS } from '@/lib/legacy-brand-storage'
+import { formatOrderNumberDisplay } from '@/lib/paypal-order-id'
 import { Package, ShoppingCart, Star, DollarSign } from 'lucide-react'
 
 interface DashboardStats {
@@ -142,7 +143,9 @@ export default function AdminDashboard() {
                   className="flex items-center justify-between rounded-lg border border-border p-4"
                 >
                   <div>
-                    <p className="font-medium text-foreground">{order.order_number}</p>
+                    <p className="font-medium text-foreground">
+                      {formatOrderNumberDisplay(order.order_number)}
+                    </p>
                     <p className="text-sm text-muted-foreground">{order.email}</p>
                   </div>
                   <div className="text-right">

@@ -28,14 +28,14 @@ export default async function FAQPage() {
     return acc
   }, {} as Record<string, FAQ[]>)
 
+  const categoryOrder = ['quality', 'general', 'payment', 'shipping', 'legal'] as const
+
   const categoryLabels: Record<string, string> = {
-    general: 'General Questions',
-    quality: 'Quality & Purity',
-    shipping: 'Shipping & Delivery',
-    payment: 'Payment & Billing',
-    storage: 'Storage & Handling',
-    legal: 'Legal & Compliance',
-    pricing: 'Pricing & Discounts',
+    general: 'General',
+    quality: 'Quality & testing',
+    shipping: 'Shipping',
+    payment: 'Payment',
+    legal: 'Legal & compliance',
   }
 
   return (
@@ -53,7 +53,11 @@ export default async function FAQPage() {
 
         {/* FAQ Sections */}
         <div className="space-y-8">
-          {Object.entries(groupedFaqs).map(([category, categoryFaqs]) => (
+          {categoryOrder
+            .filter((category) => groupedFaqs[category]?.length)
+            .map((category) => {
+              const categoryFaqs = groupedFaqs[category]
+              return (
             <Card key={category}>
               <CardHeader>
                 <CardTitle className="text-lg">
@@ -75,7 +79,8 @@ export default async function FAQPage() {
                 </Accordion>
               </CardContent>
             </Card>
-          ))}
+              )
+            })}
         </div>
 
         {/* Contact CTA */}

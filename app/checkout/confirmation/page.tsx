@@ -7,6 +7,7 @@ import { useCart } from '@/lib/cart-context'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { CheckCircle, XCircle, Loader2, Package, ArrowRight } from 'lucide-react'
+import { formatOrdOrderIdDisplay } from '@/lib/paypal-order-id'
 
 type CaptureState = 'loading' | 'success' | 'error'
 
@@ -141,7 +142,7 @@ function ConfirmationContent() {
 
             {orderNumber && (
               <p className="mt-4 rounded-lg bg-muted/60 px-4 py-2 text-sm font-medium text-foreground">
-                Order #{orderNumber}
+                Order {formatOrdOrderIdDisplay(orderNumber)}
               </p>
             )}
 

@@ -22,6 +22,7 @@ import {
 import { toast } from 'sonner'
 import { Eye, Package, X } from 'lucide-react'
 import type { Order, OrderItem } from '@/lib/types'
+import { formatOrderNumberDisplay } from '@/lib/paypal-order-id'
 
 const statusColors: Record<string, string> = {
   pending: 'bg-yellow-100 text-yellow-700',
@@ -138,9 +139,11 @@ export default function AdminOrdersPage() {
   const sendShippingEmail = () => {
     if (!selectedOrder) return
     const tn = trackingNumber.trim() || selectedOrder.tracking_number || ''
-    const subject = encodeURIComponent(`Your Terrain Peptides order ${selectedOrder.order_number} has shipped`)
+    const subject = encodeURIComponent(
+      `Your Terrain Peptides order ${formatOrderNumberDisplay(selectedOrder.order_number)} has shipped`
+    )
     const body = encodeURIComponent(
-      `Hi,\n\nYour order ${selectedOrder.order_number} has shipped.\n\nTracking number: ${tn || '[add tracking number]'}\n\nThanks,\nTerrain Peptides`
+      `Hi,\n\nYour order ${formatOrderNumberDisplay(selectedOrder.order_number)} has shipped.\n\nTracking number: ${tn || '[add tracking number]'}\n\nThanks,\nTerrain Peptides`
     )
     window.location.href = `mailto:${selectedOrder.email}?subject=${subject}&body=${body}`
   }
@@ -192,7 +195,7 @@ export default function AdminOrdersPage() {
                   <div className="flex-1">
                     <div className="flex flex-wrap items-center gap-2">
                       <p className="font-medium text-foreground">
-                        {order.order_number}
+                        {formatOrderNumberDisplay(order.order_number)}
                       </p>
                       <Badge className={statusColors[order.status]}>
                         {order.status}
@@ -251,7 +254,9 @@ export default function AdminOrdersPage() {
       <Dialog open={!!selectedOrder} onOpenChange={(open) => !open && setSelectedOrder(null)}>
         <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Order {selectedOrder?.order_number}</DialogTitle>
+            <DialogTitle>
+              Order {selectedOrder ? formatOrderNumberDisplay(selectedOrder.order_number) : ''}
+            </DialogTitle>
           </DialogHeader>
           {selectedOrder && (
             <div className="space-y-6">

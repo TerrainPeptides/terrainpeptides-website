@@ -2,7 +2,7 @@ import { stripe } from '@/lib/stripe'
 import { getProductByIdAsync } from '@/lib/data'
 import { NextResponse } from 'next/server'
 import { orderLineFromCheckoutItem, type CheckoutCartItemPayload } from '@/lib/checkout-line'
-import { nanoid } from 'nanoid'
+import { generateOrdOrderId } from '@/lib/paypal-order-id'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import { insertPendingStripeOrderWithItems } from '@/lib/supabase/order-persist'
 
@@ -76,7 +76,7 @@ export async function POST(request: Request) {
     const finalDiscountCents = discountCents || 0
     // Stripe requires a minimum of 50 cents
     const totalCents = Math.max(subtotalCents - finalDiscountCents, 50)
-    const orderNumber = `HP-${nanoid(8).toUpperCase()}`
+    const orderNumber = generateOrdOrderId()
 
     // Create the Stripe PaymentIntent — secret key stays server-side
     const paymentIntent = await stripe.paymentIntents.create({

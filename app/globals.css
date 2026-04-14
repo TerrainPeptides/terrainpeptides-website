@@ -314,6 +314,119 @@ a {
   }
 }
 
+/* Site bottom promo — marker sweep (light backgrounds) */
+@keyframes hero-highlight-sweep {
+  from {
+    background-size: 0% 100%;
+  }
+  to {
+    background-size: 100% 100%;
+  }
+}
+
+.hero-text-highlight {
+  background-image: linear-gradient(
+    transparent 52%,
+    rgba(45, 255, 90, 0.38) 52%,
+    rgba(34, 255, 75, 0.52) 72%,
+    rgba(45, 255, 90, 0.28) 92%,
+    transparent 92%
+  );
+  background-size: 0% 100%;
+  background-repeat: no-repeat;
+  background-position: left center;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  padding: 0 0.06em;
+  margin: 0 -0.06em;
+  animation: hero-highlight-sweep 1.15s cubic-bezier(0.22, 1, 0.36, 1) 0.45s forwards;
+  filter: drop-shadow(0 0 12px rgba(34, 255, 80, 0.35));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-text-highlight {
+    animation: none;
+    background-size: 100% 100%;
+    filter: none;
+  }
+}
+
+/* Site bottom promo — light blue marker on dark navy (purity, transparency, reliability) */
+.hero-text-highlight-on-dark {
+  background-image: linear-gradient(
+    transparent 50%,
+    rgba(130, 205, 255, 0.42) 50%,
+    rgba(100, 185, 255, 0.52) 70%,
+    rgba(130, 205, 255, 0.32) 90%,
+    transparent 90%
+  );
+  background-size: 0% 100%;
+  background-repeat: no-repeat;
+  background-position: left center;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  padding: 0 0.08em;
+  margin: 0 -0.08em;
+  animation: hero-highlight-sweep 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.4s forwards;
+  filter: drop-shadow(0 0 14px rgba(120, 195, 255, 0.45));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-text-highlight-on-dark {
+    animation: none;
+    background-size: 100% 100%;
+    filter: none;
+  }
+}
+
+/* Home bottom promo — Shop Now fades up after headline */
+@keyframes hero-amino-cta {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-amino-cta {
+  animation: hero-amino-cta 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.85s both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-amino-cta {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Site bottom promo — Shop Now slides in from the right after headline */
+@keyframes hero-shop-now-enter {
+  from {
+    opacity: 0;
+    transform: translateX(18px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+.hero-shop-now-cta {
+  animation: hero-shop-now-enter 0.8s cubic-bezier(0.22, 1, 0.36, 1) 1s both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-shop-now-cta {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
 /* Product page — add to cart: light base, fill to brand navy on hover */
 .product-add-to-cart {
   background: #e8eaef;

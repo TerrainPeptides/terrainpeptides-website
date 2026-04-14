@@ -7,6 +7,8 @@ import { Footer } from '@/components/footer'
 import { AgeVerification } from '@/components/age-verification'
 import { CartProvider } from '@/lib/cart-context'
 import { Toaster } from '@/components/ui/sonner'
+import { AuthProvider } from '@/components/auth-provider'
+import { SiteBottomPromoGate } from '@/components/site-bottom-promo-gate'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 const geistMono = Geist_Mono({ subsets: ['latin'], variable: '--font-geist-mono' })
@@ -31,15 +33,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} ${geistMono.variable} font-sans antialiased`}>
-        <CartProvider>
-          <AgeVerification />
-          <Navbar />
-          <main className="min-h-screen">
-            {children}
-          </main>
-          <Footer />
-          <Toaster />
-        </CartProvider>
+        <AuthProvider>
+          <CartProvider>
+            <AgeVerification />
+            <Navbar />
+            <main className="min-h-screen">{children}</main>
+            <SiteBottomPromoGate />
+            <Footer />
+            <Toaster />
+          </CartProvider>
+        </AuthProvider>
         <Analytics />
       </body>
     </html>

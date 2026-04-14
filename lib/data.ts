@@ -2,20 +2,13 @@ import type { Product, FAQ, Vouch, ReferralCode, Order, OrderItem, ContactSubmis
 import { seedProducts, seedVouches } from '@/lib/seed-data'
 import { readPersistentStore, writePersistentStore } from '@/lib/persistent-store'
 import { getProductsFromSupabase } from '@/lib/products-supabase'
-
-const now = new Date().toISOString()
+import { buildSiteStaticFaqs } from '@/lib/site-faqs'
 
 // Back-compat exports for seed data
 export const staticProducts: Product[] = seedProducts
 export const staticVouches: Vouch[] = seedVouches
 
-export const staticFaqs: FAQ[] = [
-  { id: 'faq-1', question: 'What are research peptides?', answer: 'Research peptides are short chains of amino acids used in laboratory and research settings to study biological processes.', category: 'general', sort_order: 1, created_at: now },
-  { id: 'faq-2', question: 'How is purity verified?', answer: 'Every batch is third-party tested with a Certificate of Analysis (COA) documenting 99%+ purity.', category: 'quality', sort_order: 2, created_at: now },
-  { id: 'faq-3', question: 'How long does shipping take?', answer: 'Orders typically ship within 1-2 business days. Domestic delivery is 3-5 business days.', category: 'shipping', sort_order: 3, created_at: now },
-  { id: 'faq-4', question: 'What payment methods do you accept?', answer: 'We accept major credit cards via Stripe and cryptocurrency.', category: 'payment', sort_order: 4, created_at: now },
-  { id: 'faq-5', question: 'How should peptides be stored?', answer: 'Store lyophilized peptides in a cool, dry place. After reconstitution, keep refrigerated.', category: 'storage', sort_order: 5, created_at: now },
-]
+export const staticFaqs: FAQ[] = buildSiteStaticFaqs()
 
 function fromStore(): Product[] {
   return [...readPersistentStore().products]

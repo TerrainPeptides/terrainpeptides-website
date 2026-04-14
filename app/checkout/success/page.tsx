@@ -7,6 +7,7 @@ import { useCart } from '@/lib/cart-context'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { CheckCircle, Package, ArrowRight } from 'lucide-react'
+import { formatOrdOrderIdDisplay } from '@/lib/paypal-order-id'
 
 function SuccessContent() {
   const searchParams = useSearchParams()
@@ -14,7 +15,7 @@ function SuccessContent() {
   // ?session_id=... — Stripe Checkout Sessions path
   const sessionId = searchParams.get('session_id')
 
-  // ?order=HP-XXXX&payment_intent=pi_...&redirect_status=succeeded — Elements / PaymentIntent path
+  // ?order=ORD-######&payment_intent=pi_...&redirect_status=succeeded — Elements / PaymentIntent path
   const orderNumber = searchParams.get('order')
   const paymentIntentId = searchParams.get('payment_intent')
   const redirectStatus = searchParams.get('redirect_status')
@@ -122,7 +123,7 @@ function SuccessContent() {
 
             {orderNumber && (
               <p className="mt-4 rounded-lg bg-muted/60 px-4 py-2 text-sm font-medium text-foreground">
-                Order #{orderNumber}
+                Order {formatOrdOrderIdDisplay(orderNumber)}
               </p>
             )}
 

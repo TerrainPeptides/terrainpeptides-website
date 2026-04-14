@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe'
 import { supabaseAdmin } from '@/lib/supabase/admin'
+import { normalizeOrderNumberForLookup } from '@/lib/paypal-order-id'
 
 /**
  * Called from the checkout success page after Stripe redirects back.
@@ -19,7 +20,7 @@ export async function POST(request: Request) {
       return confirmCheckoutSession(sessionId)
     }
 
-    const orderNumber = String(body.orderNumber || '').trim()
+    const orderNumber = normalizeOrderNumberForLookup(String(body.orderNumber || ''))
     const paymentIntentId = String(body.paymentIntentId || '').trim()
 
     if (!orderNumber || !paymentIntentId) {
@@ -37,7 +38,9 @@ export async function POST(request: Request) {
       )
     }
 
-    const metaOrder = (intent.metadata?.order_number || '').trim()
+    const metaOrder = normalizeOrderNumberForLookup(
+      String(intent.metadata?.order_number || '')
+    )
     if (metaOrder && metaOrder !== orderNumber) {
       return NextResponse.json({ error: 'Order number does not match payment' }, { status: 400 })
     }

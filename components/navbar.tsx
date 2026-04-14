@@ -6,7 +6,15 @@ import { Fragment, useState } from 'react'
 import { useCart } from '@/lib/cart-context'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet'
-import { Menu, ShoppingCart } from 'lucide-react'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { Menu, ShoppingCart, User, LogOut, CircleUser } from 'lucide-react'
+import { useSession, signOut } from 'next-auth/react'
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -55,6 +63,7 @@ function NavbarTickerPeriod({ duplicate }: { duplicate?: boolean }) {
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const { totalItems } = useCart()
+  const { data: session, status } = useSession()
 
   return (
     <header className="w-full">
@@ -98,10 +107,57 @@ export function Navbar() {
                 <span className="sr-only">Cart</span>
               </Button>
             </Link>
+            {status === 'loading' ? null : session ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" className="relative text-white hover:bg-white/10 hover:text-white">
+                    <div className="flex h-7 w-7 items-center justify-center rounded-full bg-white/15 text-xs font-semibold text-white">
+                      {session.user?.name?.[0]?.toUpperCase() ?? session.user?.email?.[0]?.toUpperCase() ?? <User className="h-3.5 w-3.5" />}
+                    </div>
+                    <span className="sr-only">Account</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-52">
+                  <div className="px-2 py-1.5">
+                    <p className="text-xs font-medium text-foreground">{session.user?.name}</p>
+                    <p className="truncate text-xs text-muted-foreground">{session.user?.email}</p>
+                  </div>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link href="/account" className="cursor-pointer">
+                      <User className="mr-2 h-4 w-4" />
+                      My Account
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => signOut({ callbackUrl: '/' })}
+                    className="cursor-pointer text-destructive focus:text-destructive"
+                  >
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Sign Out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Link href="/auth">
+                <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 hover:text-white">
+                  <CircleUser className="h-5 w-5" />
+                  <span className="sr-only">Sign in</span>
+                </Button>
+              </Link>
+            )}
           </div>
 
           {/* Mobile Navigation */}
           <div className="flex items-center justify-self-end gap-2 md:hidden">
+            {status === 'loading' ? null : !session ? (
+              <Link href="/auth">
+                <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 hover:text-white">
+                  <CircleUser className="h-5 w-5" />
+                  <span className="sr-only">Sign in</span>
+                </Button>
+              </Link>
+            ) : null}
             <Link href="/cart">
               <Button variant="ghost" size="icon" className="relative text-white hover:bg-white/10 hover:text-white">
                 <ShoppingCart className="h-5 w-5" />
@@ -133,6 +189,31 @@ export function Navbar() {
                       {link.label}
                     </Link>
                   ))}
+                  <div className="border-t pt-4">
+                    {session ? (
+                      <div className="flex flex-col gap-3">
+                        <div>
+                          <p className="text-sm font-medium">{session.user?.name}</p>
+                          <p className="text-xs text-muted-foreground">{session.user?.email}</p>
+                        </div>
+                        <button
+                          onClick={() => { signOut({ callbackUrl: '/' }); setIsOpen(false) }}
+                          className="flex items-center gap-2 text-sm text-destructive"
+                        >
+                          <LogOut className="h-4 w-4" />
+                          Sign Out
+                        </button>
+                      </div>
+                    ) : (
+                      <Link
+                        href="/auth"
+                        onClick={() => setIsOpen(false)}
+                        className="text-lg font-medium text-foreground/80 transition-colors hover:text-foreground"
+                      >
+                        Sign In
+                      </Link>
+                    )}
+                  </div>
                 </div>
               </SheetContent>
             </Sheet>

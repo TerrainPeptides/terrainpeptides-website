@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -8,8 +9,9 @@ import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { toast } from 'sonner'
-import { Search, Package, Truck, CheckCircle, Clock, AlertCircle } from 'lucide-react'
+import { Search, Package, Truck, CheckCircle, Clock, AlertCircle, Loader2 } from 'lucide-react'
 import type { Order, OrderItem } from '@/lib/types'
+import { formatOrderNumberDisplay } from '@/lib/paypal-order-id'
 
 const statusConfig = {
   pending: { label: 'Pending', icon: Clock, color: 'bg-yellow-100 text-yellow-700' },
@@ -19,30 +21,41 @@ const statusConfig = {
   cancelled: { label: 'Cancelled', icon: AlertCircle, color: 'bg-red-100 text-red-700' },
 }
 
-export default function TrackPage() {
-  const [orderNumber, setOrderNumber] = useState('')
-  const [email, setEmail] = useState('')
-  const [isSearching, setIsSearching] = useState(false)
+function TrackPageContent() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const [orderNumber, setOrderNumber] = useState(() => searchParams.get('order')?.trim() ?? '')
+  const [email, setEmail] = useState(() => searchParams.get('email')?.trim() ?? '')
+  const [isSearching, setIsSearching] = useState(() => {
+    return (
+      searchParams.get('auto') === '1' &&
+      Boolean(searchParams.get('order')?.trim()) &&
+      Boolean(searchParams.get('email')?.trim())
+    )
+  })
   const [order, setOrder] = useState<(Order & { items: OrderItem[] }) | null>(null)
   const [notFound, setNotFound] = useState(false)
+  /** From PayPal “I’ve confirmed” redirect (?auto=1) until lookup finishes */
+  const [isConfirmingRedirect, setIsConfirmingRedirect] = useState(() => {
+    return (
+      searchParams.get('auto') === '1' &&
+      Boolean(searchParams.get('order')?.trim()) &&
+      Boolean(searchParams.get('email')?.trim())
+    )
+  })
 
-  const handleSearch = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!orderNumber.trim() || !email.trim()) return
-
+  const runLookup = async (orderNum: string, emailAddr: string) => {
+    if (!orderNum.trim() || !emailAddr.trim()) return
     setIsSearching(true)
     setNotFound(false)
     setOrder(null)
-
     try {
       const res = await fetch('/api/orders/track', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ orderNumber: orderNumber.trim(), email: email.trim() }),
+        body: JSON.stringify({ orderNumber: orderNum.trim(), email: emailAddr.trim() }),
       })
-
       const data = await res.json()
-
       if (data.order) {
         setOrder(data.order)
       } else {
@@ -53,6 +66,56 @@ export default function TrackPage() {
     } finally {
       setIsSearching(false)
     }
+  }
+
+  useEffect(() => {
+    const auto = searchParams.get('auto') === '1'
+    const o = searchParams.get('order')?.trim()
+    const em = searchParams.get('email')?.trim()
+    if (!auto || !o || !em) return
+
+    setOrderNumber(o)
+    setEmail(em)
+
+    let cancelled = false
+    void (async () => {
+      setIsSearching(true)
+      setNotFound(false)
+      setOrder(null)
+      try {
+        const res = await fetch('/api/orders/track', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ orderNumber: o, email: em }),
+        })
+        const data = await res.json()
+        if (cancelled) return
+        if (data.order) {
+          setOrder(data.order)
+        } else {
+          setNotFound(true)
+        }
+      } catch {
+        if (!cancelled) toast.error('Failed to load your order')
+      } finally {
+        if (!cancelled) {
+          setIsSearching(false)
+          setIsConfirmingRedirect(false)
+          router.replace('/track', { scroll: false })
+        }
+      }
+    })()
+
+    return () => {
+      cancelled = true
+    }
+  }, [searchParams, router])
+
+  const handleSearch = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!orderNumber.trim() || !email.trim()) return
+    setIsConfirmingRedirect(false)
+    await runLookup(orderNumber, email)
   }
 
   const formatPrice = (cents: number) => {
@@ -86,6 +149,20 @@ export default function TrackPage() {
           </p>
         </div>
 
+        {isConfirmingRedirect && (
+          <Card className="mb-8 border-primary/25 bg-primary/[0.04]">
+            <CardContent className="flex flex-col items-center gap-4 py-10 sm:py-12">
+              <Loader2 className="h-11 w-11 animate-spin text-primary" aria-hidden />
+              <div className="text-center">
+                <p className="text-lg font-semibold text-foreground">Confirming your order</p>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  We&apos;re connecting your payment to your order and loading your details…
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
         {/* Search Form */}
         <Card className="mb-8">
           <CardHeader>
@@ -103,7 +180,8 @@ export default function TrackPage() {
                   required
                   value={orderNumber}
                   onChange={(e) => setOrderNumber(e.target.value)}
-                  placeholder="e.g., HP-ABC12345"
+                  placeholder="e.g., #ORD-571637"
+                  disabled={isConfirmingRedirect}
                 />
               </div>
               <div className="space-y-2">
@@ -115,11 +193,12 @@ export default function TrackPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="your@email.com"
+                  disabled={isConfirmingRedirect}
                 />
               </div>
-              <Button type="submit" disabled={isSearching} className="w-full gap-2">
+              <Button type="submit" disabled={isSearching || isConfirmingRedirect} className="w-full gap-2">
                 <Search className="h-4 w-4" />
-                {isSearching ? 'Searching...' : 'Track Order'}
+                {isSearching || isConfirmingRedirect ? 'Loading…' : 'Track Order'}
               </Button>
             </form>
           </CardContent>
@@ -146,7 +225,7 @@ export default function TrackPage() {
             <CardHeader>
               <div className="flex items-start justify-between">
                 <div>
-                  <CardTitle>Order {order.order_number}</CardTitle>
+                  <CardTitle>Order {formatOrderNumberDisplay(order.order_number)}</CardTitle>
                   <CardDescription>
                     Placed on {formatDate(order.created_at)}
                   </CardDescription>
@@ -251,5 +330,24 @@ export default function TrackPage() {
         )}
       </div>
     </div>
+  )
+}
+
+function TrackPageFallback() {
+  return (
+    <div className="flex min-h-[40vh] items-center justify-center bg-background px-4">
+      <div className="flex flex-col items-center gap-3 text-center">
+        <Loader2 className="h-10 w-10 animate-spin text-primary" aria-hidden />
+        <p className="text-sm text-muted-foreground">Loading…</p>
+      </div>
+    </div>
+  )
+}
+
+export default function TrackPage() {
+  return (
+    <Suspense fallback={<TrackPageFallback />}>
+      <TrackPageContent />
+    </Suspense>
   )
 }

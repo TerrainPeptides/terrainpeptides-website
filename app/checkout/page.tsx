@@ -28,6 +28,7 @@ import {
 import { Separator } from '@/components/ui/separator'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
+import { generateOrdOrderId } from '@/lib/paypal-order-id'
 import {
   CreditCard,
   Bitcoin,
@@ -333,13 +334,11 @@ export default function CheckoutPage() {
   const { isCartHydrated, items, subtotalCents, discountCents, referralCode } = useCart()
 
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<
-    'bank-transfer' | 'cash' | 'crypto' | 'paypal'
+    'bank-transfer' | 'cash' | 'crypto' | 'paypal' | 'paypal-guide'
   >('bank-transfer')
   const [cashSubMethod, setCashSubMethod] = useState<'zelle' | 'wise' | null>(null)
   // Stable order ID generated once per session for the Wise flow
-  const [wiseOrderId] = useState(
-    () => `ORD-${Math.random().toString(36).slice(2, 8).toUpperCase()}`
-  )
+  const [wiseOrderId] = useState(() => generateOrdOrderId())
 
   const [isProcessing, setIsProcessing] = useState(false)
   const [shippingInfo, setShippingInfo] = useState<ShippingInfo>({
@@ -374,6 +373,33 @@ export default function CheckoutPage() {
     setIsProcessing(true)
 
     try {
+      if (selectedPaymentMethod === 'paypal-guide') {
+        const ppOrderId = generateOrdOrderId()
+        const pendingRes = await fetch('/api/checkout/paypal-guide-pending', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            orderNumber: ppOrderId,
+            items: items.map((item) => ({
+              productId: item.product.id,
+              quantity: item.quantity,
+              dosage_variant_id: item.dosage_variant_id,
+            })),
+            shippingInfo,
+            referralCode,
+            discountCents,
+          }),
+        })
+        const pendingData = (await pendingRes.json()) as { error?: string }
+        if (!pendingRes.ok) {
+          throw new Error(pendingData.error ?? 'Could not save your order')
+        }
+        router.push(
+          `/checkout/pay?order=${encodeURIComponent(ppOrderId)}&total=${(totalCents / 100).toFixed(2)}&country=${encodeURIComponent(shippingInfo.country)}&email=${encodeURIComponent(shippingInfo.email)}`
+        )
+        return
+      }
+
       if (selectedPaymentMethod === 'paypal') {
         const paypalPayload = {
           items: items.map((item) => ({
@@ -428,7 +454,7 @@ export default function CheckoutPage() {
     }
   }
 
-  const selectPaymentMethod = (method: 'bank-transfer' | 'cash' | 'crypto' | 'paypal') => {
+  const selectPaymentMethod = (method: 'bank-transfer' | 'cash' | 'crypto' | 'paypal' | 'paypal-guide') => {
     setSelectedPaymentMethod(method)
     if (method !== 'cash') setCashSubMethod(null)
     else setCashSubMethod('wise')
@@ -666,32 +692,48 @@ export default function CheckoutPage() {
                     </div>
                   </button>
 
-                  {/* ── Card Payments (PayPal hosted) ───────────────────────── */}
+                  {/* ── Card / Bank Payments via PayPal ────────────────────── */}
                   <button
                     type="button"
-                    onClick={() => selectPaymentMethod('paypal')}
+                    onClick={() => selectPaymentMethod('paypal-guide')}
                     className={cn(
                       'relative w-full rounded-lg border p-4 text-left transition-colors',
-                      selectedPaymentMethod === 'paypal'
+                      selectedPaymentMethod === 'paypal-guide'
                         ? 'border-primary bg-muted/30 shadow-sm'
                         : 'border-border hover:bg-muted/30'
                     )}
                   >
-                    {selectedPaymentMethod === 'paypal' ? (
+                    {selectedPaymentMethod === 'paypal-guide' ? (
                       <span className="absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full bg-[#0A1628] text-white">
                         <Check className="h-3.5 w-3.5" strokeWidth={2.5} />
                       </span>
                     ) : null}
                     <div className="flex gap-3 pr-10">
-                      <CreditCard className="mt-0.5 h-5 w-5 shrink-0 text-foreground" />
+                      {/* PayPal mark icon */}
+                      <svg
+                        viewBox="0 0 24 24"
+                        className="mt-0.5 h-5 w-5 shrink-0"
+                        aria-hidden
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106z"
+                          fill="#003087"
+                        />
+                        <path
+                          d="M21.222 6.917a3.35 3.35 0 0 0-.607-.541c-.013.076-.026.175-.041.254-.59 3.025-2.566 6.582-8.562 6.582H9.819l-1.24 7.86h4.446c.458 0 .847-.334.918-.787l.038-.196.726-4.604.047-.254c.07-.453.46-.787.918-.787h.578c3.741 0 6.669-1.52 7.523-5.918.356-1.83.173-3.355-.547-4.429z"
+                          fill="#009cde"
+                        />
+                      </svg>
                       <div className="min-w-0 flex-1">
-                        <p className="font-medium text-foreground">Card Payments</p>
+                        <p className="font-medium text-foreground">Card/Bank Payments via PayPal</p>
                         <p className="text-sm text-muted-foreground">
-                          Powered by PayPal — no PayPal account required
+                          Pay with any card or bank account through PayPal
                         </p>
-                        {selectedPaymentMethod === 'paypal' ? (
+                        {selectedPaymentMethod === 'paypal-guide' ? (
                           <p className="mt-2 text-xs text-muted-foreground">
-                            Pay with any debit or credit card via PayPal&apos;s secure checkout.
+                            You&apos;ll be guided through a simple step-by-step PayPal payment flow.
                           </p>
                         ) : null}
                       </div>
@@ -799,6 +841,23 @@ export default function CheckoutPage() {
                       </div>
                     </div>
                   </button>
+
+                  {/* ── Card Payments — currently unavailable ──────────────── */}
+                  <div className="space-y-1">
+                    <div className="relative w-full cursor-not-allowed rounded-lg border border-border/50 bg-muted/20 p-4 opacity-50">
+                      <div className="flex gap-3">
+                        <CreditCard className="mt-0.5 h-5 w-5 shrink-0 text-muted-foreground" />
+                        <div className="min-w-0 flex-1">
+                          <p className="font-medium text-muted-foreground">Card Payment</p>
+                          <p className="text-sm text-muted-foreground">
+                            Direct card checkout
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    <p className="px-1 text-xs text-muted-foreground">Currently unavailable</p>
+                  </div>
+
                 </CardContent>
               </Card>
             </div>
@@ -826,15 +885,17 @@ export default function CheckoutPage() {
                   >
                     {isProcessing
                       ? 'Processing...'
-                      : selectedPaymentMethod === 'paypal'
-                        ? 'Continue to card checkout'
-                        : selectedPaymentMethod === 'bank-transfer'
-                          ? 'Pay with Bank Transfer'
-                          : selectedPaymentMethod === 'cash' && cashSubMethod === 'wise'
-                            ? 'Pay with Cash (Wise)'
-                            : selectedPaymentMethod === 'cash'
-                              ? 'Pay with Cash'
-                              : 'Pay with Crypto'}
+                      : selectedPaymentMethod === 'paypal-guide'
+                        ? 'Continue to PayPal payment'
+                        : selectedPaymentMethod === 'paypal'
+                          ? 'Continue to card checkout'
+                          : selectedPaymentMethod === 'bank-transfer'
+                            ? 'Pay with Bank Transfer'
+                            : selectedPaymentMethod === 'cash' && cashSubMethod === 'wise'
+                              ? 'Pay with Cash (Wise)'
+                              : selectedPaymentMethod === 'cash'
+                                ? 'Pay with Cash'
+                                : 'Pay with Crypto'}
                   </Button>
 
                   <p className="mt-4 text-center text-xs text-muted-foreground">

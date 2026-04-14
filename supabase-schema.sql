@@ -112,6 +112,32 @@ create table if not exists public.messages (
 );
 alter table public.messages disable row level security;
 
+-- NEWSLETTER SUBSCRIPTIONS
+create table if not exists public.newsletter_subscriptions (
+  id text primary key,
+  email text not null unique,
+  created_at timestamptz not null default now()
+);
+alter table public.newsletter_subscriptions disable row level security;
+
+-- USER ADDRESSES (saved shipping addresses, keyed by auth email)
+create table if not exists public.user_addresses (
+  id text primary key,
+  user_email text not null,
+  first_name text not null,
+  last_name text not null,
+  country text not null default 'United States',
+  address1 text not null,
+  address2 text,
+  city text not null,
+  postal_code text not null,
+  province text,
+  phone text,
+  created_at timestamptz not null default now()
+);
+create index if not exists user_addresses_email_idx on public.user_addresses(user_email);
+alter table public.user_addresses disable row level security;
+
 -- STORAGE
 -- Create bucket \"product-images\" in Supabase dashboard (Storage) and mark it public.
 -- This is not SQL-managed in most Supabase setups.

@@ -16,23 +16,19 @@ import { resolveProductImageSrc } from '@/lib/product-image'
 import { packageLineTotalCents } from '@/lib/product-price'
 import { displayDosageLabel } from '@/lib/dosage-variants'
 import { cn } from '@/lib/utils'
-import { formatOrdOrderIdDisplay, generateOrdOrderId } from '@/lib/paypal-order-id'
+import { formatOrdOrderIdDisplay, generateOrdOrderId, normalizeOrderNumberForLookup } from '@/lib/paypal-order-id'
 
 const NAVY = '#0f172a'
-/** Slightly lighter than card background (`#0f172a`) for secondary actions */
-const WISE_TUTORIAL_BTN_BG = '#1e293b'
-
 const SHIPPING_CENTS = 2500
 const HST_RATE = 0.13
 const NO_VIAL_LINE_COPY_SLUGS = new Set(['syringe-kit', 'capsule-stack'])
 
-const WISE_RECIPIENT_EMAIL = 'terrainpayments@gmail.com'
-const WISE_REGISTER_URL = 'https://wise.com/register#/email'
-/** Replace with your YouTube tutorial URLs for each step */
-const WISE_YOUTUBE_STEP1 = '#'
-const WISE_YOUTUBE_STEP2 = '#'
-const WISE_YOUTUBE_STEP3 = '#'
+const PAYPAL_REGISTER_URL = 'https://www.paypal.com/us/webapps/mpp/account-selection'
+const PAYPAL_ME_URL = 'https://www.paypal.com/paypalme/TerrainLab'
 const DISCORD_INVITE_URL = '#'
+
+/** Reference: PayPal.me-style payment screen (order ID in note, amount in USD) */
+const PAYPAL_SCREENSHOT_SRC = '/images/paypal-payment-reference.png'
 
 function DiscordGlyph({ className }: { className?: string }) {
   return (
@@ -52,6 +48,60 @@ function formatPrice(cents: number) {
     style: 'currency',
     currency: 'USD',
   }).format(cents / 100)
+}
+
+function PayPalStepCard({
+  stepNumber,
+  title,
+  afterTitle,
+  children,
+}: {
+  stepNumber: string
+  title: string
+  afterTitle?: ReactNode
+  children: ReactNode
+}) {
+  return (
+    <section className="rounded-xl border border-sky-200 bg-sky-50 px-5 py-5 shadow-sm">
+      <p className="text-3xl font-bold leading-none text-sky-300 sm:text-4xl">{stepNumber}</p>
+      <h2 className="mt-2 text-lg font-bold tracking-tight text-slate-900 sm:text-xl">{title}</h2>
+      {afterTitle ? <div className="mt-3">{afterTitle}</div> : null}
+      <div
+        className={cn(
+          'mt-3 text-base leading-relaxed text-slate-800 sm:text-lg sm:leading-relaxed',
+          afterTitle && 'mt-4'
+        )}
+      >
+        {children}
+      </div>
+    </section>
+  )
+}
+
+function CopyValueBox({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-lg border border-sky-200 bg-white p-3">
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0 flex-1">
+          <p className="text-sm font-medium leading-snug text-sky-800 sm:text-[0.9375rem]">{label}</p>
+          <p className="mt-1.5 font-mono text-base font-semibold text-slate-900 sm:text-lg">{value}</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => {
+            navigator.clipboard.writeText(value)
+            const short = label.split(' - ')[0]?.trim() ?? label
+            toast.success(`${short} copied`)
+          }}
+          className="inline-flex shrink-0 items-center gap-1 rounded-md border border-sky-200 bg-sky-50 px-2.5 py-1.5 text-xs font-semibold text-sky-700 transition-colors hover:bg-sky-100"
+          title="Copy value"
+        >
+          <Copy className="h-3.5 w-3.5" />
+          Copy
+        </button>
+      </div>
+    </div>
+  )
 }
 
 function OrderSummary({
@@ -167,50 +217,19 @@ function OrderSummary({
   )
 }
 
-function WiseStepCard({
-  stepNumber,
-  title,
-  children,
-  youtubeUrl,
-}: {
-  stepNumber: string
-  title: string
-  children: ReactNode
-  youtubeUrl?: string
-}) {
-  return (
-    <section className="rounded-xl border border-white/10 bg-[#0f172a] px-4 py-4 text-white shadow-sm sm:px-5 sm:py-4">
-      <p className="text-3xl font-bold leading-none text-white/25 sm:text-4xl">{stepNumber}</p>
-      <h2 className="mt-2 text-lg font-bold tracking-tight text-white sm:text-xl">{title}</h2>
-      <div className="mt-3 text-sm leading-relaxed text-white/90 sm:text-[0.9375rem]">
-        {children}
-      </div>
-      {youtubeUrl ? (
-        <a
-          href={youtubeUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-4 inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90"
-          style={{ backgroundColor: WISE_TUTORIAL_BTN_BG }}
-        >
-          Tutorial <ExternalLink className="h-4 w-4" />
-        </a>
-      ) : null}
-    </section>
-  )
-}
-
-function WiseCheckoutContent() {
+function PayPalCheckoutContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const { isCartHydrated, items, subtotalCents, discountCents, referralCode } = useCart()
+  const { isCartHydrated, items, subtotalCents, discountCents, referralCode, clearCart } = useCart()
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false)
+  const [transactionId, setTransactionId] = useState('')
   const [checks, setChecks] = useState<[boolean, boolean, boolean]>([false, false, false])
-  const [confirmEmail, setConfirmEmail] = useState('')
+
   const [fallbackOrderId] = useState(() => generateOrdOrderId())
 
   const orderIdRaw = searchParams.get('order')?.trim() || fallbackOrderId
   const orderIdDisplay = formatOrdOrderIdDisplay(orderIdRaw.replace(/^#/, ''))
+  const customerEmailFromCheckout = searchParams.get('email')?.trim() || ''
   const country = searchParams.get('country') || 'US'
 
   const afterDiscount = subtotalCents - discountCents
@@ -219,8 +238,9 @@ function WiseCheckoutContent() {
   const totalFromQuery = Number.parseFloat(searchParams.get('total') || '')
   const totalUsd = Number.isFinite(totalFromQuery) ? totalFromQuery : totalCentsFromContext / 100
   const formattedTotalUsd = totalUsd.toFixed(2)
+  const formattedTotal = `$${formattedTotalUsd}`
+
   const allChecked = checks.every(Boolean)
-  const emailLooksValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(confirmEmail.trim())
 
   const toggleCheck = (index: number, checked: boolean) => {
     setChecks((prev) => {
@@ -232,8 +252,54 @@ function WiseCheckoutContent() {
 
   const resetModal = () => {
     setIsConfirmModalOpen(false)
+    setTransactionId('')
     setChecks([false, false, false])
-    setConfirmEmail('')
+  }
+
+  const handleSubmitConfirmation = async () => {
+    if (!allChecked) {
+      toast.error('Please confirm all checkboxes')
+      return
+    }
+    try {
+      const res = await fetch('/api/checkout/paypal-guide-confirm', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          orderNumber: orderIdRaw,
+          paypalTransactionId: transactionId.trim() || null,
+        }),
+      })
+      const data = (await res.json()) as { error?: string; alreadyConfirmed?: boolean }
+      if (!res.ok) {
+        throw new Error(data.error ?? 'Confirmation failed')
+      }
+      const tid = transactionId.trim()
+      if (data.alreadyConfirmed) {
+        toast.success('This order was already confirmed.')
+      } else {
+        toast.success(
+          tid.length > 0
+            ? 'Payment confirmed. Thank you — your order is in our system.'
+            : 'Payment confirmed. Adding a Transaction ID next time can speed up verification.'
+        )
+      }
+      resetModal()
+      clearCart()
+
+      const orderForUrl = encodeURIComponent(normalizeOrderNumberForLookup(orderIdRaw.replace(/^#/, '')))
+      const emailForUrl =
+        customerEmailFromCheckout.length > 0
+          ? encodeURIComponent(customerEmailFromCheckout)
+          : ''
+      if (emailForUrl) {
+        router.push(`/track?auto=1&order=${orderForUrl}&email=${emailForUrl}`)
+      } else {
+        router.push(`/track?order=${orderForUrl}`)
+      }
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : 'Could not confirm payment')
+    }
   }
 
   if (!isCartHydrated) {
@@ -257,7 +323,7 @@ function WiseCheckoutContent() {
           <Card className="border-border/60">
             <CardContent className="py-10 text-center">
               <p className="text-muted-foreground">
-                Your cart is empty. Add items before continuing with Wise payment.
+                Your cart is empty. Add items before continuing with PayPal payment.
               </p>
               <Link href="/shop">
                 <Button className="mt-6 hover:opacity-90" style={{ backgroundColor: NAVY }}>
@@ -283,80 +349,125 @@ function WiseCheckoutContent() {
           Back to Checkout
         </button>
 
-        {/* Mirror main checkout: left ~60% (3/5), right summary ~40% (2/5) */}
+        <div className="mb-7">
+          <div className="flex items-center gap-3">
+            <svg
+              viewBox="0 0 24 24"
+              className="h-7 w-7 shrink-0"
+              aria-hidden
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106z"
+                fill="#003087"
+              />
+              <path
+                d="M21.222 6.917a3.35 3.35 0 0 0-.607-.541c-.013.076-.026.175-.041.254-.59 3.025-2.566 6.582-8.562 6.582H9.819l-1.24 7.86h4.446c.458 0 .847-.334.918-.787l.038-.196.726-4.604.047-.254c.07-.453.46-.787.918-.787h.578c3.741 0 6.669-1.52 7.523-5.918.356-1.83.173-3.355-.547-4.429z"
+                fill="#009cde"
+              />
+            </svg>
+            <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+              Bank/Card Payments via PayPal
+            </h1>
+          </div>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Follow the steps below to complete your payment securely via PayPal.
+          </p>
+          <a
+            href={DISCORD_INVITE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-4 flex w-full max-w-xl items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-semibold text-white shadow-sm transition-opacity hover:opacity-95 sm:text-base"
+            style={{ backgroundColor: '#5865F2' }}
+          >
+            <DiscordGlyph className="h-5 w-5 shrink-0" />
+            <span className="text-center leading-snug">
+              Need Help? Join our discord to get assistance.
+            </span>
+            <ExternalLink className="h-4 w-4 shrink-0 opacity-90" />
+          </a>
+        </div>
+
         <div className="grid gap-8 lg:grid-cols-5">
-          <div className="space-y-0 lg:col-span-3">
-            <div className="space-y-3 sm:space-y-4">
-              <WiseStepCard stepNumber="01" title="Create a Wise Account" youtubeUrl={WISE_YOUTUBE_STEP1}>
-                <p>
-                  If you don&apos;t already have a Wise account, create one for free. It only takes a few minutes.
-                </p>
+          <div className="space-y-3 sm:space-y-4 lg:col-span-3">
+            {/* Step 1 */}
+            <PayPalStepCard stepNumber="01" title="Create a PayPal Account">
+              <p>
+                Head to PayPal and create a free account. You&apos;ll need your email, phone number, and the name on your payment card. For occupation, select any option from the list.
+              </p>
+              <a
+                href={PAYPAL_REGISTER_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-4 inline-flex items-center gap-1.5 rounded-lg border border-sky-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-900 shadow-sm transition-colors hover:bg-sky-50"
+              >
+                Create a PayPal Account
+                <ExternalLink className="h-4 w-4 shrink-0 text-sky-500" />
+              </a>
+              <p className="mt-3 text-sm text-slate-600 sm:text-base">
+                Already have a PayPal account? Skip this step and go to Step 2.
+              </p>
+            </PayPalStepCard>
+
+            {/* Step 2 */}
+            <PayPalStepCard
+              stepNumber="02"
+              title="Send Payment"
+              afterTitle={
                 <a
-                  href={WISE_REGISTER_URL}
+                  href={PAYPAL_ME_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-sky-300 underline-offset-4 hover:underline"
+                  className="inline-flex w-full items-center justify-center gap-1.5 rounded-lg px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-opacity hover:opacity-90 sm:w-auto sm:justify-start"
+                  style={{ backgroundColor: '#009cde' }}
                 >
-                  Create your Wise account (email signup){' '}
-                  <ExternalLink className="h-4 w-4 shrink-0 opacity-90" />
+                  Open PayPal Payment Page
+                  <ExternalLink className="h-4 w-4 shrink-0" />
                 </a>
-              </WiseStepCard>
+              }
+            >
+              <p>
+                Click the button above to open our PayPal page. Hit &apos;Pay&apos;, then paste your Order Total in the USD field and your Order ID in the Note field. The format should look like the image below. Copy both values using the buttons below. Make sure the amount is in USD.
+              </p>
 
-              <WiseStepCard stepNumber="02" title="Link Your Bank or Card" youtubeUrl={WISE_YOUTUBE_STEP2}>
-                <p>
-                  Inside Wise, link your bank account or credit card. Then send your payment to:
-                </p>
-                <div className="mt-3 rounded-lg border border-white/15 bg-white/10 p-3">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="min-w-0">
-                      <p className="text-xs text-white/75">Email:</p>
-                      <p className="font-mono text-sm font-semibold text-white sm:text-base">{WISE_RECIPIENT_EMAIL}</p>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        navigator.clipboard.writeText(WISE_RECIPIENT_EMAIL)
-                        toast.success('Wise recipient email copied')
-                      }}
-                      className="shrink-0 rounded-md p-1.5 text-white/80 transition-colors hover:bg-white/10 hover:text-white"
-                      title="Copy recipient email"
-                    >
-                      <Copy className="h-4 w-4" />
-                    </button>
+              <div className="mt-5 rounded-xl border border-sky-200 bg-white/80 p-4 shadow-sm">
+                <h3 className="text-base font-bold text-slate-900 sm:text-lg">Input Order Information</h3>
+                <div className="mt-4 space-y-3">
+                  <CopyValueBox
+                    label="Order Total - Paste in this amount in the USD Field"
+                    value={formattedTotal}
+                  />
+                  <CopyValueBox
+                    label="Order ID - Paste in the note field"
+                    value={orderIdDisplay}
+                  />
+                </div>
+                <div className="mt-5 flex justify-center">
+                  <div className="relative w-full max-w-[280px] overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-md sm:max-w-[320px]">
+                    <Image
+                      src={PAYPAL_SCREENSHOT_SRC}
+                      alt="PayPal payment screen: enter USD amount and paste your Order ID in the note field"
+                      width={640}
+                      height={720}
+                      className="h-auto w-full object-cover object-top"
+                      sizes="(max-width: 640px) 100vw, 320px"
+                      priority
+                    />
                   </div>
                 </div>
-              </WiseStepCard>
+                <p className="mt-4 text-base font-medium text-amber-800 sm:text-lg">
+                  Mistakes with this step may lead to delayed shipment or refunds.
+                </p>
+              </div>
+            </PayPalStepCard>
 
-              <WiseStepCard stepNumber="03" title="Send Exact Amount &amp; Include Your Order ID" youtubeUrl={WISE_YOUTUBE_STEP3}>
-                <p>
-                  Send exactly <strong className="text-white">${formattedTotalUsd} USD</strong>. In the reference or note field on Wise, type
-                  your Order ID exactly as shown:
-                </p>
-                <div className="mt-3 flex flex-wrap items-center gap-2">
-                  <code className="inline-flex rounded-md bg-white/12 px-2.5 py-1.5 font-mono text-sm font-semibold text-white sm:text-base">
-                    {orderIdDisplay}
-                  </code>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      void navigator.clipboard.writeText(orderIdDisplay)
-                      toast.success('Order ID copied')
-                    }}
-                    className="inline-flex shrink-0 items-center gap-1 rounded-md border border-white/20 bg-white/10 px-2.5 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-white/15"
-                    title="Copy order ID"
-                  >
-                    <Copy className="h-3.5 w-3.5" />
-                    Copy
-                  </button>
-                </div>
-                <p className="mt-3 text-xs text-white/85 sm:text-sm">
-                  This helps us match your payment to your order automatically.
-                </p>
-                <p className="mt-3 text-xs font-medium text-amber-200/95 sm:text-sm">
-                  Mistakes with payment will lead to delays in processing and potential refunds.
-                </p>
-              </WiseStepCard>
-            </div>
+            {/* Step 3 */}
+            <PayPalStepCard stepNumber="03" title="Finish Transaction">
+              <p>
+                After clicking Next, you will be prompted to the transaction page. Pay by Bank Transfer by linking your bank to PayPal, or pay through card, by linking a credit/debit card. Copying your PayPal Transaction ID is optional, but it speeds up how quickly we can match your payment—then click Confirm Payment on the right.
+              </p>
+            </PayPalStepCard>
           </div>
 
           <div className="lg:col-span-2">
@@ -376,12 +487,15 @@ function WiseCheckoutContent() {
                 <Button
                   type="button"
                   onClick={() => setIsConfirmModalOpen(true)}
-                  className={cn('mt-6 w-full text-base hover:opacity-90')}
+                  className="mt-6 w-full text-base hover:opacity-90"
                   size="lg"
                   style={{ backgroundColor: NAVY }}
                 >
                   Confirm Payment
                 </Button>
+                <p className="mt-4 text-center text-xs text-muted-foreground">
+                  After paying on PayPal, confirm here so we can match your payment to this order.
+                </p>
               </CardContent>
             </Card>
           </div>
@@ -423,18 +537,20 @@ function WiseCheckoutContent() {
             <h2 className="mt-6 text-center text-3xl font-bold tracking-tight">Confirm Your Payment</h2>
 
             <div className="mt-6 space-y-2">
-              <Label htmlFor="wise-confirm-email" className="text-sm font-medium text-white">
-                Your Email Address
+              <Label htmlFor="pp-transaction-id" className="text-sm font-medium text-white">
+                PayPal Transaction ID <span className="font-normal text-white/70">(optional)</span>
               </Label>
               <Input
-                id="wise-confirm-email"
-                type="email"
-                autoComplete="email"
-                placeholder="you@example.com"
-                value={confirmEmail}
-                onChange={(e) => setConfirmEmail(e.target.value)}
+                id="pp-transaction-id"
+                autoComplete="off"
+                placeholder="Optional — paste if you have it"
+                value={transactionId}
+                onChange={(e) => setTransactionId(e.target.value)}
                 className="h-10 border-white/20 bg-white text-[#0f172a] placeholder:text-muted-foreground focus-visible:border-white/40 focus-visible:ring-white/25"
               />
+              <p className="text-xs text-white/60">
+                Optional: including this from your PayPal receipt or email helps us verify your payment faster.
+              </p>
             </div>
 
             <div className="mt-6 space-y-2 rounded-xl border border-white/15 bg-white/10 p-4 sm:p-5">
@@ -463,8 +579,8 @@ function WiseCheckoutContent() {
 
             <div className="mt-6 space-y-4">
               {([
-                `I have sent exactly $${formattedTotalUsd} USD via Wise`,
-                `I included my Order ID (${orderIdDisplay}) in the Wise reference or note field`,
+                `I have sent exactly $${formattedTotalUsd} USD via PayPal`,
+                `I included my Order ID (${orderIdDisplay}) in the PayPal note field`,
                 'I understand that payment errors or delays may result in order delays or refunds',
               ] as const).map((label, index) => (
                 <label key={label} className="flex cursor-pointer items-start gap-3 text-base leading-relaxed sm:text-lg">
@@ -495,11 +611,8 @@ function WiseCheckoutContent() {
 
             <Button
               type="button"
-              disabled={!allChecked || !emailLooksValid}
-              onClick={() => {
-                toast.success('Payment confirmation submitted. Our team will review your Wise transfer.')
-                resetModal()
-              }}
+              disabled={!allChecked}
+              onClick={handleSubmitConfirmation}
               className="mt-6 w-full border border-white/25 bg-[#020617] text-base text-white hover:bg-[#020617]/90 disabled:opacity-50 sm:text-lg"
               size="lg"
             >
@@ -512,10 +625,10 @@ function WiseCheckoutContent() {
   )
 }
 
-export default function CheckoutWisePage() {
+export default function CheckoutPayPalPage() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <WiseCheckoutContent />
+      <PayPalCheckoutContent />
     </Suspense>
   )
 }

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase/admin'
+import { normalizeOrderNumberForLookup } from '@/lib/paypal-order-id'
 
 export async function POST(request: Request) {
   try {
@@ -15,10 +16,11 @@ export async function POST(request: Request) {
     }
 
     const emailLower = String(email).toLowerCase()
+    const orderNumLookup = normalizeOrderNumberForLookup(String(orderNumber))
     const { data: order, error } = await supabase
       .from('orders')
       .select('*')
-      .eq('order_number', orderNumber)
+      .eq('order_number', orderNumLookup)
       .maybeSingle()
     if (error) throw error
 

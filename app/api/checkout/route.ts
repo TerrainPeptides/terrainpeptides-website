@@ -3,6 +3,7 @@ import { getProductByIdAsync } from '@/lib/data'
 import { NextResponse } from 'next/server'
 import { orderLineFromCheckoutItem, type CheckoutCartItemPayload } from '@/lib/checkout-line'
 import { nanoid } from 'nanoid'
+import { generateOrdOrderId } from '@/lib/paypal-order-id'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import { insertPendingCheckoutOrderWithItems } from '@/lib/supabase/order-persist'
 
@@ -60,7 +61,7 @@ export async function POST(request: Request) {
 
     const finalDiscountCents = discountCents || 0
     const totalCents = subtotalCents - finalDiscountCents
-    const orderNumber = `HP-${nanoid(8).toUpperCase()}`
+    const orderNumber = generateOrdOrderId()
     const shippingPayload = {
       name: shippingInfo.name,
       address1: shippingInfo.address1,
