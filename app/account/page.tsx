@@ -4,10 +4,10 @@ import { useSession, signOut } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import {
   User,
   MapPin,
-  Gift,
   ShoppingBag,
   LogOut,
   Plus,
@@ -19,9 +19,13 @@ import {
   Copy,
   Check,
   ShoppingCart,
+  Users,
+  DollarSign,
+  TrendingUp,
+  Link2,
 } from 'lucide-react'
 
-type Tab = 'profile' | 'addresses' | 'discounts'
+type Tab = 'profile' | 'addresses' | 'discounts' | 'affiliate'
 
 interface SavedDiscount {
   code: string
@@ -52,6 +56,24 @@ interface Order {
   items?: { product_name: string; quantity: number }[]
 }
 
+interface AffiliateCode {
+  id: string
+  code: string
+  discount_percent: number
+  current_uses: number
+  active: boolean
+}
+
+interface AffiliateOrder {
+  id: string
+  order_number: string
+  email: string
+  total_cents: number
+  payment_status: string
+  status: string
+  created_at: string
+}
+
 const STATUS_COLORS: Record<string, string> = {
   pending: 'bg-yellow-100 text-yellow-700',
   processing: 'bg-blue-100 text-blue-700',
@@ -75,6 +97,16 @@ export default function AccountPage() {
   const [savedDiscounts, setSavedDiscounts] = useState<SavedDiscount[]>([])
   const [copiedCode, setCopiedCode] = useState<string | null>(null)
   const [appliedCode, setAppliedCode] = useState<string | null>(null)
+
+  const [affiliateCode, setAffiliateCode] = useState<AffiliateCode | null>(null)
+  const [affiliateOrders, setAffiliateOrders] = useState<AffiliateOrder[]>([])
+  const [affiliateEarned, setAffiliateEarned] = useState(0)
+  const [affiliatePaid, setAffiliatePaid] = useState(0)
+  const [affiliateLoading, setAffiliateLoading] = useState(false)
+  const [claimInput, setClaimInput] = useState('')
+  const [claimLoading, setClaimLoading] = useState(false)
+  const [claimError, setClaimError] = useState('')
+  const [copiedAffiliate, setCopiedAffiliate] = useState(false)
 
   useEffect(() => {
     try {
@@ -114,6 +146,57 @@ export default function AccountPage() {
       fetchOrders()
     }
   }, [session])
+
+  useEffect(() => {
+    if (session && activeTab === 'affiliate') {
+      fetchAffiliate()
+    }
+  }, [session, activeTab])
+
+  async function fetchAffiliate() {
+    setAffiliateLoading(true)
+    try {
+      const res = await fetch('/api/affiliate')
+      const data = await res.json()
+      setAffiliateCode(data.code ?? null)
+      setAffiliateOrders(data.orders ?? [])
+      setAffiliateEarned(data.earned_cents ?? 0)
+      setAffiliatePaid(data.paid_cents ?? 0)
+    } finally {
+      setAffiliateLoading(false)
+    }
+  }
+
+  async function handleClaimCode(e: React.FormEvent) {
+    e.preventDefault()
+    setClaimError('')
+    setClaimLoading(true)
+    try {
+      const res = await fetch('/api/affiliate/claim', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: claimInput }),
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        setClaimError(data.error ?? 'Failed to claim code.')
+      } else {
+        await fetchAffiliate()
+        setClaimInput('')
+      }
+    } catch {
+      setClaimError('Something went wrong. Please try again.')
+    } finally {
+      setClaimLoading(false)
+    }
+  }
+
+  function copyAffiliateCode(code: string) {
+    navigator.clipboard.writeText(code).then(() => {
+      setCopiedAffiliate(true)
+      setTimeout(() => setCopiedAffiliate(false), 2000)
+    })
+  }
 
   async function fetchAddresses() {
     setAddressLoading(true)
@@ -212,11 +295,12 @@ export default function AccountPage() {
 
       {/* ── Tab cards ────────────────────────────────────── */}
       <div className="mx-auto mt-8 max-w-3xl px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           {([
             { id: 'profile', icon: User, label: 'Profile', sub: 'Edit your details' },
             { id: 'addresses', icon: MapPin, label: 'Addresses', sub: 'Manage addresses' },
             { id: 'discounts', icon: Tag, label: 'Discounts', sub: `${savedDiscounts.length} saved`, badge: savedDiscounts.length > 0 },
+            { id: 'affiliate', icon: Users, label: 'Affiliate', sub: affiliateCode ? `Code: ${affiliateCode.code}` : 'Earn commissions', badge: false },
           ] as const).map(({ id, icon: Icon, label, sub, badge }) => (
             <button
               key={id}
@@ -382,6 +466,193 @@ export default function AccountPage() {
                 ))
               )}
             </div>
+          </div>
+        )}
+
+        {/* ── Affiliate tab ────────────────────────────── */}
+        {activeTab === 'affiliate' && (
+          <div className="mt-5 space-y-5">
+            {/* Hero Banner */}
+            <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+              <div className="grid md:grid-cols-2">
+                {/* Left: text */}
+                <div className="flex flex-col justify-center p-7 sm:p-8">
+                  <p className="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-[#6c5ce7]/70">
+                    Partner Program
+                  </p>
+                  <h2 className="mt-2 text-2xl font-extrabold leading-snug text-gray-900 sm:text-3xl">
+                    Partner with premium<br />research peptides
+                  </h2>
+                  <p className="mt-3 text-sm leading-relaxed text-gray-500">
+                    Earn 20% commission on first orders, 10% recurring on all research peptide purchases.
+                  </p>
+                  <div className="mt-5 grid grid-cols-2 gap-x-6 gap-y-4">
+                    {[
+                      { value: '20%', label: 'First order commission' },
+                      { value: '10%', label: 'Lifetime recurring' },
+                      { value: '30 days', label: 'Cookie window' },
+                      { value: 'Monthly', label: 'Payouts via bank deposit' },
+                    ].map(s => (
+                      <div key={s.label}>
+                        <p className="text-lg font-extrabold text-gray-900">{s.value}</p>
+                        <p className="text-[0.7rem] font-medium text-gray-400">{s.label}</p>
+                      </div>
+                    ))}
+                  </div>
+                  {!affiliateCode && !affiliateLoading && (
+                    <div className="mt-6">
+                      <button
+                        onClick={() => document.getElementById('claim-code-input')?.focus()}
+                        className="inline-flex items-center gap-2 rounded-full bg-[#0A1628] px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[#132744]"
+                      >
+                        Become a Partner →
+                      </button>
+                    </div>
+                  )}
+                </div>
+                {/* Right: hero image */}
+                <div className="relative flex items-center justify-center overflow-hidden bg-[#eef1f7] p-6">
+                  <Image
+                    src="/images/affiliate-hero.png"
+                    alt="Affiliate earnings"
+                    width={520}
+                    height={380}
+                    className="relative z-10 h-auto w-full max-w-sm object-contain drop-shadow-xl"
+                    priority
+                  />
+                </div>
+              </div>
+            </div>
+
+            {affiliateLoading ? (
+              <div className="flex justify-center py-10">
+                <div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-200 border-t-[#6c5ce7]" />
+              </div>
+            ) : !affiliateCode ? (
+              /* Code Claim Form */
+              <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+                <h3 className="text-base font-semibold text-gray-900">Claim your referral code</h3>
+                <p className="mt-1 text-sm text-gray-400">
+                  Choose a unique code — customers will use it for 10% off their order and you earn commissions.
+                </p>
+                <form onSubmit={handleClaimCode} className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-start">
+                  <div className="flex-1">
+                    <input
+                      id="claim-code-input"
+                      placeholder="YOURCODE"
+                      value={claimInput}
+                      onChange={e => { setClaimInput(e.target.value.toUpperCase()); setClaimError('') }}
+                      className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 font-mono text-sm font-semibold uppercase tracking-widest text-gray-800 outline-none transition placeholder:font-normal placeholder:tracking-normal placeholder:text-gray-400 focus:border-[#6c5ce7] focus:ring-2 focus:ring-[#6c5ce7]/10"
+                      maxLength={20}
+                      required
+                    />
+                    {claimError && (
+                      <p className="mt-1.5 text-xs font-medium text-red-500">{claimError}</p>
+                    )}
+                  </div>
+                  <button
+                    type="submit"
+                    disabled={claimLoading || claimInput.length < 3}
+                    className="flex items-center gap-2 rounded-xl bg-[#0A1628] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#132744] disabled:opacity-50"
+                  >
+                    {claimLoading ? <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/30 border-t-white" /> : <Link2 className="h-3.5 w-3.5" />}
+                    Claim Code
+                  </button>
+                </form>
+              </div>
+            ) : (
+              /* Affiliate Dashboard */
+              <div className="space-y-4">
+                {/* Code + earnings */}
+                <div className="grid gap-4 sm:grid-cols-3">
+                  {/* Your code card */}
+                  <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:col-span-1">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">Your Code</p>
+                    <p className="mt-1.5 font-mono text-2xl font-extrabold tracking-widest text-[#0A1628]">
+                      {affiliateCode.code}
+                    </p>
+                    <p className="mt-1 text-xs text-gray-400">{affiliateCode.discount_percent}% off for customers</p>
+                    <button
+                      onClick={() => copyAffiliateCode(affiliateCode.code)}
+                      className="mt-3 flex items-center gap-1.5 rounded-lg border border-gray-200 bg-gray-50 px-3 py-1.5 text-xs font-semibold text-gray-600 transition hover:border-gray-300 hover:shadow-sm"
+                    >
+                      {copiedAffiliate ? <><Check className="h-3.5 w-3.5 text-emerald-500" />Copied!</> : <><Copy className="h-3.5 w-3.5" />Copy Code</>}
+                    </button>
+                  </div>
+
+                  {/* Funds Available */}
+                  <div className="rounded-2xl border border-emerald-100 bg-emerald-50 p-5 shadow-sm">
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <p className="text-xs font-semibold uppercase tracking-wide text-emerald-600">Funds Available</p>
+                        <p className="mt-1.5 text-2xl font-extrabold text-emerald-700">
+                          ${((affiliateEarned - affiliatePaid) / 100).toFixed(2)}
+                        </p>
+                        <p className="mt-1 text-xs text-emerald-600/70">Pending payout</p>
+                      </div>
+                      <DollarSign className="h-8 w-8 text-emerald-400/50" />
+                    </div>
+                  </div>
+
+                  {/* Funds Received */}
+                  <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">Funds Received</p>
+                        <p className="mt-1.5 text-2xl font-extrabold text-gray-900">
+                          ${(affiliatePaid / 100).toFixed(2)}
+                        </p>
+                        <p className="mt-1 text-xs text-gray-400">Total paid out</p>
+                      </div>
+                      <TrendingUp className="h-8 w-8 text-gray-300" />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Orders through code */}
+                <div className="rounded-2xl border border-gray-200 bg-white shadow-sm">
+                  <div className="flex items-center gap-2.5 border-b border-gray-100 px-6 py-4">
+                    <Users className="h-4 w-4 text-gray-400" />
+                    <h3 className="text-sm font-semibold text-gray-900">Orders via your code</h3>
+                    <span className="ml-auto text-xs text-gray-400">{affiliateOrders.length} total</span>
+                  </div>
+                  {affiliateOrders.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center py-12 text-center">
+                      <Users className="h-10 w-10 text-gray-200" strokeWidth={1.5} />
+                      <p className="mt-3 text-sm font-medium text-gray-500">No orders yet</p>
+                      <p className="mt-1 text-xs text-gray-400">Share your code and start earning commissions.</p>
+                    </div>
+                  ) : (
+                    <div className="divide-y divide-gray-50">
+                      {affiliateOrders.map(order => (
+                        <div key={order.id} className="flex items-center justify-between px-6 py-4">
+                          <div>
+                            <p className="text-sm font-medium text-gray-900">#{order.order_number}</p>
+                            <p className="text-xs text-gray-400">{order.email}</p>
+                            <p className="text-xs text-gray-400">
+                              {new Date(order.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                            </p>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-sm font-semibold text-gray-900">${(order.total_cents / 100).toFixed(2)}</p>
+                            <p className="text-xs font-medium text-emerald-600">
+                              +${((order.total_cents * 0.2) / 100).toFixed(2)} commission
+                            </p>
+                            <span className={`inline-block rounded-full px-2 py-0.5 text-xs font-medium ${
+                              order.payment_status === 'paid'
+                                ? 'bg-emerald-100 text-emerald-700'
+                                : 'bg-gray-100 text-gray-500'
+                            }`}>
+                              {order.payment_status}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         )}
 

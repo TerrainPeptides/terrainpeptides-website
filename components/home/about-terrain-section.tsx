@@ -106,16 +106,17 @@ export function AboutTerrainSection() {
               ))}
             </ul>
             <div className="mt-10">
-              <Link href="/shop">
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="rounded-full border-primary bg-white px-8 font-semibold text-primary shadow-sm hover:bg-primary hover:text-primary-foreground"
-                >
+              <Button
+                size="lg"
+                variant="outline"
+                className="rounded-full border-primary bg-white px-8 font-semibold text-primary shadow-sm hover:bg-primary hover:text-primary-foreground"
+                asChild
+              >
+                <Link href="/shop">
                   Shop Now
                   <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             </div>
           </div>
         </div>

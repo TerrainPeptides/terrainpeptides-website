@@ -416,7 +416,7 @@ a {
 }
 
 .hero-shop-now-cta {
-  animation: hero-shop-now-enter 0.8s cubic-bezier(0.22, 1, 0.36, 1) 1s both;
+  animation: hero-shop-now-enter 0.8s cubic-bezier(0.22, 1, 0.36, 1) 1s forwards;
 }
 
 @media (prefers-reduced-motion: reduce) {

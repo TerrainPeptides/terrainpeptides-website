@@ -102,6 +102,8 @@ export interface ReferralCode {
   active: boolean
   created_at: string
   expires_at: string | null
+  owner_email?: string | null
+  paid_commission_cents?: number
 }
 
 export interface FAQ {

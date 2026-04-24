@@ -1,6 +1,6 @@
 'use client'
 
-import { Suspense, useState, useEffect } from 'react'
+import { Suspense, useState, useEffect, useRef } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -86,8 +86,15 @@ function AuthPageInner() {
     confirmPassword: '',
   })
 
+  const skipTabErrorClearRef = useRef(false)
+
   useEffect(() => {
-    setErrors({})
+    // Don't wipe a success / error banner we just set when switching tabs (e.g. after signup)
+    if (skipTabErrorClearRef.current) {
+      skipTabErrorClearRef.current = false
+    } else {
+      setErrors({})
+    }
     setShowPassword(false)
     setShowConfirmPassword(false)
   }, [tab])
@@ -131,8 +138,14 @@ function AuthPageInner() {
         router.push(callbackUrl)
         router.refresh()
       }
-    } catch {
-      setErrors({ general: 'Something went wrong. Please try again.' })
+    } catch (err) {
+      // NextAuth v5 throws CredentialsSignin instead of returning { error } for bad credentials
+      const msg = err instanceof Error ? err.message : String(err)
+      if (msg.toLowerCase().includes('credentialssignin') || msg.toLowerCase().includes('credentials')) {
+        setErrors({ general: 'Invalid email or password. Please try again.' })
+      } else {
+        setErrors({ general: 'Something went wrong. Please try again.' })
+      }
     } finally {
       setLoading(false)
     }
@@ -144,7 +157,8 @@ function AuthPageInner() {
     setLoading(true)
     setErrors({})
     try {
-      const res = await fetch('/api/auth/signup', {
+      // Outside /api/auth/* so NextAuth catch-all can never intercept this route
+      const res = await fetch('/api/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -153,28 +167,41 @@ function AuthPageInner() {
           password: signUpForm.password,
         }),
       })
-      const data = await res.json()
+
+      const raw = await res.text()
+      let data: { error?: string; message?: string } = {}
+      if (raw.trim()) {
+        try {
+          data = JSON.parse(raw) as { error?: string; message?: string }
+        } catch {
+          setErrors({
+            general: `Registration failed (HTTP ${res.status}). The server returned an unexpected response — please try again.`,
+          })
+          return
+        }
+      }
+
       if (!res.ok) {
         setErrors({ general: data.error ?? 'Sign up failed. Please try again.' })
         return
       }
-      const signInResult = await signIn('credentials', {
-        email: signUpForm.email,
-        password: signUpForm.password,
-        redirect: false,
-      })
-      if (signInResult?.error) {
-        setTab('signin')
-        setErrors({ general: 'Account created! Please sign in.' })
-      } else {
-        if (claimPromo && promoPercent) {
-          saveClaimedPromo(claimPromo, promoPercent)
-        }
-        router.push('/account')
-        router.refresh()
+
+      const emailLower = signUpForm.email.trim().toLowerCase()
+      if (claimPromo && promoPercent) {
+        saveClaimedPromo(claimPromo, promoPercent)
       }
-    } catch {
-      setErrors({ general: 'Something went wrong. Please try again.' })
+
+      // Reliable flow: never auto sign-in here (NextAuth v5 can throw / misbehave on client).
+      skipTabErrorClearRef.current = true
+      setSignInForm({ email: emailLower, password: '' })
+      setSignUpForm({ name: '', email: '', password: '', confirmPassword: '' })
+      setTab('signin')
+      setErrors({
+        general: 'Account created! Sign in below with the same email and password.',
+      })
+    } catch (err) {
+      console.error('[auth] handleSignUp:', err)
+      setErrors({ general: 'Network error. Check your connection and try again.' })
     } finally {
       setLoading(false)
     }

@@ -22,12 +22,12 @@ export function FeaturedProducts({ products }: FeaturedProductsProps) {
               Our most popular research compounds, trusted by laboratories worldwide.
             </p>
           </div>
-          <Link href="/shop">
-            <Button variant="outline" className="gap-2">
+          <Button variant="outline" className="gap-2" asChild>
+            <Link href="/shop">
               View All
               <ArrowRight className="h-4 w-4" />
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         </div>
 
         {/* Products Grid */}

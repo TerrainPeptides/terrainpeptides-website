@@ -1,7 +1,8 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import {
   Elements,
@@ -331,10 +332,11 @@ function PaymentStep({
 
 export default function CheckoutPage() {
   const router = useRouter()
+  const { data: session } = useSession()
   const { isCartHydrated, items, subtotalCents, discountCents, referralCode } = useCart()
 
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<
-    'bank-transfer' | 'cash' | 'crypto' | 'paypal' | 'paypal-guide'
+    'bank-transfer' | 'cash' | 'crypto' | 'paypal' | 'paypal-guide' | 'square'
   >('bank-transfer')
   const [cashSubMethod, setCashSubMethod] = useState<'zelle' | 'wise' | null>(null)
   // Stable order ID generated once per session for the Wise flow
@@ -354,6 +356,12 @@ export default function CheckoutPage() {
 
   const [clientSecret, setClientSecret] = useState<string | null>(null)
   const [orderNumber, setOrderNumber] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (session?.user?.email) {
+      setShippingInfo(prev => ({ ...prev, email: session.user!.email! }))
+    }
+  }, [session?.user?.email])
 
   const afterDiscount = subtotalCents - discountCents
   const taxCents = useMemo(
@@ -397,6 +405,29 @@ export default function CheckoutPage() {
         router.push(
           `/checkout/pay?order=${encodeURIComponent(ppOrderId)}&total=${(totalCents / 100).toFixed(2)}&country=${encodeURIComponent(shippingInfo.country)}&email=${encodeURIComponent(shippingInfo.email)}`
         )
+        return
+      }
+
+      if (selectedPaymentMethod === 'square') {
+        const res = await fetch('/api/square/create-payment-link', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            items: items.map((item) => ({
+              productId: item.product.id,
+              quantity: item.quantity,
+              dosage_variant_id: item.dosage_variant_id,
+            })),
+            shippingInfo,
+            referralCode,
+            discountCents,
+          }),
+        })
+        const data = (await res.json()) as { paymentUrl?: string; error?: string }
+        if (!res.ok || !data.paymentUrl) {
+          throw new Error(data.error ?? 'Could not create Square payment link')
+        }
+        window.location.href = data.paymentUrl
         return
       }
 
@@ -454,7 +485,7 @@ export default function CheckoutPage() {
     }
   }
 
-  const selectPaymentMethod = (method: 'bank-transfer' | 'cash' | 'crypto' | 'paypal' | 'paypal-guide') => {
+  const selectPaymentMethod = (method: 'bank-transfer' | 'cash' | 'crypto' | 'paypal' | 'paypal-guide' | 'square') => {
     setSelectedPaymentMethod(method)
     if (method !== 'cash') setCashSubMethod(null)
     else setCashSubMethod('wise')
@@ -570,15 +601,10 @@ export default function CheckoutPage() {
                       />
                     </div>
                     <div className="space-y-2 sm:col-span-2">
-                      <Label htmlFor="email">Email Address</Label>
-                      <Input
-                        id="email"
-                        type="email"
-                        required
-                        placeholder="you@example.com"
-                        value={shippingInfo.email}
-                        onChange={(e) => setShippingInfo({ ...shippingInfo, email: e.target.value })}
-                      />
+                      <Label>Email Address</Label>
+                      <div className="flex items-center gap-2 rounded-lg border border-border bg-muted/40 px-4 py-2.5 text-sm text-muted-foreground">
+                        {shippingInfo.email || session?.user?.email || '—'}
+                      </div>
                     </div>
                     <div className="space-y-2 sm:col-span-2">
                       <Label htmlFor="country">Country</Label>
@@ -692,7 +718,47 @@ export default function CheckoutPage() {
                     </div>
                   </button>
 
-                  {/* ── Card / Bank Payments via PayPal ────────────────────── */}
+                  {/* ── Card Payments via Square ───────────────────────────── */}
+                  <button
+                    type="button"
+                    onClick={() => selectPaymentMethod('square')}
+                    className={cn(
+                      'relative w-full rounded-lg border p-4 text-left transition-colors',
+                      selectedPaymentMethod === 'square'
+                        ? 'border-primary bg-muted/30 shadow-sm'
+                        : 'border-border hover:bg-muted/30'
+                    )}
+                  >
+                    {selectedPaymentMethod === 'square' ? (
+                      <span className="absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full bg-[#0A1628] text-white">
+                        <Check className="h-3.5 w-3.5" strokeWidth={2.5} />
+                      </span>
+                    ) : null}
+                    <div className="flex gap-3 pr-10">
+                      {/* Square mark icon */}
+                      <svg
+                        viewBox="0 0 24 24"
+                        className="mt-0.5 h-5 w-5 shrink-0"
+                        aria-hidden
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <rect width="24" height="24" rx="4" fill="#3E4348" />
+                        <rect x="6" y="6" width="12" height="12" rx="1.5" fill="white" />
+                      </svg>
+                      <div className="min-w-0 flex-1">
+                        <p className="font-medium text-foreground">Card Payments</p>
+                        <p className="text-sm text-muted-foreground">via Square</p>
+                        {selectedPaymentMethod === 'square' ? (
+                          <p className="mt-2 text-xs text-muted-foreground">
+                            Pay securely with any credit or debit card through Square&apos;s hosted checkout.
+                          </p>
+                        ) : null}
+                      </div>
+                    </div>
+                  </button>
+
+                  {/* ── Bank Payments via PayPal ────────────────────── */}
                   <button
                     type="button"
                     onClick={() => selectPaymentMethod('paypal-guide')}
@@ -727,9 +793,9 @@ export default function CheckoutPage() {
                         />
                       </svg>
                       <div className="min-w-0 flex-1">
-                        <p className="font-medium text-foreground">Card/Bank Payments via PayPal</p>
+                        <p className="font-medium text-foreground">Bank Payments via PayPal</p>
                         <p className="text-sm text-muted-foreground">
-                          Pay with any card or bank account through PayPal
+                          Pay with any bank account through PayPal
                         </p>
                         {selectedPaymentMethod === 'paypal-guide' ? (
                           <p className="mt-2 text-xs text-muted-foreground">
@@ -842,21 +908,6 @@ export default function CheckoutPage() {
                     </div>
                   </button>
 
-                  {/* ── Card Payments — currently unavailable ──────────────── */}
-                  <div className="space-y-1">
-                    <div className="relative w-full cursor-not-allowed rounded-lg border border-border/50 bg-muted/20 p-4 opacity-50">
-                      <div className="flex gap-3">
-                        <CreditCard className="mt-0.5 h-5 w-5 shrink-0 text-muted-foreground" />
-                        <div className="min-w-0 flex-1">
-                          <p className="font-medium text-muted-foreground">Card Payment</p>
-                          <p className="text-sm text-muted-foreground">
-                            Direct card checkout
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                    <p className="px-1 text-xs text-muted-foreground">Currently unavailable</p>
-                  </div>
 
                 </CardContent>
               </Card>
@@ -885,17 +936,19 @@ export default function CheckoutPage() {
                   >
                     {isProcessing
                       ? 'Processing...'
-                      : selectedPaymentMethod === 'paypal-guide'
-                        ? 'Continue to PayPal payment'
-                        : selectedPaymentMethod === 'paypal'
-                          ? 'Continue to card checkout'
-                          : selectedPaymentMethod === 'bank-transfer'
-                            ? 'Pay with Bank Transfer'
-                            : selectedPaymentMethod === 'cash' && cashSubMethod === 'wise'
-                              ? 'Pay with Cash (Wise)'
-                              : selectedPaymentMethod === 'cash'
-                                ? 'Pay with Cash'
-                                : 'Pay with Crypto'}
+                      : selectedPaymentMethod === 'square'
+                        ? 'Continue to Card Payment (Square)'
+                        : selectedPaymentMethod === 'paypal-guide'
+                          ? 'Continue to PayPal payment'
+                          : selectedPaymentMethod === 'paypal'
+                            ? 'Continue to card checkout'
+                            : selectedPaymentMethod === 'bank-transfer'
+                              ? 'Pay with Bank Transfer'
+                              : selectedPaymentMethod === 'cash' && cashSubMethod === 'wise'
+                                ? 'Pay with Cash (Wise)'
+                                : selectedPaymentMethod === 'cash'
+                                  ? 'Pay with Cash'
+                                  : 'Pay with Crypto'}
                   </Button>
 
                   <p className="mt-4 text-center text-xs text-muted-foreground">

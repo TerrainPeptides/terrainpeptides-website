@@ -13,15 +13,16 @@ export function CTASection() {
           <p className="mx-auto mt-4 max-w-xl text-foreground/70">
             Browse our complete catalog of premium research peptides with guaranteed purity, COA documentation, and fast shipping.
           </p>
-          <Link href="/shop">
-            <Button
-              size="lg"
-              className="mt-8 px-8 shadow-lg"
-            >
+          <Button
+            size="lg"
+            className="mt-8 px-8 shadow-lg"
+            asChild
+          >
+            <Link href="/shop">
               Shop Now
               <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         </div>
       </div>
     </section>

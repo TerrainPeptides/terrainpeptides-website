@@ -68,12 +68,11 @@ export function ProductCard({ product }: ProductCardProps) {
             )}
           </div>
 
-          <button
-            type="button"
-            className="mt-4 w-full rounded-full bg-[#0A1628] py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#0A1628]/90"
+          <div
+            className="mt-4 w-full rounded-full bg-[#0A1628] py-2.5 text-center text-sm font-semibold text-white transition-colors group-hover:bg-[#0A1628]/90"
           >
             Shop Now
-          </button>
+          </div>
         </div>
       </div>
     </Link>

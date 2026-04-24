@@ -96,8 +96,8 @@ export function Navbar() {
 
           {/* Desktop Actions */}
           <div className="hidden items-center justify-self-end gap-4 md:flex">
-            <Link href="/cart">
-              <Button variant="ghost" size="icon" className="relative text-white hover:bg-white/10 hover:text-white">
+            <Button variant="ghost" size="icon" className="relative text-white hover:bg-white/10 hover:text-white" asChild>
+              <Link href="/cart">
                 <ShoppingCart className="h-5 w-5" />
                 {totalItems > 0 && (
                   <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-white text-xs font-medium text-[#0A1628]">
@@ -105,8 +105,8 @@ export function Navbar() {
                   </span>
                 )}
                 <span className="sr-only">Cart</span>
-              </Button>
-            </Link>
+              </Link>
+            </Button>
             {status === 'loading' ? null : session ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -139,27 +139,27 @@ export function Navbar() {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <Link href="/auth">
-                <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 hover:text-white">
+              <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 hover:text-white" asChild>
+                <Link href="/auth">
                   <CircleUser className="h-5 w-5" />
                   <span className="sr-only">Sign in</span>
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             )}
           </div>
 
           {/* Mobile Navigation */}
           <div className="flex items-center justify-self-end gap-2 md:hidden">
             {status === 'loading' ? null : !session ? (
-              <Link href="/auth">
-                <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 hover:text-white">
+              <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 hover:text-white" asChild>
+                <Link href="/auth">
                   <CircleUser className="h-5 w-5" />
                   <span className="sr-only">Sign in</span>
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             ) : null}
-            <Link href="/cart">
-              <Button variant="ghost" size="icon" className="relative text-white hover:bg-white/10 hover:text-white">
+            <Button variant="ghost" size="icon" className="relative text-white hover:bg-white/10 hover:text-white" asChild>
+              <Link href="/cart">
                 <ShoppingCart className="h-5 w-5" />
                 {totalItems > 0 && (
                   <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-white text-xs font-medium text-[#0A1628]">
@@ -167,8 +167,8 @@ export function Navbar() {
                   </span>
                 )}
                 <span className="sr-only">Cart</span>
-              </Button>
-            </Link>
+              </Link>
+            </Button>
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild>
                 <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 hover:text-white">

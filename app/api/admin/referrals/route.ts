@@ -24,6 +24,8 @@ export async function GET(request: Request) {
       active: Boolean(r.active),
       created_at: r.created_at,
       expires_at: r.expires_at ?? null,
+      owner_email: r.owner_email ?? null,
+      paid_commission_cents: r.paid_commission_cents ?? 0,
     }))
     return NextResponse.json({ codes })
   } catch (error) {
