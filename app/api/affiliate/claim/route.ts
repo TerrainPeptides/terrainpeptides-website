@@ -49,7 +49,7 @@ export async function POST(request: Request) {
   }
 
   const { error } = await supabase.from('referral_codes').insert({
-    id: `ref-${Date.now()}`,
+    id: crypto.randomUUID(),
     code: raw,
     discount_percent: 10,
     max_uses: null,

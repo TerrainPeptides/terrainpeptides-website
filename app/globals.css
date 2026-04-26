@@ -427,37 +427,4 @@ a {
   }
 }
 
-/* Product page — add to cart: light base, slightly darker hover fill */
-.product-add-to-cart {
-  background: #e8eaef;
-  isolation: isolate;
-}
-
-.product-add-to-cart::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  background: #d9dde6;
-  transform: translateX(-100%);
-  transition: transform 0.42s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.product-add-to-cart:hover:not(:disabled)::before {
-  transform: translateX(0);
-}
-
-.product-add-to-cart:hover:not(:disabled) {
-  border-color: rgba(0, 0, 0, 0.22);
-}
-
-.product-add-to-cart:disabled::before {
-  display: none;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .product-add-to-cart::before {
-    transition: none;
-  }
-}
 

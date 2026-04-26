@@ -192,19 +192,23 @@ export function ProductNamePanel({ product, theme = 'navy' }: ProductNamePanelPr
         </div>
       )}
 
-      {/* Add to Cart */}
-      <button
-        type="button"
-        onClick={handleAddToCart}
-        disabled={!product.in_stock}
-        className="product-add-to-cart group relative mt-5 w-full overflow-hidden rounded-full border border-black/15 py-3.5 text-sm font-semibold text-[#0A1628] disabled:opacity-50"
-      >
-        <span className="relative z-10 block text-[#0A1628] transition-colors duration-300 enabled:group-hover:text-[#0A1628]">
-          {product.in_stock ? 'Add to cart' : 'Out of Stock'}
-        </span>
-      </button>
-
-      <CoaButton coaUrl={product.coa_url} theme={isNavy ? 'navy' : 'default'} />
+      {/* Add to Cart + CoA */}
+      <div className="mt-5 flex items-center gap-2">
+        <CoaButton coaUrl={product.coa_url} theme={isNavy ? 'navy' : 'default'} compact />
+        <button
+          type="button"
+          onClick={handleAddToCart}
+          disabled={!product.in_stock}
+          className="flex-1 rounded-full bg-[#0A1628] py-3.5 text-sm font-semibold text-white transition-colors hover:bg-[#0A1628]/90 disabled:opacity-50"
+        >
+          {product.in_stock ? (
+            <span className="flex items-center justify-center gap-2">
+              Add to cart
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+            </span>
+          ) : 'Out of Stock'}
+        </button>
+      </div>
 
       {/* Trust Badges */}
       <div className="mt-5 grid grid-cols-2 gap-2">

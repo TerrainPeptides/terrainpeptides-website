@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { auth } from '@/auth'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 
-const COMMISSION_RATE = 0.20
+const COMMISSION_RATE = 0.10
 
 export async function GET() {
   const session = await auth()

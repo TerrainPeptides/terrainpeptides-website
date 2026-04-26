@@ -282,7 +282,7 @@ export default function AdminReferralsPage() {
                             )}
                           </div>
                           <p className="mt-0.5 text-sm text-muted-foreground">
-                            {code.discount_percent}% off · {codeOrders.length} orders · ${(totalRevenue / 100).toFixed(2)} revenue · Expires: {formatDate(code.expires_at)}
+                            {code.discount_percent}% off · {codeOrders.length} orders · ${(totalRevenue / 100).toFixed(2)} revenue · <span className="text-emerald-600 font-medium">${(Math.round(codeOrders.filter(o => o.payment_status === 'paid').reduce((s, o) => s + Number(o.total_cents || 0), 0) * 0.1) / 100).toFixed(2)} affiliate earned</span> · Expires: {formatDate(code.expires_at)}
                           </p>
                         </div>
                       </div>
@@ -320,6 +320,9 @@ export default function AdminReferralsPage() {
                               </div>
                               <div className="text-right">
                                 <p className="text-sm font-semibold text-foreground">${(Number(o.total_cents) / 100).toFixed(2)}</p>
+                                <p className="text-xs font-medium text-emerald-600">
+                                  +${(Math.round(Number(o.total_cents) * 0.1) / 100).toFixed(2)} affiliate
+                                </p>
                                 <Badge className={o.payment_status === 'paid' ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-600'}>
                                   {o.payment_status}
                                 </Badge>

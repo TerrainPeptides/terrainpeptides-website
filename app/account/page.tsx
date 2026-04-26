@@ -23,6 +23,7 @@ import {
   DollarSign,
   TrendingUp,
   Link2,
+  Clock,
 } from 'lucide-react'
 
 type Tab = 'profile' | 'addresses' | 'discounts' | 'affiliate'
@@ -107,6 +108,7 @@ export default function AccountPage() {
   const [claimLoading, setClaimLoading] = useState(false)
   const [claimError, setClaimError] = useState('')
   const [copiedAffiliate, setCopiedAffiliate] = useState(false)
+  const [autoGenerating, setAutoGenerating] = useState(false)
 
   useEffect(() => {
     try {
@@ -196,6 +198,31 @@ export default function AccountPage() {
       setCopiedAffiliate(true)
       setTimeout(() => setCopiedAffiliate(false), 2000)
     })
+  }
+
+  async function autoGenerateCode() {
+    setAutoGenerating(true)
+    setClaimError('')
+    const name = (session?.user?.name ?? session?.user?.email?.split('@')[0] ?? 'USER').toUpperCase().replace(/[^A-Z0-9]/g, '')
+    const suffix = Math.floor(1000 + Math.random() * 9000)
+    const generated = `${name.slice(0, 10)}${suffix}`
+    try {
+      const res = await fetch('/api/affiliate/claim', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: generated }),
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        setClaimError(data.error ?? 'Failed to generate code. Try entering one manually.')
+      } else {
+        await fetchAffiliate()
+      }
+    } catch {
+      setClaimError('Something went wrong. Please try again.')
+    } finally {
+      setAutoGenerating(false)
+    }
   }
 
   async function fetchAddresses() {
@@ -484,11 +511,11 @@ export default function AccountPage() {
                     Partner with premium<br />research peptides
                   </h2>
                   <p className="mt-3 text-sm leading-relaxed text-gray-500">
-                    Earn 20% commission on first orders, 10% recurring on all research peptide purchases.
+                    Earn 10% commission on every order referred through your unique code.
                   </p>
                   <div className="mt-5 grid grid-cols-2 gap-x-6 gap-y-4">
                     {[
-                      { value: '20%', label: 'First order commission' },
+                      { value: '10%', label: 'Commission per sale' },
                       { value: '10%', label: 'Lifetime recurring' },
                       { value: '30 days', label: 'Cookie window' },
                       { value: 'Monthly', label: 'Payouts via bank deposit' },
@@ -533,7 +560,7 @@ export default function AccountPage() {
               <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
                 <h3 className="text-base font-semibold text-gray-900">Claim your referral code</h3>
                 <p className="mt-1 text-sm text-gray-400">
-                  Choose a unique code — customers will use it for 10% off their order and you earn commissions.
+                  Choose a unique code — customers will use it for 10% off their order and you earn 10% commission.
                 </p>
                 <form onSubmit={handleClaimCode} className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-start">
                   <div className="flex-1">
@@ -559,6 +586,17 @@ export default function AccountPage() {
                     Claim Code
                   </button>
                 </form>
+                <div className="mt-3 flex items-center gap-3">
+                  <span className="text-xs text-gray-400">or</span>
+                  <button
+                    type="button"
+                    onClick={autoGenerateCode}
+                    disabled={autoGenerating}
+                    className="text-xs font-semibold text-[#6c5ce7] hover:underline disabled:opacity-50"
+                  >
+                    {autoGenerating ? 'Generating...' : 'Auto-generate a code for me'}
+                  </button>
+                </div>
               </div>
             ) : (
               /* Affiliate Dashboard */
@@ -580,15 +618,15 @@ export default function AccountPage() {
                     </button>
                   </div>
 
-                  {/* Funds Available */}
+                  {/* Withdrawable Funds */}
                   <div className="rounded-2xl border border-emerald-100 bg-emerald-50 p-5 shadow-sm">
                     <div className="flex items-start justify-between">
                       <div>
-                        <p className="text-xs font-semibold uppercase tracking-wide text-emerald-600">Funds Available</p>
+                        <p className="text-xs font-semibold uppercase tracking-wide text-emerald-600">Withdrawable Funds</p>
                         <p className="mt-1.5 text-2xl font-extrabold text-emerald-700">
                           ${((affiliateEarned - affiliatePaid) / 100).toFixed(2)}
                         </p>
-                        <p className="mt-1 text-xs text-emerald-600/70">Pending payout</p>
+                        <p className="mt-1 text-xs text-emerald-600/70">Available for withdrawal</p>
                       </div>
                       <DollarSign className="h-8 w-8 text-emerald-400/50" />
                     </div>
@@ -605,6 +643,49 @@ export default function AccountPage() {
                         <p className="mt-1 text-xs text-gray-400">Total paid out</p>
                       </div>
                       <TrendingUp className="h-8 w-8 text-gray-300" />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Payouts Section */}
+                <div className="rounded-2xl border border-gray-200 bg-white shadow-sm">
+                  <div className="flex items-center gap-2.5 border-b border-gray-100 px-6 py-4">
+                    <DollarSign className="h-4 w-4 text-gray-400" />
+                    <h3 className="text-sm font-semibold text-gray-900">Payouts</h3>
+                  </div>
+                  <div className="divide-y divide-gray-50">
+                    <div className="flex items-center justify-between px-6 py-4">
+                      <div className="flex items-center gap-3">
+                        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-100">
+                          <Clock className="h-4 w-4 text-amber-600" />
+                        </span>
+                        <div>
+                          <p className="text-sm font-medium text-gray-900">Payouts Being Confirmed</p>
+                          <p className="text-xs text-gray-400">Earnings from orders awaiting payment confirmation</p>
+                        </div>
+                      </div>
+                      <p className="text-sm font-semibold text-amber-600">
+                        ${(() => {
+                          const pendingCommission = affiliateOrders
+                            .filter(o => o.payment_status !== 'paid')
+                            .reduce((sum, o) => sum + Math.round(o.total_cents * 0.1), 0)
+                          return (pendingCommission / 100).toFixed(2)
+                        })()}
+                      </p>
+                    </div>
+                    <div className="flex items-center justify-between px-6 py-4">
+                      <div className="flex items-center gap-3">
+                        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100">
+                          <DollarSign className="h-4 w-4 text-emerald-600" />
+                        </span>
+                        <div>
+                          <p className="text-sm font-medium text-gray-900">Withdrawable Funds</p>
+                          <p className="text-xs text-gray-400">Commission from confirmed orders, ready for payout</p>
+                        </div>
+                      </div>
+                      <p className="text-sm font-semibold text-emerald-600">
+                        ${((affiliateEarned - affiliatePaid) / 100).toFixed(2)}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -636,7 +717,7 @@ export default function AccountPage() {
                           <div className="text-right">
                             <p className="text-sm font-semibold text-gray-900">${(order.total_cents / 100).toFixed(2)}</p>
                             <p className="text-xs font-medium text-emerald-600">
-                              +${((order.total_cents * 0.2) / 100).toFixed(2)} commission
+                              +${((order.total_cents * 0.1) / 100).toFixed(2)} commission
                             </p>
                             <span className={`inline-block rounded-full px-2 py-0.5 text-xs font-medium ${
                               order.payment_status === 'paid'

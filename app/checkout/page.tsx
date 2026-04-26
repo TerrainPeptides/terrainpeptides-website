@@ -33,10 +33,8 @@ import { generateOrdOrderId } from '@/lib/paypal-order-id'
 import {
   CreditCard,
   Bitcoin,
-  Building2,
   Banknote,
   Check,
-  ChevronRight,
   ArrowLeft,
   ShoppingBag,
   Lock,
@@ -44,6 +42,7 @@ import {
   Truck,
   Package,
   FlaskConical,
+  Phone,
 } from 'lucide-react'
 
 const SHIPPING_CENTS = 2500
@@ -52,6 +51,7 @@ const HST_RATE = 0.13
 interface ShippingInfo {
   name: string
   email: string
+  phone: string
   address1: string
   address2: string
   city: string
@@ -336,8 +336,8 @@ export default function CheckoutPage() {
   const { isCartHydrated, items, subtotalCents, discountCents, referralCode } = useCart()
 
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<
-    'bank-transfer' | 'cash' | 'crypto' | 'paypal' | 'paypal-guide' | 'square'
-  >('bank-transfer')
+    'cash' | 'crypto' | 'paypal' | 'paypal-guide' | 'square'
+  >('square')
   const [cashSubMethod, setCashSubMethod] = useState<'zelle' | 'wise' | null>(null)
   // Stable order ID generated once per session for the Wise flow
   const [wiseOrderId] = useState(() => generateOrdOrderId())
@@ -346,6 +346,7 @@ export default function CheckoutPage() {
   const [shippingInfo, setShippingInfo] = useState<ShippingInfo>({
     name: '',
     email: '',
+    phone: '',
     address1: '',
     address2: '',
     city: '',
@@ -353,6 +354,7 @@ export default function CheckoutPage() {
     zip: '',
     country: 'US',
   })
+  const [saveInfo, setSaveInfo] = useState(true)
 
   const [clientSecret, setClientSecret] = useState<string | null>(null)
   const [orderNumber, setOrderNumber] = useState<string | null>(null)
@@ -378,6 +380,13 @@ export default function CheckoutPage() {
       return
     }
 
+    const resolvedEmail = (shippingInfo.email || session?.user?.email || '').trim()
+    if (!resolvedEmail) {
+      toast.error('Please sign in or provide an email before continuing.')
+      return
+    }
+    const normalizedShippingInfo: ShippingInfo = { ...shippingInfo, email: resolvedEmail }
+
     setIsProcessing(true)
 
     try {
@@ -393,7 +402,7 @@ export default function CheckoutPage() {
               quantity: item.quantity,
               dosage_variant_id: item.dosage_variant_id,
             })),
-            shippingInfo,
+            shippingInfo: normalizedShippingInfo,
             referralCode,
             discountCents,
           }),
@@ -403,7 +412,7 @@ export default function CheckoutPage() {
           throw new Error(pendingData.error ?? 'Could not save your order')
         }
         router.push(
-          `/checkout/pay?order=${encodeURIComponent(ppOrderId)}&total=${(totalCents / 100).toFixed(2)}&country=${encodeURIComponent(shippingInfo.country)}&email=${encodeURIComponent(shippingInfo.email)}`
+          `/checkout/pay?order=${encodeURIComponent(ppOrderId)}&total=${(totalCents / 100).toFixed(2)}&country=${encodeURIComponent(normalizedShippingInfo.country)}&email=${encodeURIComponent(normalizedShippingInfo.email)}`
         )
         return
       }
@@ -418,7 +427,7 @@ export default function CheckoutPage() {
               quantity: item.quantity,
               dosage_variant_id: item.dosage_variant_id,
             })),
-            shippingInfo,
+            shippingInfo: normalizedShippingInfo,
             referralCode,
             discountCents,
           }),
@@ -438,7 +447,7 @@ export default function CheckoutPage() {
             quantity: item.quantity,
             dosage_variant_id: item.dosage_variant_id,
           })),
-          shippingInfo,
+          shippingInfo: normalizedShippingInfo,
           referralCode,
           discountCents,
         }
@@ -470,12 +479,10 @@ export default function CheckoutPage() {
       }
 
       const path =
-        selectedPaymentMethod === 'bank-transfer'
-          ? '/checkout/bank-transfer'
-          : selectedPaymentMethod === 'cash' && cashSubMethod === 'wise'
-            ? `/checkout/wise?order=${encodeURIComponent(wiseOrderId)}&total=${(totalCents / 100).toFixed(2)}&country=${encodeURIComponent(shippingInfo.country)}`
-            : selectedPaymentMethod === 'cash'
-              ? '/checkout/cash'
+        selectedPaymentMethod === 'cash' && cashSubMethod === 'wise'
+          ? `/checkout/wise?order=${encodeURIComponent(wiseOrderId)}&total=${(totalCents / 100).toFixed(2)}&country=${encodeURIComponent(normalizedShippingInfo.country)}`
+          : selectedPaymentMethod === 'cash'
+            ? '/checkout/cash'
             : '/checkout/crypto'
       router.push(path)
     } catch (error) {
@@ -485,7 +492,7 @@ export default function CheckoutPage() {
     }
   }
 
-  const selectPaymentMethod = (method: 'bank-transfer' | 'cash' | 'crypto' | 'paypal' | 'paypal-guide' | 'square') => {
+  const selectPaymentMethod = (method: 'cash' | 'crypto' | 'paypal' | 'paypal-guide' | 'square') => {
     setSelectedPaymentMethod(method)
     if (method !== 'cash') setCashSubMethod(null)
     else setCashSubMethod('wise')
@@ -573,7 +580,7 @@ export default function CheckoutPage() {
           </div>
           <div className="flex items-center justify-center gap-2 text-xs font-medium text-muted-foreground sm:text-sm">
             <Package className="h-4 w-4 text-foreground" />
-            10 Vials / Product
+            Research Use Only
           </div>
         </div>
 
@@ -605,6 +612,20 @@ export default function CheckoutPage() {
                       <div className="flex items-center gap-2 rounded-lg border border-border bg-muted/40 px-4 py-2.5 text-sm text-muted-foreground">
                         {shippingInfo.email || session?.user?.email || '—'}
                       </div>
+                    </div>
+                    <div className="space-y-2 sm:col-span-2">
+                      <Label htmlFor="phone" className="flex items-center gap-1.5">
+                        <Phone className="h-3.5 w-3.5 text-muted-foreground" />
+                        Phone Number <span className="text-xs font-normal text-muted-foreground">(For Shipping Updates)</span>
+                      </Label>
+                      <Input
+                        id="phone"
+                        type="tel"
+                        required
+                        placeholder="+1 (555) 000-0000"
+                        value={shippingInfo.phone}
+                        onChange={(e) => setShippingInfo({ ...shippingInfo, phone: e.target.value })}
+                      />
                     </div>
                     <div className="space-y-2 sm:col-span-2">
                       <Label htmlFor="country">Country</Label>
@@ -667,6 +688,17 @@ export default function CheckoutPage() {
                         onChange={(e) => setShippingInfo({ ...shippingInfo, zip: e.target.value })}
                       />
                     </div>
+                    <div className="sm:col-span-2">
+                      <label className="flex cursor-pointer items-center gap-2.5">
+                        <input
+                          type="checkbox"
+                          checked={saveInfo}
+                          onChange={(e) => setSaveInfo(e.target.checked)}
+                          className="h-4 w-4 rounded border-border text-[#0A1628] focus:ring-[#0A1628]/20"
+                        />
+                        <span className="text-sm text-muted-foreground">Save information for next checkout</span>
+                      </label>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -680,45 +712,7 @@ export default function CheckoutPage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
-                  {/* ── Bank Transfer ─────────────────────────────────────── */}
-                  <button
-                    type="button"
-                    onClick={() => selectPaymentMethod('bank-transfer')}
-                    className={cn(
-                      'relative w-full rounded-lg border p-4 text-left transition-colors',
-                      selectedPaymentMethod === 'bank-transfer'
-                        ? 'border-primary bg-muted/30 shadow-sm'
-                        : 'border-border hover:bg-muted/30'
-                    )}
-                  >
-                    {selectedPaymentMethod === 'bank-transfer' ? (
-                      <span className="absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full bg-[#0A1628] text-white">
-                        <Check className="h-3.5 w-3.5" strokeWidth={2.5} />
-                      </span>
-                    ) : null}
-                    <div className="flex gap-3 pr-10">
-                      <Building2 className="mt-0.5 h-5 w-5 shrink-0 text-foreground" />
-                      <div className="min-w-0 flex-1">
-                        <p className="font-medium text-foreground">Bank Transfer</p>
-                        <p className="text-sm text-muted-foreground">
-                          Same-day payment via direct bank transfer
-                        </p>
-                        {selectedPaymentMethod === 'bank-transfer' ? (
-                          <div className="mt-4 space-y-2 border-t border-border/60 pt-4">
-                            <div className="flex items-center justify-between gap-2 text-sm font-medium text-foreground">
-                              <span>Link a new bank account</span>
-                              <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
-                            </div>
-                            <p className="text-xs leading-relaxed text-muted-foreground">
-                              Supported: US bank accounts via Zelle, international via Wise
-                            </p>
-                          </div>
-                        ) : null}
-                      </div>
-                    </div>
-                  </button>
-
-                  {/* ── Card Payments via Square ───────────────────────────── */}
+                  {/* ── Payment via Debit/Credit Card (Square) ─────────────── */}
                   <button
                     type="button"
                     onClick={() => selectPaymentMethod('square')}
@@ -735,71 +729,25 @@ export default function CheckoutPage() {
                       </span>
                     ) : null}
                     <div className="flex gap-3 pr-10">
-                      {/* Square mark icon */}
-                      <svg
-                        viewBox="0 0 24 24"
-                        className="mt-0.5 h-5 w-5 shrink-0"
-                        aria-hidden
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <rect width="24" height="24" rx="4" fill="#3E4348" />
-                        <rect x="6" y="6" width="12" height="12" rx="1.5" fill="white" />
-                      </svg>
+                      <CreditCard className="mt-0.5 h-5 w-5 shrink-0 text-foreground" />
                       <div className="min-w-0 flex-1">
-                        <p className="font-medium text-foreground">Card Payments</p>
-                        <p className="text-sm text-muted-foreground">via Square</p>
+                        <p className="font-medium text-foreground">Payment via Debit/Credit Card</p>
+                        <p className="text-sm text-muted-foreground">Pay securely with any debit or credit card</p>
+                        <div className="mt-2 inline-flex items-center gap-2 rounded-md border border-border/70 bg-background px-2 py-1 text-xs text-muted-foreground">
+                          <svg
+                            viewBox="0 0 20 20"
+                            className="h-4 w-4"
+                            aria-hidden
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <rect x="2.5" y="2.5" width="15" height="15" rx="2.8" fill="#006AFF" />
+                            <rect x="6.3" y="6.3" width="7.4" height="7.4" rx="1.4" fill="white" />
+                          </svg>
+                          Powered by Square
+                        </div>
                         {selectedPaymentMethod === 'square' ? (
                           <p className="mt-2 text-xs text-muted-foreground">
-                            Pay securely with any credit or debit card through Square&apos;s hosted checkout.
-                          </p>
-                        ) : null}
-                      </div>
-                    </div>
-                  </button>
-
-                  {/* ── Bank Payments via PayPal ────────────────────── */}
-                  <button
-                    type="button"
-                    onClick={() => selectPaymentMethod('paypal-guide')}
-                    className={cn(
-                      'relative w-full rounded-lg border p-4 text-left transition-colors',
-                      selectedPaymentMethod === 'paypal-guide'
-                        ? 'border-primary bg-muted/30 shadow-sm'
-                        : 'border-border hover:bg-muted/30'
-                    )}
-                  >
-                    {selectedPaymentMethod === 'paypal-guide' ? (
-                      <span className="absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full bg-[#0A1628] text-white">
-                        <Check className="h-3.5 w-3.5" strokeWidth={2.5} />
-                      </span>
-                    ) : null}
-                    <div className="flex gap-3 pr-10">
-                      {/* PayPal mark icon */}
-                      <svg
-                        viewBox="0 0 24 24"
-                        className="mt-0.5 h-5 w-5 shrink-0"
-                        aria-hidden
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106z"
-                          fill="#003087"
-                        />
-                        <path
-                          d="M21.222 6.917a3.35 3.35 0 0 0-.607-.541c-.013.076-.026.175-.041.254-.59 3.025-2.566 6.582-8.562 6.582H9.819l-1.24 7.86h4.446c.458 0 .847-.334.918-.787l.038-.196.726-4.604.047-.254c.07-.453.46-.787.918-.787h.578c3.741 0 6.669-1.52 7.523-5.918.356-1.83.173-3.355-.547-4.429z"
-                          fill="#009cde"
-                        />
-                      </svg>
-                      <div className="min-w-0 flex-1">
-                        <p className="font-medium text-foreground">Bank Payments via PayPal</p>
-                        <p className="text-sm text-muted-foreground">
-                          Pay with any bank account through PayPal
-                        </p>
-                        {selectedPaymentMethod === 'paypal-guide' ? (
-                          <p className="mt-2 text-xs text-muted-foreground">
-                            You&apos;ll be guided through a simple step-by-step PayPal payment flow.
+                            You&apos;ll be redirected to a secure hosted checkout page to complete your payment.
                           </p>
                         ) : null}
                       </div>
@@ -832,7 +780,6 @@ export default function CheckoutPage() {
 
                         {selectedPaymentMethod === 'cash' ? (
                           <div className="mt-4 border-t border-border/60 pt-4">
-                            {/* Sub-method pills */}
                             <div className="flex flex-wrap gap-2">
                               <button
                                 type="button"
@@ -871,43 +818,54 @@ export default function CheckoutPage() {
                     </div>
                   </button>
 
-                  {/* ── Cryptocurrency ─────────────────────────────────────── */}
-                  <button
-                    type="button"
-                    onClick={() => selectPaymentMethod('crypto')}
-                    className={cn(
-                      'relative w-full rounded-lg border p-4 text-left transition-colors',
-                      selectedPaymentMethod === 'crypto'
-                        ? 'border-primary bg-muted/30 shadow-sm'
-                        : 'border-border hover:bg-muted/30'
-                    )}
+                  {/* ── Bank Payments via PayPal (greyed out) ──────────────── */}
+                  <div
+                    className="relative w-full cursor-not-allowed rounded-lg border border-border bg-muted/20 p-4 text-left opacity-50"
                   >
-                    {selectedPaymentMethod === 'crypto' ? (
-                      <span className="absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full bg-[#0A1628] text-white">
-                        <Check className="h-3.5 w-3.5" strokeWidth={2.5} />
-                      </span>
-                    ) : null}
+                    <div className="absolute right-3 top-3 rounded-full bg-muted px-2 py-0.5 text-[0.6rem] font-semibold uppercase tracking-wider text-muted-foreground">
+                      Coming Soon
+                    </div>
+                    <div className="flex gap-3 pr-10">
+                      <svg
+                        viewBox="0 0 24 24"
+                        className="mt-0.5 h-5 w-5 shrink-0"
+                        aria-hidden
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106z"
+                          fill="#003087"
+                        />
+                        <path
+                          d="M21.222 6.917a3.35 3.35 0 0 0-.607-.541c-.013.076-.026.175-.041.254-.59 3.025-2.566 6.582-8.562 6.582H9.819l-1.24 7.86h4.446c.458 0 .847-.334.918-.787l.038-.196.726-4.604.047-.254c.07-.453.46-.787.918-.787h.578c3.741 0 6.669-1.52 7.523-5.918.356-1.83.173-3.355-.547-4.429z"
+                          fill="#009cde"
+                        />
+                      </svg>
+                      <div className="min-w-0 flex-1">
+                        <p className="font-medium text-foreground">Pay with PayPal</p>
+                        <p className="text-sm text-muted-foreground">
+                          Pay with your PayPal account or bank
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* ── Cryptocurrency (greyed out) ────────────────────────── */}
+                  <div
+                    className="relative w-full cursor-not-allowed rounded-lg border border-border bg-muted/20 p-4 text-left opacity-50"
+                  >
+                    <div className="absolute right-3 top-3 rounded-full bg-muted px-2 py-0.5 text-[0.6rem] font-semibold uppercase tracking-wider text-muted-foreground">
+                      Coming Soon
+                    </div>
                     <div className="flex gap-3 pr-10">
                       <Bitcoin className="mt-0.5 h-5 w-5 shrink-0 text-foreground" />
                       <div className="min-w-0 flex-1">
                         <p className="font-medium text-foreground">Cryptocurrency</p>
-                        <p className="text-sm text-muted-foreground">Pay anonymously with crypto</p>
-                        {selectedPaymentMethod === 'crypto' ? (
-                          <div className="mt-4 flex flex-wrap gap-2 border-t border-border/60 pt-4">
-                            {(['BTC', 'ETH', 'USDT', 'LTC', 'USDC'] as const).map((coin) => (
-                              <span
-                                key={coin}
-                                className="rounded-md border border-border/20 bg-[#0A1628]/5 px-2.5 py-1 text-xs font-semibold tabular-nums text-foreground"
-                              >
-                                {coin}
-                              </span>
-                            ))}
-                          </div>
-                        ) : null}
+                        <p className="text-sm text-muted-foreground">Pay with crypto</p>
                       </div>
                     </div>
-                  </button>
-
+                  </div>
 
                 </CardContent>
               </Card>
@@ -937,18 +895,12 @@ export default function CheckoutPage() {
                     {isProcessing
                       ? 'Processing...'
                       : selectedPaymentMethod === 'square'
-                        ? 'Continue to Card Payment (Square)'
-                        : selectedPaymentMethod === 'paypal-guide'
-                          ? 'Continue to PayPal payment'
-                          : selectedPaymentMethod === 'paypal'
-                            ? 'Continue to card checkout'
-                            : selectedPaymentMethod === 'bank-transfer'
-                              ? 'Pay with Bank Transfer'
-                              : selectedPaymentMethod === 'cash' && cashSubMethod === 'wise'
-                                ? 'Pay with Cash (Wise)'
-                                : selectedPaymentMethod === 'cash'
-                                  ? 'Pay with Cash'
-                                  : 'Pay with Crypto'}
+                        ? 'Continue to Card Payment'
+                        : selectedPaymentMethod === 'cash' && cashSubMethod === 'wise'
+                          ? 'Pay with Cash (Wise)'
+                          : selectedPaymentMethod === 'cash'
+                            ? 'Pay with Cash'
+                            : 'Continue'}
                   </Button>
 
                   <p className="mt-4 text-center text-xs text-muted-foreground">

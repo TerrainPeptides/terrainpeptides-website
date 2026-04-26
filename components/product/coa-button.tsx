@@ -18,9 +18,11 @@ interface CoaButtonProps {
   coaUrl?: string | null
   /** Match the theme of the containing panel (navy = dark text/border, default = standard) */
   theme?: 'navy' | 'default'
+  /** Compact mode: smaller button for inline placement next to Add to Cart */
+  compact?: boolean
 }
 
-export function CoaButton({ coaUrl, theme = 'default' }: CoaButtonProps) {
+export function CoaButton({ coaUrl, theme = 'default', compact = false }: CoaButtonProps) {
   const [open, setOpen] = useState(false)
   const [email, setEmail] = useState('')
   const [submitting, setSubmitting] = useState(false)
@@ -30,14 +32,24 @@ export function CoaButton({ coaUrl, theme = 'default' }: CoaButtonProps) {
     ? 'border-border/35 text-foreground hover:bg-[#0A1628]/5'
     : ''
 
+  const compactClass = compact
+    ? 'rounded-full border border-black/15 px-4 py-3.5 text-sm font-semibold text-[#0A1628] hover:bg-gray-50 transition-colors'
+    : `mt-4 gap-2 ${btnClass}`
+
   if (coaUrl) {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button variant="outline" size="sm" className={`mt-4 gap-2 ${btnClass}`}>
-            <FileText className="h-4 w-4" />
-            View Certificate of Analysis
-          </Button>
+          {compact ? (
+            <button type="button" className={compactClass}>
+              CoA
+            </button>
+          ) : (
+            <Button variant="outline" size="sm" className={compactClass}>
+              <FileText className="h-4 w-4" />
+              View Certificate of Analysis
+            </Button>
+          )}
         </DialogTrigger>
         <DialogContent
           showCloseButton
@@ -66,15 +78,25 @@ export function CoaButton({ coaUrl, theme = 'default' }: CoaButtonProps) {
 
   return (
     <>
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={() => setOpen(true)}
-        className={`mt-4 gap-2 ${btnClass}`}
-      >
-        <FileText className="h-4 w-4" />
-        View Certificate of Analysis
-      </Button>
+      {compact ? (
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          className={compactClass}
+        >
+          CoA
+        </button>
+      ) : (
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setOpen(true)}
+          className={`mt-4 gap-2 ${btnClass}`}
+        >
+          <FileText className="h-4 w-4" />
+          View Certificate of Analysis
+        </Button>
+      )}
 
       {open && (
         <div

@@ -24,6 +24,49 @@ interface ShippingInfo {
   country: string
 }
 
+interface SquareLocation {
+  id: string
+  currency: string
+}
+
+async function resolveSquareLocation(accessToken: string): Promise<SquareLocation | null> {
+  const configuredId = String(process.env.SQUARE_LOCATION_ID ?? '').trim()
+  const configuredCurrency = String(process.env.SQUARE_CURRENCY ?? '').trim().toUpperCase()
+
+  const res = await fetch(`${SQUARE_BASE_URL}/v2/locations`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      'Square-Version': '2024-10-17',
+    },
+  })
+
+  if (!res.ok) {
+    if (configuredId && configuredCurrency) {
+      return { id: configuredId, currency: configuredCurrency }
+    }
+    return null
+  }
+
+  const data = (await res.json()) as {
+    locations?: Array<{ id?: string; status?: string; currency?: string }>
+  }
+
+  const locations = data.locations ?? []
+
+  // Prefer the configured location ID if specified, otherwise pick the first ACTIVE one
+  const match = configuredId
+    ? locations.find((l) => l.id === configuredId)
+    : (locations.find((l) => l.status === 'ACTIVE' && l.id) ?? locations.find((l) => l.id))
+
+  if (!match?.id) return null
+
+  return {
+    id: match.id,
+    currency: configuredCurrency || match.currency || 'USD',
+  }
+}
+
 export async function POST(request: Request) {
   try {
     const accessToken = process.env.SQUARE_ACCESS_TOKEN
@@ -33,6 +76,15 @@ export async function POST(request: Request) {
         { status: 503 }
       )
     }
+
+    const squareLocation = await resolveSquareLocation(accessToken)
+    if (!squareLocation) {
+      return NextResponse.json(
+        { error: 'Square merchant location could not be resolved. Check SQUARE_ACCESS_TOKEN.' },
+        { status: 503 }
+      )
+    }
+    const { id: locationId, currency: squareCurrency } = squareLocation
 
     const supabase = supabaseAdmin()
     const body = (await request.json()) as {
@@ -89,13 +141,13 @@ export async function POST(request: Request) {
     const orderNumber = generateOrdOrderId()
     const origin = request.headers.get('origin') ?? process.env.NEXTAUTH_URL ?? ''
 
-    // Build Square line items
+    // Build Square line items — use the merchant account's currency (auto-detected from Square)
     const squareLineItems: object[] = orderItems.map((item) => ({
       name: item.product_name,
       quantity: String(item.quantity),
       base_price_money: {
         amount: item.price_cents,
-        currency: 'USD',
+        currency: squareCurrency,
       },
     }))
 
@@ -106,7 +158,7 @@ export async function POST(request: Request) {
         quantity: '1',
         base_price_money: {
           amount: -finalDiscountCents,
-          currency: 'USD',
+          currency: squareCurrency,
         },
       })
     }
@@ -117,7 +169,7 @@ export async function POST(request: Request) {
       quantity: '1',
       base_price_money: {
         amount: SHIPPING_CENTS,
-        currency: 'USD',
+        currency: squareCurrency,
       },
     })
 
@@ -128,7 +180,7 @@ export async function POST(request: Request) {
         quantity: '1',
         base_price_money: {
           amount: taxCents,
-          currency: 'USD',
+          currency: squareCurrency,
         },
       })
     }
@@ -136,6 +188,7 @@ export async function POST(request: Request) {
     const squarePayload = {
       idempotency_key: `sq-${orderNumber}-${Date.now()}`,
       order: {
+        location_id: locationId,
         reference_id: orderNumber,
         // Critical merchant-consistency fields
         note: 'Service Rendered - Royal Detailing',
