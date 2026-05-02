@@ -3,10 +3,33 @@ import { NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 
+export const dynamic = 'force-dynamic'
+
+/** Lets you confirm the route is deployed (Stripe still sends only POST webhooks). */
+export async function GET() {
+  const hasSecret = Boolean(process.env.STRIPE_WEBHOOK_SECRET?.trim())
+  const hasStripe = Boolean(stripe)
+  return NextResponse.json({
+    ok: true,
+    endpoint: 'stripe-webhooks',
+    stripeSdk: hasStripe,
+    webhookSecretConfigured: hasSecret,
+  })
+}
+
 export async function POST(request: Request) {
   if (!stripe) {
     return NextResponse.json({ error: 'Stripe not configured' }, { status: 503 })
   }
+
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET?.trim()
+  if (!webhookSecret) {
+    return NextResponse.json(
+      { error: 'STRIPE_WEBHOOK_SECRET is not set. Add the whsec_… value from Stripe Dashboard → Webhooks → your endpoint.' },
+      { status: 503 }
+    )
+  }
+
   const body = await request.text()
   const signature = request.headers.get('stripe-signature')
 
@@ -17,11 +40,7 @@ export async function POST(request: Request) {
   let event: Stripe.Event
 
   try {
-    event = stripe.webhooks.constructEvent(
-      body,
-      signature,
-      process.env.STRIPE_WEBHOOK_SECRET || ''
-    )
+    event = stripe.webhooks.constructEvent(body, signature, webhookSecret)
   } catch (err) {
     console.error('Webhook signature verification failed:', err)
     return NextResponse.json({ error: 'Invalid signature' }, { status: 400 })

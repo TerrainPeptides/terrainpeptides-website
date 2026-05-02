@@ -6,14 +6,20 @@ import { generateOrdOrderId } from '@/lib/paypal-order-id'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import { insertPendingStripeOrderWithItems } from '@/lib/supabase/order-persist'
 
+/** Card charges on PaymentIntents require suffix, not full statement_descriptor. */
+const STATEMENT_DESCRIPTOR_SUFFIX = 'Royal Auto Detailing'
+const HST_RATE = 0.13
+
 interface ShippingInfo {
   name: string
   email: string
+  phone?: string
   address1: string
   address2?: string
   city: string
   state: string
   zip: string
+  country?: string
 }
 
 export async function POST(request: Request) {
@@ -27,11 +33,18 @@ export async function POST(request: Request) {
 
     const supabase = supabaseAdmin()
     const body = await request.json()
-    const { items, shippingInfo, referralCode, discountCents }: {
+    const {
+      items,
+      shippingInfo,
+      referralCode,
+      discountCents,
+      shippingCents: shippingCentsParam,
+    }: {
       items: CheckoutCartItemPayload[]
       shippingInfo: ShippingInfo
       referralCode?: string
       discountCents?: number
+      shippingCents?: number
     } = body
 
     if (!items || items.length === 0) {
@@ -44,7 +57,9 @@ export async function POST(request: Request) {
 
     const productIds = [...new Set(items.map((i) => i.productId))]
     const products = await Promise.all(productIds.map((id) => getProductByIdAsync(id)))
-    const byId = new Map(products.filter((p): p is NonNullable<typeof p> => p != null).map((p) => [p.id, p]))
+    const byId = new Map(
+      products.filter((p): p is NonNullable<typeof p> => p != null).map((p) => [p.id, p])
+    )
 
     let subtotalCents = 0
     const orderItems: {
@@ -73,24 +88,30 @@ export async function POST(request: Request) {
       }
     }
 
-    const finalDiscountCents = discountCents || 0
-    // Stripe requires a minimum of 50 cents
-    const totalCents = Math.max(subtotalCents - finalDiscountCents, 50)
+    const finalDiscountCents = discountCents ?? 0
+    const finalShippingCents = typeof shippingCentsParam === 'number' ? shippingCentsParam : 2499
+
+    const countryCode = (shippingInfo.country ?? 'US').toUpperCase()
+    const afterDiscount = subtotalCents - finalDiscountCents
+    const taxCents = countryCode === 'CA' ? Math.round(afterDiscount * HST_RATE) : 0
+
+    // Stripe minimum is 50 cents
+    const totalCents = Math.max(afterDiscount + finalShippingCents + taxCents, 50)
     const orderNumber = generateOrdOrderId()
 
-    // Create the Stripe PaymentIntent — secret key stays server-side
     const paymentIntent = await stripe.paymentIntents.create({
       amount: totalCents,
       currency: 'usd',
-      automatic_payment_methods: { enabled: true },
+      // Card-only keeps the Payment Element simple and avoids loading many PM types from the Dashboard.
+      payment_method_types: ['card'],
       receipt_email: shippingInfo.email,
+      statement_descriptor_suffix: STATEMENT_DESCRIPTOR_SUFFIX,
       metadata: {
         order_number: orderNumber,
         referral_code: referralCode || '',
       },
     })
 
-    // Create a pending order record so the webhook can find it by payment_intent id
     const shippingPayload = {
       name: shippingInfo.name,
       address1: shippingInfo.address1 || '',
@@ -98,7 +119,7 @@ export async function POST(request: Request) {
       city: shippingInfo.city || '',
       state: shippingInfo.state || '',
       zip: shippingInfo.zip || '',
-      country: 'USA',
+      country: countryCode,
     }
 
     const now = new Date().toISOString()
@@ -125,8 +146,6 @@ export async function POST(request: Request) {
         { status: 500 }
       )
     }
-
-    // Referral usage is incremented in /api/checkout/confirm-payment when payment succeeds
 
     return NextResponse.json({
       clientSecret: paymentIntent.client_secret,
