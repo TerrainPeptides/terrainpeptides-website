@@ -44,20 +44,57 @@ export default function AdminLayout({
   const pathname = usePathname()
 
   useEffect(() => {
-    const legacy = localStorage.getItem(LEGACY_LOCAL_STORAGE_KEYS.adminToken)
-    let token = localStorage.getItem('terrain-admin-token')
-    if (!token && legacy) {
-      localStorage.setItem('terrain-admin-token', legacy)
-      token = legacy
+    if (pathname === '/admin/login') {
+      setIsAuthenticated(false)
+      setIsLoading(false)
+      return
     }
-    if (legacy) localStorage.removeItem(LEGACY_LOCAL_STORAGE_KEYS.adminToken)
 
-    if (!token && pathname !== '/admin/login') {
-      router.push('/admin/login')
-    } else if (token) {
+    let cancelled = false
+
+    const run = async () => {
+      const legacy = localStorage.getItem(LEGACY_LOCAL_STORAGE_KEYS.adminToken)
+      let token = localStorage.getItem('terrain-admin-token')
+      if (!token && legacy) {
+        localStorage.setItem('terrain-admin-token', legacy)
+        token = legacy
+      }
+      if (legacy) localStorage.removeItem(LEGACY_LOCAL_STORAGE_KEYS.adminToken)
+
+      if (!token) {
+        router.replace('/admin/login')
+        if (!cancelled) {
+          setIsAuthenticated(false)
+          setIsLoading(false)
+        }
+        return
+      }
+
+      const res = await fetch('/api/admin/verify', {
+        method: 'GET',
+        headers: { Authorization: `Bearer ${token}` },
+        cache: 'no-store',
+      })
+
+      if (cancelled) return
+
+      if (!res.ok) {
+        localStorage.removeItem('terrain-admin-token')
+        localStorage.removeItem(LEGACY_LOCAL_STORAGE_KEYS.adminToken)
+        router.replace('/admin/login')
+        setIsAuthenticated(false)
+        setIsLoading(false)
+        return
+      }
+
       setIsAuthenticated(true)
+      setIsLoading(false)
     }
-    setIsLoading(false)
+
+    void run()
+    return () => {
+      cancelled = true
+    }
   }, [pathname, router])
 
   const handleLogout = () => {
@@ -79,7 +116,12 @@ export default function AdminLayout({
   }
 
   if (!isAuthenticated) {
-    return null
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center gap-2 bg-muted/30 px-4 text-center text-sm text-muted-foreground">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+        <p>Redirecting to sign in…</p>
+      </div>
+    )
   }
 
   const SidebarContent = () => (

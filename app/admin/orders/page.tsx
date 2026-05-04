@@ -21,8 +21,9 @@ import {
 } from '@/components/ui/select'
 import { toast } from 'sonner'
 import { Eye, Package, X } from 'lucide-react'
-import type { Order, OrderItem } from '@/lib/types'
+import type { Order, OrderItem, ShippingAddress } from '@/lib/types'
 import { formatOrderNumberDisplay } from '@/lib/paypal-order-id'
+import { Separator } from '@/components/ui/separator'
 
 const statusColors: Record<string, string> = {
   pending: 'bg-yellow-100 text-yellow-700',
@@ -39,10 +40,12 @@ const paymentStatusColors: Record<string, string> = {
   refunded: 'bg-orange-100 text-orange-800',
 }
 
+type AdminOrder = Order & { items: OrderItem[] }
+
 export default function AdminOrdersPage() {
-  const [orders, setOrders] = useState<(Order & { items: OrderItem[] })[]>([])
+  const [orders, setOrders] = useState<AdminOrder[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const [selectedOrder, setSelectedOrder] = useState<(Order & { items: OrderItem[] }) | null>(null)
+  const [selectedOrder, setSelectedOrder] = useState<AdminOrder | null>(null)
   const [trackingNumber, setTrackingNumber] = useState('')
 
   useEffect(() => {
@@ -56,6 +59,11 @@ export default function AdminOrdersPage() {
           Authorization: `Bearer ${localStorage.getItem('terrain-admin-token')}`,
         },
       })
+      if (res.status === 401) {
+        localStorage.removeItem('terrain-admin-token')
+        window.location.href = '/admin/login'
+        return
+      }
       const data = await res.json()
       setOrders(data.orders || [])
     } catch (error) {
@@ -211,7 +219,7 @@ export default function AdminOrdersPage() {
                     </div>
                     <p className="text-sm text-muted-foreground">
                       {[order.customer_name, order.email].filter(Boolean).join(' • ')}
-                      {(order.customer_name || order.email) && ' • '}
+                      {order.customer_name || order.email ? ' · ' : ''}
                       {formatDate(order.created_at)}
                     </p>
                     <p className="mt-1 font-medium text-foreground">
@@ -252,7 +260,7 @@ export default function AdminOrdersPage() {
 
       {/* Order Detail Dialog */}
       <Dialog open={!!selectedOrder} onOpenChange={(open) => !open && setSelectedOrder(null)}>
-        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">
+        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-3xl">
           <DialogHeader>
             <DialogTitle>
               Order {selectedOrder ? formatOrderNumberDisplay(selectedOrder.order_number) : ''}
@@ -260,9 +268,19 @@ export default function AdminOrdersPage() {
           </DialogHeader>
           {selectedOrder && (
             <div className="space-y-6">
-              {/* Status */}
+              <div className="grid gap-3 text-sm sm:grid-cols-2">
+                <div>
+                  <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Order ID</p>
+                  <p className="mt-0.5 break-all font-mono text-xs text-foreground">{selectedOrder.id}</p>
+                </div>
+                <div>
+                  <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Placed</p>
+                  <p className="mt-0.5 text-foreground">{formatDate(selectedOrder.created_at)}</p>
+                </div>
+              </div>
+
               <div className="space-y-2">
-                <Label>Status</Label>
+                <Label>Order status</Label>
                 <Select
                   value={selectedOrder.status}
                   onValueChange={(value) => updateOrderStatus(selectedOrder.id, value)}
@@ -280,84 +298,223 @@ export default function AdminOrdersPage() {
                 </Select>
               </div>
 
-              {/* Tracking */}
               <div className="space-y-2">
-                <Label>Tracking Number</Label>
-                <div className="flex gap-2">
+                <Label>Tracking number</Label>
+                <div className="flex flex-col gap-2 sm:flex-row">
                   <Input
                     value={trackingNumber}
                     onChange={(e) => setTrackingNumber(e.target.value)}
                     placeholder="Enter tracking number"
+                    className="flex-1"
                   />
-                  <Button onClick={updateTrackingNumber}>Save</Button>
-                </div>
-                <div className="flex gap-2">
-                  <Button variant="outline" onClick={() => updateOrderStatus(selectedOrder.id, 'shipped')}>
-                    Mark Fulfilled
+                  <Button type="button" onClick={updateTrackingNumber}>
+                    Save
                   </Button>
-                  <Button variant="outline" onClick={sendShippingEmail}>
-                    Send Email Notification
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <Button type="button" variant="outline" onClick={() => updateOrderStatus(selectedOrder.id, 'shipped')}>
+                    Mark fulfilled
+                  </Button>
+                  <Button type="button" variant="outline" onClick={sendShippingEmail}>
+                    Send email (mailto)
                   </Button>
                 </div>
               </div>
 
-              {/* Customer Info */}
-              <div className="rounded-lg bg-muted/50 p-4">
-                <h4 className="mb-2 font-semibold text-foreground">Customer</h4>
-                {selectedOrder.customer_name && (
-                  <p className="text-sm font-medium text-foreground">{selectedOrder.customer_name}</p>
-                )}
-                <p className="text-sm text-muted-foreground">{selectedOrder.email}</p>
-                {selectedOrder.shipping_address && (
-                  <div className="mt-2 text-sm text-muted-foreground">
-                    <p>{selectedOrder.shipping_address.name}</p>
-                    <p>{selectedOrder.shipping_address.address1}</p>
-                    {selectedOrder.shipping_address.address2 && (
-                      <p>{selectedOrder.shipping_address.address2}</p>
-                    )}
-                    <p>
-                      {selectedOrder.shipping_address.city}, {selectedOrder.shipping_address.state}{' '}
-                      {selectedOrder.shipping_address.zip}
-                    </p>
+              <Separator />
+
+              <div className="rounded-lg border border-border bg-muted/30 p-4">
+                <h4 className="mb-3 text-sm font-semibold text-foreground">Payment</h4>
+                <dl className="grid gap-2 text-sm sm:grid-cols-2">
+                  <div>
+                    <dt className="text-muted-foreground">Method</dt>
+                    <dd className="font-medium capitalize text-foreground">{selectedOrder.payment_method}</dd>
                   </div>
-                )}
+                  <div>
+                    <dt className="text-muted-foreground">Payment status</dt>
+                    <dd className="font-medium capitalize text-foreground">{selectedOrder.payment_status}</dd>
+                  </div>
+                  {selectedOrder.stripe_session_id ? (
+                    <div className="sm:col-span-2">
+                      <dt className="text-muted-foreground">Stripe reference (PaymentIntent / session)</dt>
+                      <dd className="break-all font-mono text-xs text-foreground">{selectedOrder.stripe_session_id}</dd>
+                    </div>
+                  ) : null}
+                  {selectedOrder.crypto_address ? (
+                    <div className="sm:col-span-2">
+                      <dt className="text-muted-foreground">Crypto address</dt>
+                      <dd className="break-all font-mono text-xs text-foreground">{selectedOrder.crypto_address}</dd>
+                    </div>
+                  ) : null}
+                </dl>
               </div>
 
-              {/* Items */}
-              <div>
-                <h4 className="mb-2 font-semibold text-foreground">Items</h4>
-                <div className="space-y-2">
-                  {selectedOrder.items?.map((item) => (
-                    <div key={item.id} className="flex justify-between rounded-lg border border-border p-3">
-                      <div>
-                        <p className="font-medium text-foreground">{item.product_name}</p>
-                        <p className="text-sm text-muted-foreground">Qty: {item.quantity}</p>
-                      </div>
-                      <p className="font-medium text-foreground">
-                        {formatPrice(item.price_cents * item.quantity)}
-                      </p>
+              <div className="rounded-lg border border-border bg-muted/30 p-4">
+                <h4 className="mb-3 text-sm font-semibold text-foreground">Referral &amp; discount codes</h4>
+                <dl className="grid gap-2 text-sm sm:grid-cols-2">
+                  <div>
+                    <dt className="text-muted-foreground">Referral code</dt>
+                    <dd className="font-medium text-foreground">{selectedOrder.referral_code || '—'}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-muted-foreground">Discount / promo code</dt>
+                    <dd className="font-medium text-foreground">{selectedOrder.discount_code || '—'}</dd>
+                  </div>
+                </dl>
+              </div>
+
+              <div className="rounded-lg border border-border bg-muted/30 p-4">
+                <h4 className="mb-3 text-sm font-semibold text-foreground">Customer &amp; contact</h4>
+                <dl className="space-y-2 text-sm">
+                  <div>
+                    <dt className="text-muted-foreground">Name (order)</dt>
+                    <dd className="font-medium text-foreground">{selectedOrder.customer_name || '—'}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-muted-foreground">Email (order)</dt>
+                    <dd className="break-all text-foreground">{selectedOrder.email || '—'}</dd>
+                  </div>
+                  {selectedOrder.customer_email && selectedOrder.customer_email !== selectedOrder.email ? (
+                    <div>
+                      <dt className="text-muted-foreground">Customer email (row)</dt>
+                      <dd className="break-all text-foreground">{selectedOrder.customer_email}</dd>
                     </div>
-                  ))}
+                  ) : null}
+                </dl>
+              </div>
+
+              {(() => {
+                const ship = selectedOrder.shipping_address as (ShippingAddress & {
+                  email?: string
+                  phone?: string
+                  company?: string
+                  shipping_cents?: number
+                  tax_cents?: number
+                }) | null
+                if (!ship) {
+                  return (
+                    <div className="rounded-lg border border-dashed border-border p-4 text-sm text-muted-foreground">
+                      No shipping address on file.
+                    </div>
+                  )
+                }
+                return (
+                  <div className="rounded-lg border border-border bg-muted/30 p-4">
+                    <h4 className="mb-3 text-sm font-semibold text-foreground">Shipping &amp; delivery details</h4>
+                    <dl className="grid gap-2 text-sm sm:grid-cols-2">
+                      <div className="sm:col-span-2">
+                        <dt className="text-muted-foreground">Ship to name</dt>
+                        <dd className="font-medium text-foreground">{ship.name || '—'}</dd>
+                      </div>
+                      {ship.company ? (
+                        <div className="sm:col-span-2">
+                          <dt className="text-muted-foreground">Company</dt>
+                          <dd className="text-foreground">{ship.company}</dd>
+                        </div>
+                      ) : null}
+                      <div>
+                        <dt className="text-muted-foreground">Phone</dt>
+                        <dd className="text-foreground">{ship.phone || '—'}</dd>
+                      </div>
+                      <div>
+                        <dt className="text-muted-foreground">Email (checkout)</dt>
+                        <dd className="break-all text-foreground">{ship.email || '—'}</dd>
+                      </div>
+                      <div className="sm:col-span-2">
+                        <dt className="text-muted-foreground">Address</dt>
+                        <dd className="whitespace-pre-line text-foreground">
+                          {ship.address1}
+                          {ship.address2 ? `\n${ship.address2}` : ''}
+                          {`\n${ship.city}, ${ship.state} ${ship.zip}`}
+                          {`\n${ship.country}`}
+                        </dd>
+                      </div>
+                      {typeof ship.shipping_cents === 'number' ? (
+                        <div>
+                          <dt className="text-muted-foreground">Shipping (checkout)</dt>
+                          <dd className="text-foreground">{formatPrice(ship.shipping_cents)}</dd>
+                        </div>
+                      ) : null}
+                      {typeof ship.tax_cents === 'number' ? (
+                        <div>
+                          <dt className="text-muted-foreground">Tax (checkout)</dt>
+                          <dd className="text-foreground">{formatPrice(ship.tax_cents)}</dd>
+                        </div>
+                      ) : null}
+                    </dl>
+                  </div>
+                )
+              })()}
+
+              <div>
+                <h4 className="mb-2 text-sm font-semibold text-foreground">Line items</h4>
+                <div className="space-y-2">
+                  {selectedOrder.items?.map((item) => {
+                    const line =
+                      item.line_total_cents != null
+                        ? item.line_total_cents
+                        : item.price_cents * item.quantity
+                    return (
+                      <div
+                        key={item.id}
+                        className="flex flex-col gap-1 rounded-lg border border-border p-3 sm:flex-row sm:items-start sm:justify-between"
+                      >
+                        <div className="min-w-0 flex-1">
+                          <p className="font-medium text-foreground">{item.product_name}</p>
+                          <p className="text-xs text-muted-foreground">
+                            Product ID:{' '}
+                            <span className="font-mono text-foreground">{item.product_id || '—'}</span>
+                          </p>
+                          <p className="text-sm text-muted-foreground">
+                            Qty {item.quantity} · {formatPrice(item.price_cents)} each
+                          </p>
+                        </div>
+                        <p className="shrink-0 font-semibold tabular-nums text-foreground">{formatPrice(line)}</p>
+                      </div>
+                    )
+                  })}
                 </div>
               </div>
 
-              {/* Totals */}
-              <div className="space-y-2 border-t border-border pt-4">
+              <div className="space-y-2 rounded-lg border border-border bg-muted/20 p-4">
+                <h4 className="text-sm font-semibold text-foreground">Totals</h4>
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Subtotal</span>
-                  <span className="text-foreground">{formatPrice(selectedOrder.subtotal_cents)}</span>
+                  <span className="tabular-nums text-foreground">{formatPrice(selectedOrder.subtotal_cents)}</span>
                 </div>
-                {selectedOrder.discount_cents > 0 && (
+                {selectedOrder.discount_cents > 0 ? (
                   <div className="flex justify-between text-sm">
                     <span className="text-green-600">Discount</span>
-                    <span className="text-green-600">-{formatPrice(selectedOrder.discount_cents)}</span>
+                    <span className="tabular-nums text-green-600">-{formatPrice(selectedOrder.discount_cents)}</span>
                   </div>
-                )}
-                <div className="flex justify-between font-semibold">
-                  <span className="text-foreground">Total</span>
-                  <span className="text-foreground">{formatPrice(selectedOrder.total_cents)}</span>
+                ) : null}
+                <div className="flex justify-between text-sm font-semibold">
+                  <span className="text-foreground">Charged total</span>
+                  <span className="tabular-nums text-foreground">{formatPrice(selectedOrder.total_cents)}</span>
                 </div>
               </div>
+
+              {selectedOrder.full_record && Object.keys(selectedOrder.full_record).length > 0 ? (
+                <details className="rounded-lg border border-border p-3 text-sm">
+                  <summary className="cursor-pointer font-medium text-foreground">Raw database row (orders)</summary>
+                  <pre className="mt-3 max-h-64 overflow-auto whitespace-pre-wrap break-all rounded-md bg-muted p-3 text-xs">
+                    {JSON.stringify(selectedOrder.full_record, null, 2)}
+                  </pre>
+                </details>
+              ) : null}
+
+              {selectedOrder.items?.some((i) => i.full_item && Object.keys(i.full_item).length > 0) ? (
+                <details className="rounded-lg border border-border p-3 text-sm">
+                  <summary className="cursor-pointer font-medium text-foreground">Raw line items (order_items)</summary>
+                  <pre className="mt-3 max-h-64 overflow-auto whitespace-pre-wrap break-all rounded-md bg-muted p-3 text-xs">
+                    {JSON.stringify(
+                      selectedOrder.items.map((i) => i.full_item ?? { id: i.id, product_name: i.product_name }),
+                      null,
+                      2
+                    )}
+                  </pre>
+                </details>
+              ) : null}
             </div>
           )}
         </DialogContent>

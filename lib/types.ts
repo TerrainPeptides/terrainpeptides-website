@@ -43,10 +43,12 @@ export interface Order {
   id: string
   order_number: string
   email: string
+  /** Row `customer_email` when different from normalized `email` */
+  customer_email?: string | null
   /** Set from checkout / Supabase `customer_name` when available */
   customer_name?: string | null
   status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled'
-  payment_method: 'stripe' | 'crypto'
+  payment_method: 'stripe' | 'crypto' | 'paypal' | string
   payment_status: 'pending' | 'paid' | 'failed' | 'refunded'
   stripe_session_id: string | null
   crypto_address: string | null
@@ -60,26 +62,39 @@ export interface Order {
   created_at: string
   updated_at: string
   items?: OrderItem[]
+  /** Full `orders` row from the database (admin API). */
+  full_record?: Record<string, unknown>
 }
 
 export interface OrderItem {
   id: string
   order_id: string
-  product_id: string
+  product_id: string | null
   product_name: string
   quantity: number
+  /** Unit price in cents (legacy admin UI). */
   price_cents: number
+  /** Line total when provided by the admin API. */
+  line_total_cents?: number
   created_at: string
+  /** Raw `order_items` row for admin debugging. */
+  full_item?: Record<string, unknown>
 }
 
 export interface ShippingAddress {
   name: string
+  email?: string
+  phone?: string
+  company?: string
   address1: string
   address2?: string
   city: string
   state: string
   zip: string
   country: string
+  /** Checkout snapshot (cents), when stored with the address JSON */
+  shipping_cents?: number
+  tax_cents?: number
 }
 
 export interface Vouch {

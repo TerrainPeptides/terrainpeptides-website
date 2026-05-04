@@ -5,12 +5,19 @@ export type PersistedOrderSchema = 'modern' | 'modern_min' | 'legacy'
 
 export interface ShippingPayload {
   name: string
+  /** Checkout email (may match customer_email on the order row). */
+  email?: string
+  phone?: string
+  company?: string
   address1: string
   address2: string
   city: string
   state: string
   zip: string
   country: string
+  /** Optional snapshot for admin / receipts (stored inside shipping_address JSON). */
+  shipping_cents?: number
+  tax_cents?: number
 }
 
 export interface OrderLineInput {
@@ -111,7 +118,7 @@ export async function insertPendingCheckoutOrderWithItems(
         total: totalCents / 100,
         subtotal: subtotalCents / 100,
         discount: discountCents / 100,
-        discount_code: null,
+        discount_code: referralCode?.trim() ? referralCode.trim() : null,
       },
     },
     {
@@ -123,6 +130,7 @@ export async function insertPendingCheckoutOrderWithItems(
         total: totalCents / 100,
         subtotal: subtotalCents / 100,
         discount: discountCents / 100,
+        discount_code: referralCode?.trim() ? referralCode.trim() : null,
       },
     },
     {
@@ -142,6 +150,7 @@ export async function insertPendingCheckoutOrderWithItems(
         shipping_address: shippingPayload as unknown as Record<string, unknown>,
         tracking_number: null,
         referral_code: referralCode,
+        discount_code: referralCode?.trim() ? referralCode.trim() : null,
         created_at: now,
         updated_at: now,
       },

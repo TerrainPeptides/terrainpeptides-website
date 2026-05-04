@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { LEGACY_LOCAL_STORAGE_KEYS } from '@/lib/legacy-brand-storage'
 import { formatOrderNumberDisplay } from '@/lib/paypal-order-id'
@@ -22,6 +23,7 @@ interface DashboardStats {
 }
 
 export default function AdminDashboard() {
+  const router = useRouter()
   const [stats, setStats] = useState<DashboardStats | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
@@ -39,6 +41,12 @@ export default function AdminDashboard() {
           Authorization: `Bearer ${token}`,
         },
       })
+      if (res.status === 401) {
+        localStorage.removeItem('terrain-admin-token')
+        localStorage.removeItem(LEGACY_LOCAL_STORAGE_KEYS.adminToken)
+        router.replace('/admin/login')
+        return
+      }
       const data = await res.json()
       setStats(data)
     } catch (error) {

@@ -10,7 +10,7 @@ import {
   useStripe,
   useElements,
 } from '@stripe/react-stripe-js'
-import { getStripePublishableKeyIssue, getStripePromise } from '@/lib/stripe-client'
+import { getStripePublishableKeyIssueAsync, getStripePromise } from '@/lib/stripe-client'
 import { resolveProductImageSrc } from '@/lib/product-image'
 import { useCart } from '@/lib/cart-context'
 import { packageLineTotalCents } from '@/lib/product-price'
@@ -62,6 +62,22 @@ function getStandardShippingDateRange(): string {
   return `${fmt.format(start)} – ${fmt.format(end)}`
 }
 
+function withTimeout<T>(promise: Promise<T>, ms: number, message: string): Promise<T> {
+  return new Promise((resolve, reject) => {
+    const t = setTimeout(() => reject(new Error(message)), ms)
+    promise.then(
+      (v) => {
+        clearTimeout(t)
+        resolve(v)
+      },
+      (e) => {
+        clearTimeout(t)
+        reject(e)
+      }
+    )
+  })
+}
+
 /** Wait for Stripe.js + publishable key, then mount Elements (avoids infinite spinner on bad keys). */
 function StripePaymentSection({
   clientSecret,
@@ -77,21 +93,26 @@ function StripePaymentSection({
 
   useEffect(() => {
     let cancelled = false
-    const issue = getStripePublishableKeyIssue()
-    if (issue) {
-      setLoadError(issue)
-      setStripe(null)
-      return () => {
-        cancelled = true
-      }
-    }
     ;(async () => {
+      const issue = await getStripePublishableKeyIssueAsync()
+      if (cancelled) return
+      if (issue) {
+        setLoadError(issue)
+        setStripe(null)
+        return
+      }
       try {
-        const instance = await getStripePromise()
+        const instance = await withTimeout(
+          getStripePromise(),
+          20000,
+          'Loading Stripe.js timed out. Check your network, disable ad blockers for this site, or confirm js.stripe.com is not blocked.'
+        )
         if (cancelled) return
         if (!instance) {
+          const again = await getStripePublishableKeyIssueAsync()
           setLoadError(
-            'Stripe.js could not initialize. Confirm NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY is a publishable key (pk_test_ or pk_live_) from Dashboard → Developers → API keys, and restart the dev server after changing env.'
+            again ??
+              'Stripe.js could not initialize. Restart `npm run dev` after editing .env.local, and confirm your publishable key in Stripe Dashboard → Developers → API keys.'
           )
           setStripe(null)
           return
@@ -107,7 +128,7 @@ function StripePaymentSection({
     return () => {
       cancelled = true
     }
-  }, [])
+  }, [clientSecret])
 
   if (loadError) {
     return (
@@ -135,7 +156,6 @@ function StripePaymentSection({
       stripe={stripe}
       options={{
         clientSecret,
-        loader: 'always',
         appearance: {
           theme: 'stripe',
           variables: {
@@ -161,44 +181,96 @@ function PaymentFormInner({
   const stripe = useStripe()
   const elements = useElements()
   const [isProcessing, setIsProcessing] = useState(false)
+  const [paymentElementReady, setPaymentElementReady] = useState(false)
+  const [elementError, setElementError] = useState<string | null>(null)
+
+  useEffect(() => {
+    setIsProcessing(false)
+    setPaymentElementReady(false)
+    setElementError(null)
+  }, [])
+
+  useEffect(() => {
+    if (elementError || paymentElementReady) return
+    const t = setTimeout(() => {
+      setElementError(
+        'The card form is taking too long to appear. Common causes: (1) live publishable key (pk_live_) paired with a test PaymentIntent or the opposite — use matching test/live keys on server and client; (2) an extension or firewall blocking Stripe; (3) dev server needs a restart after changing .env.local.'
+      )
+    }, 25000)
+    return () => clearTimeout(t)
+  }, [elementError, paymentElementReady])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!stripe || !elements) return
 
     setIsProcessing(true)
+    try {
+      const submitResult = await withTimeout(
+        elements.submit(),
+        45000,
+        'Validating your card timed out. Check your connection and try again.'
+      )
+      if (submitResult.error) {
+        toast.error(submitResult.error.message ?? 'Please check your payment details.')
+        return
+      }
 
-    const { error: submitError } = await elements.submit()
-    if (submitError) {
-      toast.error(submitError.message ?? 'Please check your payment details.')
+      const { error } = await withTimeout(
+        stripe.confirmPayment({
+          elements,
+          confirmParams: {
+            return_url: `${window.location.origin}/checkout/success?order=${encodeURIComponent(orderNumber)}`,
+          },
+        }),
+        120000,
+        'Confirming payment timed out. If you were charged, check your email; otherwise try again.'
+      )
+
+      if (error) {
+        toast.error(error.message ?? 'Payment failed. Please try again.')
+      }
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Payment step failed')
+    } finally {
       setIsProcessing(false)
-      return
     }
-
-    const { error } = await stripe.confirmPayment({
-      elements,
-      confirmParams: {
-        return_url: `${window.location.origin}/checkout/success?order=${orderNumber}`,
-      },
-    })
-
-    if (error) {
-      toast.error(error.message ?? 'Payment failed. Please try again.')
-    }
-    setIsProcessing(false)
   }
+
+  const payBlocked = isProcessing || !stripe || !elements || !paymentElementReady
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
-      <PaymentElement options={{ layout: 'tabs' }} />
+      {elementError && (
+        <div className="rounded-lg border border-destructive/40 bg-destructive/5 p-3 text-sm text-destructive">
+          {elementError}
+        </div>
+      )}
+
+      <PaymentElement
+        options={{ layout: 'accordion' }}
+        onReady={() => {
+          setPaymentElementReady(true)
+          setElementError(null)
+        }}
+        onLoadError={(ev) => {
+          const msg = ev.error.message ?? 'Could not load payment fields'
+          setElementError(msg)
+          toast.error(msg)
+        }}
+      />
 
       <Button
         type="submit"
-        disabled={isProcessing || !stripe || !elements}
+        disabled={payBlocked}
         className="w-full bg-[#0A1628] hover:bg-[#0A1628]/90 text-white"
         size="lg"
       >
-        {isProcessing ? 'Processing…' : `Pay ${formatPrice(totalCents)}`}
+        {isProcessing
+          ? 'Processing…'
+          : !paymentElementReady
+            ? 'Loading card form…'
+            : `Pay ${formatPrice(totalCents)}`}
       </Button>
 
       <div className="flex items-center justify-center gap-1.5 text-xs text-muted-foreground">
@@ -392,6 +464,7 @@ export default function CheckoutPage() {
             name: shippingInfo.name,
             email: shippingInfo.email,
             phone: shippingInfo.phone,
+            company: shippingInfo.company,
             address1: shippingInfo.address1,
             address2: shippingInfo.address2,
             city: shippingInfo.city,

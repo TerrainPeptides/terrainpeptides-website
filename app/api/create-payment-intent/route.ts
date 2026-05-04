@@ -14,6 +14,7 @@ interface ShippingInfo {
   name: string
   email: string
   phone?: string
+  company?: string
   address1: string
   address2?: string
   city: string
@@ -112,14 +113,20 @@ export async function POST(request: Request) {
       },
     })
 
+    const emailNorm = (shippingInfo.email || '').trim().toLowerCase()
     const shippingPayload = {
       name: shippingInfo.name,
+      email: emailNorm,
+      phone: (shippingInfo.phone || '').trim(),
+      company: (shippingInfo.company || '').trim(),
       address1: shippingInfo.address1 || '',
       address2: shippingInfo.address2 || '',
       city: shippingInfo.city || '',
       state: shippingInfo.state || '',
       zip: shippingInfo.zip || '',
       country: countryCode,
+      shipping_cents: finalShippingCents,
+      tax_cents: taxCents,
     }
 
     const now = new Date().toISOString()
