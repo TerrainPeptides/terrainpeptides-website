@@ -2,6 +2,9 @@ import { Suspense } from 'react'
 import { ShopContent } from '@/components/shop/shop-content'
 import { getProductsAsync } from '@/lib/data'
 
+/** Always read latest catalog prices from Supabase (not a stale build snapshot). */
+export const dynamic = 'force-dynamic'
+
 export const metadata = {
   title: 'Shop | Terrain Peptides',
   description: 'Browse our complete catalog of premium research peptides by goal: fat loss, skin and collagen, sleep, cognitive support, and performance.',

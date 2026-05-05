@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { verifyAdmin } from '@/lib/admin-auth'
+import { revalidateProductCatalog } from '@/lib/revalidate-catalog'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import { maybeUploadImageDataUrl } from '@/lib/supabase/upload'
 import { seedProducts } from '@/lib/seed-data'
@@ -158,6 +159,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: error.message }, { status: 400 })
     }
 
+    revalidateProductCatalog({ productSlug: slug })
     return NextResponse.json({ success: true, product: productFromDbRow(data as Record<string, unknown>) })
   } catch (error) {
     console.error('Admin products POST error:', error)
@@ -260,7 +262,13 @@ export async function PUT(request: Request) {
       return NextResponse.json({ error: error.message }, { status: 400 })
     }
 
-    return NextResponse.json({ success: true, product: productFromDbRow(data as Record<string, unknown>) })
+    const updated = productFromDbRow(data as Record<string, unknown>)
+    const oldSlug = String(existing.slug ?? '').trim() || null
+    revalidateProductCatalog({
+      productSlug: updated.slug ?? nextSlug,
+      previousSlug: oldSlug !== nextSlug ? oldSlug : null,
+    })
+    return NextResponse.json({ success: true, product: updated })
   } catch (error) {
     console.error('Admin products PUT error:', error)
     return NextResponse.json(
@@ -294,6 +302,7 @@ export async function PATCH(request: Request) {
         return NextResponse.json({ error: error.message }, { status: 400 })
       }
       const count = data?.length ?? 0
+      revalidateProductCatalog()
       return NextResponse.json({ success: true, unhidden: count })
     }
     return NextResponse.json({ error: 'Unknown action' }, { status: 400 })
@@ -317,8 +326,11 @@ export async function DELETE(request: Request) {
     const id = searchParams.get('id')
     if (!id) return NextResponse.json({ error: 'ID required' }, { status: 400 })
     const supabase = supabaseAdmin()
+    const { data: doomed } = await supabase.from('products').select('slug').eq('id', id).maybeSingle()
+    const doomedSlug = doomed?.slug != null ? String(doomed.slug).trim() : null
     const { error } = await supabase.from('products').delete().eq('id', id)
     if (error) return NextResponse.json({ error: error.message }, { status: 400 })
+    revalidateProductCatalog({ productSlug: doomedSlug || undefined })
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error('Admin products DELETE error:', error)

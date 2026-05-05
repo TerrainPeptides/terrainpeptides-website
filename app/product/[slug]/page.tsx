@@ -20,6 +20,9 @@ interface ProductPageProps {
   params: Promise<{ slug: string }>
 }
 
+/** Always read latest product/pricing from Supabase (not a stale build snapshot). */
+export const dynamic = 'force-dynamic'
+
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
   const { slug } = await params
   const product = await getProductBySlugAsync(slug)

@@ -185,11 +185,15 @@ function PaymentFormInner({
   const [isProcessing, setIsProcessing] = useState(false)
   const [paymentElementReady, setPaymentElementReady] = useState(false)
   const [elementError, setElementError] = useState<string | null>(null)
+  const [ackResearch, setAckResearch] = useState(false)
+  const [ackPowder, setAckPowder] = useState(false)
 
   useEffect(() => {
     setIsProcessing(false)
     setPaymentElementReady(false)
     setElementError(null)
+    setAckResearch(false)
+    setAckPowder(false)
   }, [])
 
   useEffect(() => {
@@ -239,7 +243,9 @@ function PaymentFormInner({
     }
   }
 
-  const payBlocked = isProcessing || !stripe || !elements || !paymentElementReady
+  const agreementsOk = ackResearch && ackPowder
+  const payBlocked =
+    isProcessing || !stripe || !elements || !paymentElementReady || !agreementsOk
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
@@ -262,10 +268,51 @@ function PaymentFormInner({
         }}
       />
 
+      <div className="space-y-4 rounded-lg border border-border/70 bg-muted/25 p-4">
+        <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+          Required acknowledgements
+        </p>
+        <label className="flex cursor-pointer items-start gap-3 text-sm leading-snug text-foreground/90">
+          <input
+            type="checkbox"
+            checked={ackResearch}
+            onChange={(e) => setAckResearch(e.target.checked)}
+            className="mt-0.5 h-4 w-4 shrink-0 rounded border-border accent-[#0A1628]"
+          />
+          <span>
+            I confirm that I am at least 18 years of age and am purchasing these products for{' '}
+            <strong className="font-semibold text-foreground">research purposes only</strong>. These
+            peptides are <strong className="font-semibold text-foreground">not intended for human consumption</strong>,
+            veterinary use, therapeutic applications, or any diagnostic purposes. I understand and accept full
+            responsibility for the proper handling and use of these products.{' '}
+            <strong className="font-semibold text-foreground">
+              Terrain Peptides is not liable for any misuse of these products.
+            </strong>
+          </span>
+        </label>
+        <label className="flex cursor-pointer items-start gap-3 text-sm leading-snug text-foreground/90">
+          <input
+            type="checkbox"
+            checked={ackPowder}
+            onChange={(e) => setAckPowder(e.target.checked)}
+            className="mt-0.5 h-4 w-4 shrink-0 rounded border-border accent-[#0A1628]"
+          />
+          <span>
+            I understand that all products are shipped as{' '}
+            <strong className="font-semibold text-foreground">freeze-dried powder</strong>.
+            Freeze-drying preserves product stability, ensures sterility, and protects products during transit.{' '}
+            <strong className="font-semibold text-foreground">
+              Terrain Peptides does not provide, solicit, or endorse any usage instructions, dosage guidance, or
+              administration protocols for any products sold.
+            </strong>
+          </span>
+        </label>
+      </div>
+
       <Button
         type="submit"
         disabled={payBlocked}
-        className="w-full bg-[#0A1628] hover:bg-[#0A1628]/90 text-white"
+        className="w-full bg-[#0A1628] text-white hover:bg-[#0A1628]/90 disabled:pointer-events-none disabled:opacity-40"
         size="lg"
       >
         {isProcessing
@@ -505,7 +552,8 @@ export default function CheckoutPage() {
     return (
       <div className="bg-background">
         <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
-          <div className="animate-pulse space-y-4">
+          <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">Checkout</h1>
+          <div className="mt-8 animate-pulse space-y-4">
             <div className="h-8 w-48 rounded-md bg-muted" />
             <div className="h-64 rounded-xl bg-muted" />
           </div>
@@ -519,9 +567,10 @@ export default function CheckoutPage() {
     return (
       <div className="bg-background">
         <div className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
+          <h1 className="text-center text-3xl font-bold tracking-tight text-foreground sm:text-4xl">Checkout</h1>
           <div className="flex flex-col items-center justify-center text-center">
-            <ShoppingBag className="h-16 w-16 text-muted-foreground/50" />
-            <h1 className="mt-6 text-2xl font-bold text-foreground">Your cart is empty</h1>
+            <ShoppingBag className="mt-10 h-16 w-16 text-muted-foreground/50" />
+            <h2 className="mt-6 text-2xl font-bold text-foreground">Your cart is empty</h2>
             <p className="mt-2 text-muted-foreground">Add items to your cart before checking out.</p>
             <Link href="/shop">
               <Button className="mt-6 bg-[#0A1628] hover:bg-[#0A1628]/90">Browse Products</Button>
@@ -535,15 +584,16 @@ export default function CheckoutPage() {
   return (
     <div className="min-h-screen bg-background">
       <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
+        <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">Checkout</h1>
         <Link
           href="/cart"
-          className="mb-8 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
+          className="mt-4 mb-8 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Cart
         </Link>
 
-        <div className="mt-6 grid gap-8 lg:grid-cols-5">
+        <div className="mt-2 grid gap-8 lg:grid-cols-5">
           {/* ── Left column: Steps ─────────────────────────────── */}
           <div className="space-y-4 lg:col-span-3">
 
