@@ -1,5 +1,6 @@
 import type { Product } from '@/lib/types'
 import { DEFAULT_CART_VARIANT_ID, findDosageVariant } from '@/lib/dosage-variants'
+import { volumeDiscountFractionForVials } from '@/lib/product-price'
 
 export interface CheckoutCartItemPayload {
   productId: string
@@ -56,13 +57,17 @@ export function orderLineFromCheckoutItem(
     })
     throw new Error('INVALID_VARIANT')
   }
-  const lineTotalCents = variant.price_cents * item.quantity
+  const qty = item.quantity
+  const listCents = variant.price_cents * qty
+  const rate = volumeDiscountFractionForVials(qty)
+  const lineTotalCents = Math.round(listCents * (1 - rate))
+  const price_cents = qty > 0 ? Math.round(lineTotalCents / qty) : variant.price_cents
   const doseSuffix = variant.label ? ` — ${variant.label}` : ''
   return {
     product_id: product.id,
     product_name: `${product.name}${doseSuffix}`,
-    quantity: item.quantity,
-    price_cents: variant.price_cents,
+    quantity: qty,
+    price_cents,
     lineTotalCents,
   }
 }

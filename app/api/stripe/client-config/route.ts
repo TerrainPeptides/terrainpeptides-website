@@ -9,6 +9,8 @@ import {
  * Returns the Stripe publishable key for the browser, read from server env at request time.
  * Avoids stale/wrong values from client bundles that inlined NEXT_PUBLIC_* at compile time.
  */
+export const dynamic = 'force-dynamic'
+
 export async function GET() {
   const { publishableKey, rawFallback } = pickPublishableStripeKeyFromProcessEnv(process.env)
 

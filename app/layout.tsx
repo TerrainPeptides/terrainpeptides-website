@@ -38,7 +38,7 @@ export default function RootLayout({
           <CartProvider>
             <AgeVerification />
             <Navbar />
-            <main className="min-h-screen">{children}</main>
+            <main className="min-h-screen min-h-[100dvh]">{children}</main>
             <SiteBottomPromoGate />
             <PromoPopup />
             <Footer />

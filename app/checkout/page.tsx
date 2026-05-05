@@ -92,6 +92,8 @@ function StripePaymentSection({
   const [loadError, setLoadError] = useState<string | null>(null)
 
   useEffect(() => {
+    setStripe(undefined)
+    setLoadError(null)
     let cancelled = false
     ;(async () => {
       const issue = await getStripePublishableKeyIssueAsync()

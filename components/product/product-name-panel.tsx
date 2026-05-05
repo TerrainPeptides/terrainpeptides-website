@@ -3,7 +3,11 @@
 import { useEffect, useState } from 'react'
 import { useCart } from '@/lib/cart-context'
 import { formatUsdCents } from '@/lib/format-price'
-import { packageLineTotalCents } from '@/lib/product-price'
+import {
+  packageLineListCents,
+  packageLineTotalCents,
+  volumeDiscountFractionForVials,
+} from '@/lib/product-price'
 import { getSeededProductReviewDisplay } from '@/lib/product-review-display'
 import {
   hasDosageVariants,
@@ -20,11 +24,19 @@ import {
 import { CoaButton } from '@/components/product/coa-button'
 import type { Product } from '@/lib/types'
 
-const QUANTITY_OPTIONS = [
-  { qty: 1, label: '1 Vial', discount: 0 },
-  { qty: 3, label: '3 Vials (10% off)', discount: 0.10 },
-  { qty: 5, label: '5 Vials (15% off)', discount: 0.15 },
-]
+const VIAL_QTY_MIN = 1
+const VIAL_QTY_MAX = 10
+
+function vialQtyLabel(n: number): string {
+  return n === 1 ? '1 vial' : `${n} vials`
+}
+
+function volumeDiscountLabel(n: number): string {
+  const d = volumeDiscountFractionForVials(n)
+  if (d <= 0) return vialQtyLabel(n)
+  const pctStr = String(Math.round(d * 10000) / 100)
+  return `${vialQtyLabel(n)} (${pctStr}% off)`
+}
 
 const TRUST_BADGES = [
   { emoji: '•', label: 'Third-party Tested' },
@@ -42,18 +54,17 @@ export function ProductNamePanel({ product, theme = 'navy' }: ProductNamePanelPr
   const [selectedVariantId, setSelectedVariantId] = useState(() =>
     getDefaultDosageVariantId(product)
   )
-  const [selectedQtyIndex, setSelectedQtyIndex] = useState<number | null>(null)
+  const [quantity, setQuantity] = useState(1)
   const { addItem } = useCart()
 
   useEffect(() => {
     setSelectedVariantId(getDefaultDosageVariantId(product))
-    setSelectedQtyIndex(null)
+    setQuantity(1)
   }, [product.id])
 
   const { rating, reviewCount } = getSeededProductReviewDisplay(product.id)
 
-  const quantity = selectedQtyIndex !== null ? QUANTITY_OPTIONS[selectedQtyIndex].qty : 1
-  const discount = selectedQtyIndex !== null ? QUANTITY_OPTIONS[selectedQtyIndex].discount : 0
+  const volumeDiscount = volumeDiscountFractionForVials(quantity)
 
   const handleAddToCart = () => {
     addItem(product, quantity, selectedVariantId)
@@ -64,8 +75,8 @@ export function ProductNamePanel({ product, theme = 'navy' }: ProductNamePanelPr
   }
 
   const perVial = perVialPriceCentsForVariant(product, selectedVariantId)
-  const baseTotalCents = packageLineTotalCents(product, quantity, selectedVariantId)
-  const discountedCents = Math.round(baseTotalCents * (1 - discount))
+  const listLineCents = packageLineListCents(product, quantity, selectedVariantId)
+  const lineTotalCents = packageLineTotalCents(product, quantity, selectedVariantId)
   const multiDose = hasDosageVariants(product)
   const variants = product.dosage_variants ?? []
 
@@ -155,40 +166,39 @@ export function ProductNamePanel({ product, theme = 'navy' }: ProductNamePanelPr
           <p className={`text-sm font-medium ${text}`}>Quantity:</p>
           <div className="relative">
             <select
-              value={selectedQtyIndex ?? ''}
-              onChange={(e) => {
-                const v = e.target.value
-                setSelectedQtyIndex(v === '' ? null : Number(v))
-              }}
+              value={quantity}
+              onChange={(e) => setQuantity(Number(e.target.value))}
               className={`${fieldShell} appearance-none pr-10`}
             >
-            <option value="">1 Vial</option>
-            {QUANTITY_OPTIONS.filter((o) => o.qty > 1).map((o, idx) => (
-              <option key={o.qty} value={idx + 1}>
-                {o.label}
-              </option>
-            ))}
+              {Array.from({ length: VIAL_QTY_MAX - VIAL_QTY_MIN + 1 }, (_, i) => {
+                const n = VIAL_QTY_MIN + i
+                return (
+                  <option key={n} value={n}>
+                    {volumeDiscountLabel(n)}
+                  </option>
+                )
+              })}
             </select>
             <ChevronDown className={`pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 ${muted}`} />
           </div>
         </div>
-        {selectedQtyIndex !== null && (
+        {quantity > 1 && (
           <button
             type="button"
-            onClick={() => setSelectedQtyIndex(null)}
+            onClick={() => setQuantity(1)}
             className={`mt-7 flex shrink-0 items-center gap-1 self-start text-xs ${muted} hover:text-foreground`}
           >
             <X className="h-3.5 w-3.5" />
-            Clear
+            Reset to 1
           </button>
         )}
       </div>
 
-      {/* Total price with discount */}
-      {discount > 0 && (
+      {/* Total price with volume discount */}
+      {volumeDiscount > 0 && (
         <div className="mt-3 flex items-center gap-2 text-sm">
-          <span className={`line-through ${muted}`}>{formatUsdCents(baseTotalCents)}</span>
-          <span className={`font-bold ${text}`}>{formatUsdCents(discountedCents)}</span>
+          <span className={`line-through ${muted}`}>{formatUsdCents(listLineCents)}</span>
+          <span className={`font-bold ${text}`}>{formatUsdCents(lineTotalCents)}</span>
         </div>
       )}
 

@@ -158,7 +158,13 @@
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: color-mix(in srgb, var(--primary) 35%, var(--divider));
+  background: var(--divider);
+}
+
+@supports (background: color-mix(in srgb, red, blue)) {
+  ::-webkit-scrollbar-thumb:hover {
+    background: color-mix(in srgb, var(--primary) 35%, var(--divider));
+  }
 }
 
 /* Product research progress bars — primary */

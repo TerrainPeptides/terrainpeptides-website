@@ -1,4 +1,3 @@
-import { nanoid } from 'nanoid'
 import type { SupabaseClient } from '@supabase/supabase-js'
 
 export type PersistedOrderSchema = 'modern' | 'modern_min' | 'legacy'
@@ -36,6 +35,12 @@ function isLikelyColumnMismatch(message: string): boolean {
     m.includes('unknown field') ||
     m.includes('invalid input syntax for type uuid')
   )
+}
+
+function withoutColumn(row: Record<string, unknown>, column: string): Record<string, unknown> {
+  const next = { ...row }
+  delete next[column]
+  return next
 }
 
 export type CheckoutPayment =
@@ -104,57 +109,61 @@ export async function insertPendingCheckoutOrderWithItems(
     updated_at: now,
   }
 
+  const discountCodeValue = referralCode?.trim() ? referralCode.trim() : null
+
+  const modernRowFull: Record<string, unknown> = {
+    id: crypto.randomUUID(),
+    ...modernBase,
+    customer_email: emailLower,
+    customer_name: customerName,
+    total: totalCents / 100,
+    subtotal: subtotalCents / 100,
+    discount: discountCents / 100,
+    discount_code: discountCodeValue,
+  }
+
+  const modernMinRowFull: Record<string, unknown> = {
+    id: crypto.randomUUID(),
+    ...modernBase,
+    customer_email: emailLower,
+    customer_name: customerName,
+    total: totalCents / 100,
+    subtotal: subtotalCents / 100,
+    discount: discountCents / 100,
+    discount_code: discountCodeValue,
+  }
+
+  const legacyRowFull: Record<string, unknown> = {
+    id: crypto.randomUUID(),
+    order_number: orderNumber,
+    email: emailLower,
+    status: 'pending',
+    payment_method: paymentMethodLabel,
+    payment_status: 'pending',
+    stripe_session_id: sessionIdValue,
+    crypto_address: payment.mode === 'crypto' ? payment.cryptoAddress : null,
+    subtotal_cents: subtotalCents,
+    discount_cents: discountCents,
+    total_cents: totalCents,
+    shipping_address: shippingPayload as unknown as Record<string, unknown>,
+    tracking_number: null,
+    referral_code: referralCode,
+    discount_code: discountCodeValue,
+    created_at: now,
+    updated_at: now,
+  }
+
+  /** Older DBs may omit `discount_code`; try with column first, then without. */
   const attempts: Array<{
     schema: PersistedOrderSchema
     row: Record<string, unknown>
   }> = [
-    {
-      schema: 'modern',
-      row: {
-        id: `order-${Date.now()}-${nanoid(6)}`,
-        ...modernBase,
-        customer_email: emailLower,
-        customer_name: customerName,
-        total: totalCents / 100,
-        subtotal: subtotalCents / 100,
-        discount: discountCents / 100,
-        discount_code: referralCode?.trim() ? referralCode.trim() : null,
-      },
-    },
-    {
-      schema: 'modern_min',
-      row: {
-        id: `order-${Date.now()}-${nanoid(6)}`,
-        ...modernBase,
-        customer_email: emailLower,
-        total: totalCents / 100,
-        subtotal: subtotalCents / 100,
-        discount: discountCents / 100,
-        discount_code: referralCode?.trim() ? referralCode.trim() : null,
-      },
-    },
-    {
-      schema: 'legacy',
-      row: {
-        id: crypto.randomUUID(),
-        order_number: orderNumber,
-        email: emailLower,
-        status: 'pending',
-        payment_method: paymentMethodLabel,
-        payment_status: 'pending',
-        stripe_session_id: sessionIdValue,
-        crypto_address: payment.mode === 'crypto' ? payment.cryptoAddress : null,
-        subtotal_cents: subtotalCents,
-        discount_cents: discountCents,
-        total_cents: totalCents,
-        shipping_address: shippingPayload as unknown as Record<string, unknown>,
-        tracking_number: null,
-        referral_code: referralCode,
-        discount_code: referralCode?.trim() ? referralCode.trim() : null,
-        created_at: now,
-        updated_at: now,
-      },
-    },
+    { schema: 'modern', row: modernRowFull },
+    { schema: 'modern', row: withoutColumn(modernRowFull, 'discount_code') },
+    { schema: 'modern_min', row: modernMinRowFull },
+    { schema: 'modern_min', row: withoutColumn(modernMinRowFull, 'discount_code') },
+    { schema: 'legacy', row: legacyRowFull },
+    { schema: 'legacy', row: withoutColumn(legacyRowFull, 'discount_code') },
   ]
 
   let lastError = ''
@@ -227,7 +236,7 @@ async function insertOrderItemsForSchema(
   }
 
   const rows = lines.map((item) => ({
-    id: `oi-${nanoid(14)}`,
+    id: crypto.randomUUID(),
     order_id: orderId,
     product_id: item.product_id,
     product_name: item.product_name,
@@ -239,7 +248,7 @@ async function insertOrderItemsForSchema(
   if (!error) return { ok: true }
 
   const rowsNoProductId = lines.map((item) => ({
-    id: `oi-${nanoid(14)}`,
+    id: crypto.randomUUID(),
     order_id: orderId,
     product_id: null,
     product_name: item.product_name,
@@ -251,7 +260,7 @@ async function insertOrderItemsForSchema(
   if (!r2.error) return { ok: true }
 
   const rowsLegacyPrice = lines.map((item) => ({
-    id: `oi-${nanoid(14)}`,
+    id: crypto.randomUUID(),
     order_id: orderId,
     product_id: item.product_id,
     product_name: item.product_name,
@@ -263,7 +272,7 @@ async function insertOrderItemsForSchema(
   if (!r3.error) return { ok: true }
 
   const rowsLegacyNoPid = lines.map((item) => ({
-    id: `oi-${nanoid(14)}`,
+    id: crypto.randomUUID(),
     order_id: orderId,
     product_id: null,
     product_name: item.product_name,

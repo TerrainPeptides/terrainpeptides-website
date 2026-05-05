@@ -40,7 +40,7 @@ export function pickPublishableStripeKeyFromProcessEnv(
   /** Server-only name; readable by Route Handlers without exposing to the client bundle. */
   const c = normalizeStripeEnvKey(env.STRIPE_PUBLISHABLE_KEY)
 
-  const orderedCandidates = [a, b, c].filter(isPublishableStripeKey)
+  const orderedCandidates = [...new Set([a, b, c].filter(isPublishableStripeKey))]
   if (orderedCandidates.length === 0) {
     return { publishableKey: null, rawFallback: a || b || c }
   }

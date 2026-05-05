@@ -48,7 +48,9 @@ export function PromoPopup() {
     <>
       {/* Backdrop */}
       <div
-        className={`fixed inset-0 z-[200] bg-black/45 backdrop-blur-[2px] transition-opacity duration-300 ${visible ? 'opacity-100' : 'opacity-0'}`}
+        className={`fixed inset-0 z-[200] bg-black/45 backdrop-blur-[2px] transition-opacity duration-300 ${
+          visible ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
+        }`}
         onClick={dismiss}
         aria-hidden
       />
@@ -59,7 +61,7 @@ export function PromoPopup() {
         aria-modal="true"
         aria-labelledby="promo-popup-title"
         className={`fixed left-1/2 top-1/2 z-[201] w-[calc(100vw-2rem)] max-w-[420px] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-3xl bg-white shadow-2xl transition-all duration-300 ${
-          visible ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
+          visible ? 'pointer-events-auto scale-100 opacity-100' : 'pointer-events-none scale-95 opacity-0'
         }`}
       >
         {/* Close button */}
