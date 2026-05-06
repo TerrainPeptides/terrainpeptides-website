@@ -357,7 +357,8 @@ a {
   }
 }
 
-/* Site bottom promo — light blue marker on dark navy (purity, transparency, reliability) */
+/* Site bottom promo — light blue marker on dark navy (purity, transparency, reliability).
+   Base state: no sweep. `.hero-text-highlight-on-dark--in-view` runs once when scrolled into view (see PromoHeadlineHighlight). */
 .hero-text-highlight-on-dark {
   background-image: linear-gradient(
     transparent 50%,
@@ -373,12 +374,16 @@ a {
   -webkit-box-decoration-break: clone;
   padding: 0 0.08em;
   margin: 0 -0.08em;
-  animation: hero-highlight-sweep 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.4s forwards;
   filter: drop-shadow(0 0 14px rgba(120, 195, 255, 0.45));
 }
 
+.hero-text-highlight-on-dark.hero-text-highlight-on-dark--in-view {
+  animation: hero-highlight-sweep 1.1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .hero-text-highlight-on-dark {
+  .hero-text-highlight-on-dark,
+  .hero-text-highlight-on-dark.hero-text-highlight-on-dark--in-view {
     animation: none;
     background-size: 100% 100%;
     filter: none;
@@ -403,6 +408,30 @@ a {
 
 @media (prefers-reduced-motion: reduce) {
   .hero-amino-cta {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Home hero — primary Shop Now rises after headline (1s delay) */
+@keyframes hero-shop-now-rise {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-shop-now-enter {
+  animation: hero-shop-now-rise 0.75s cubic-bezier(0.22, 1, 0.36, 1) 1s both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-shop-now-enter {
     animation: none;
     opacity: 1;
     transform: none;

@@ -1,4 +1,5 @@
 import { HeroSection } from '@/components/home/hero-section'
+import { TerrainGuaranteeSection } from '@/components/home/terrain-guarantee-section'
 import { FeaturedProducts } from '@/components/home/featured-products'
 import { QualitySection } from '@/components/home/quality-section'
 import { getFeaturedProductsAsync, getFaqs } from '@/lib/data'
@@ -14,6 +15,7 @@ export default async function HomePage() {
   return (
     <div className="flex flex-col bg-white">
       <HeroSection />
+      <TerrainGuaranteeSection />
       <QualitySection />
       <FeaturedProducts products={featuredProducts} />
       <FaqSection faqs={faqs} />

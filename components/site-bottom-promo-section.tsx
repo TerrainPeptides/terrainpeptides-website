@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { NewsletterSection } from '@/components/home/newsletter-section'
+import { PromoPurityHighlight } from '@/components/promo-purity-highlight'
 
 /** Newsletter + headline band — rendered once in root layout above the footer on every page */
 export function SiteBottomPromoSection() {
@@ -32,9 +33,7 @@ export function SiteBottomPromoSection() {
           <div className="relative mx-auto max-w-[34rem] px-1 text-center sm:max-w-3xl lg:max-w-[40rem]">
             <h2 className="text-balance text-[1.35rem] font-semibold leading-snug tracking-[-0.02em] text-white/95 sm:text-2xl md:text-[1.65rem] md:leading-[1.35] lg:text-[1.85rem]">
               All the research peptides you need, with the{' '}
-              <span className="hero-text-highlight-on-dark font-semibold text-white">
-                purity, transparency, and reliability
-              </span>{' '}
+              <PromoPurityHighlight>purity, transparency, and reliability</PromoPurityHighlight>{' '}
               your work demands.
             </h2>
 

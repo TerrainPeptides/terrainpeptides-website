@@ -12,13 +12,13 @@ function trimEmail(raw: string | undefined): string {
   return raw.trim()
 }
 
-/** When no ADMIN_EMAIL / ADMIN_PASSWORD are set, keep the original demo admin so local deploys still work. */
+/** When no ADMIN_EMAIL / ADMIN_PASSWORD are set, use this account so the panel works without env. Prefer ADMIN_EMAIL / ADMIN_PASSWORD in production. */
 function defaultStaticAdmins(): AdminAccount[] {
   return [
     {
       emailNorm: 'admin@terrainpeptides.com',
       emailForJwt: 'admin@terrainpeptides.com',
-      password: 'terrain2024',
+      password: '6tveucxz123!',
     },
   ]
 }

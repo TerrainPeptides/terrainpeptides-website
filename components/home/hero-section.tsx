@@ -128,7 +128,7 @@ export function HeroSection() {
         <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
           <Link
             href="/shop"
-            className="group relative inline-flex min-w-[200px] items-center justify-center overflow-hidden rounded-full bg-[#0A1628] px-10 py-3.5 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:bg-[#132744] hover:shadow-xl active:scale-[0.97]"
+            className="hero-shop-now-enter group relative inline-flex min-w-[200px] items-center justify-center overflow-hidden rounded-full bg-[#0A1628] px-10 py-3.5 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:bg-[#132744] hover:shadow-xl active:scale-[0.97]"
           >
             <span className="absolute inset-0 origin-left scale-x-0 bg-white/10 transition-transform duration-500 ease-out group-hover:scale-x-100" aria-hidden />
             <span className="relative z-10">SHOP NOW →</span>
