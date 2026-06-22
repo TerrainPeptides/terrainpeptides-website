@@ -412,11 +412,11 @@ function WiseCheckoutContent() {
 
             <div className="mx-auto flex w-fit justify-center rounded-md bg-white/95 px-4 py-2">
               <Image
-                src="/images/terrain-wordmark.png"
+                src="/images/terrain-logo.png"
                 alt="Terrain Peptides"
-                width={180}
-                height={48}
-                className="h-8 w-auto"
+                width={603}
+                height={278}
+                className="h-12 w-auto"
               />
             </div>
 

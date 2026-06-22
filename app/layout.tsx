@@ -10,18 +10,49 @@ import { Toaster } from '@/components/ui/sonner'
 import { AuthProvider } from '@/components/auth-provider'
 import { SiteBottomPromoGate } from '@/components/site-bottom-promo-gate'
 import { PromoPopup } from '@/components/promo-popup'
+import { getSiteUrl } from '@/lib/site-url'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 const geistMono = Geist_Mono({ subsets: ['latin'], variable: '--font-geist-mono' })
 
+const siteDescription =
+  'Premium quality research peptides for scientific research. 99%+ purity, third-party tested, with certificates of analysis.'
+
 export const metadata: Metadata = {
-  title: 'Terrain Peptides | Premium Research Peptides',
-  description: 'Premium quality research peptides for scientific research. 99%+ purity, third-party tested, with certificates of analysis.',
+  metadataBase: new URL(getSiteUrl()),
+  title: {
+    default: 'Terrain Peptides | Premium Research Peptides',
+    template: '%s | Terrain Peptides',
+  },
+  description: siteDescription,
   keywords: ['peptides', 'research peptides', 'BPC-157', 'TB500', 'GHK-Cu', 'laboratory research'],
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: getSiteUrl(),
+    siteName: 'Terrain Peptides',
+    title: 'Terrain Peptides | Premium Research Peptides',
+    description: siteDescription,
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Terrain Peptides | Premium Research Peptides',
+    description: siteDescription,
+  },
 }
 
 export const viewport: Viewport = {
-  themeColor: '#0A1628',
+  themeColor: '#ffffff',
   width: 'device-width',
   initialScale: 1,
 }

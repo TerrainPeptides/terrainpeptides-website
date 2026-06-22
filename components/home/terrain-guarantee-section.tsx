@@ -89,60 +89,64 @@ const cards = [
 export function TerrainGuaranteeSection() {
   return (
     <section
-      className="relative overflow-hidden bg-[#dce2ec] py-16 sm:py-20 lg:py-24"
+      className="bg-white py-14 sm:py-20 lg:py-24"
       aria-labelledby="terrain-guarantee-heading"
     >
-      <div className="relative mx-auto flex max-w-6xl flex-col items-center gap-12 px-4 sm:px-6 lg:flex-row lg:items-center lg:gap-14 lg:px-10">
-        {/* Left — die-cut sticker vial (transparent PNG), tilted like reference */}
-        <div className="flex w-full shrink-0 justify-center lg:w-[44%] lg:justify-center">
-          <div className="relative flex min-h-[280px] items-center justify-center sm:min-h-[320px] lg:min-h-[420px]">
-            <Image
-              src="/images/home/guarantee/terrain-sticker-9b957e96.png"
-              alt="Terrain GHK-Cu research peptide vial sticker"
-              width={380}
-              height={460}
-              className="h-auto w-full max-w-[240px] rotate-[8deg] object-contain sm:max-w-[280px] lg:max-w-[min(100%,340px)]"
-              priority
-            />
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="overflow-hidden rounded-3xl bg-gradient-to-r from-[#527da3] via-[#2a4568] via-[38%] to-[#0A1628] px-5 py-4 sm:px-8 sm:py-5 md:px-10 md:py-6">
+          <div className="flex flex-col items-center gap-6 md:flex-row md:items-center md:justify-between md:gap-6 lg:gap-8">
+            {/* Left — vial scaled up visually without growing the section */}
+            <div className="relative flex w-full min-w-0 flex-1 items-center justify-center overflow-hidden md:max-w-[48%]">
+              <Image
+                src="/images/terrain-sticker-9b957e96.png"
+                alt="Terrain GHK-Cu research peptide vial sticker"
+                width={682}
+                height={1024}
+                className="h-[300px] w-auto origin-center rotate-[8deg] object-contain sm:h-[340px] md:h-[360px] lg:h-[380px] scale-[1.55] sm:scale-[1.65] md:scale-[1.85] lg:scale-[2]"
+              />
+            </div>
+
+            {/* Right — guarantee card, matched height alignment */}
+            <div className="flex w-full flex-1 items-center justify-center">
+              <div className="w-full max-w-xl rounded-2xl bg-white px-6 py-5 shadow-lg sm:rounded-3xl sm:px-8 sm:py-6 md:max-w-none md:px-10 lg:px-12">
+                <h2
+                  id="terrain-guarantee-heading"
+                  className="max-w-xl text-balance text-2xl font-bold tracking-tight text-[#0A1628] sm:text-3xl lg:text-[2rem]"
+                >
+                  The Terrain Peptides Guarantee
+                </h2>
+                <p className="mt-2 max-w-lg text-sm leading-relaxed text-[#0A1628]/70 sm:text-base">
+                  Documented quality for research and laboratory use. Every batch meets our internal purity standards.
+                </p>
+
+                <ul className="mt-5 flex w-full flex-col gap-2.5">
+                  {cards.map((c) => (
+                    <li
+                      key={c.key}
+                      className="flex w-full items-stretch overflow-hidden rounded-2xl border border-[#0A1628]/8 bg-[#F8FAFC] shadow-sm"
+                    >
+                      <div className={`w-1 shrink-0 ${c.accent}`} aria-hidden />
+                      <div className="flex flex-1 items-center gap-4 px-4 py-3 sm:px-5">
+                        <div className="flex shrink-0 justify-center">{c.icon}</div>
+                        <div className="min-w-0 flex-1 text-left">
+                          <div className="flex flex-wrap items-center gap-1.5">
+                            <p className="text-sm font-bold text-[#0A1628] sm:text-base">{c.title}</p>
+                            {c.hint ? (
+                              <span className="inline-flex text-[#0A1628]/40" title="More details available at checkout and on product pages">
+                                <CircleHelp className="h-3.5 w-3.5" strokeWidth={2} aria-hidden />
+                                <span className="sr-only">More information</span>
+                              </span>
+                            ) : null}
+                          </div>
+                          <p className="mt-0.5 text-xs text-[#0A1628]/55 sm:text-sm">{c.description}</p>
+                        </div>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
           </div>
-        </div>
-
-        <div className="flex w-full flex-col items-center text-center lg:w-[56%] lg:items-start lg:text-left">
-          <h2
-            id="terrain-guarantee-heading"
-            className="max-w-xl text-balance text-2xl font-bold tracking-tight text-[#0A1628] sm:text-3xl lg:text-[2rem]"
-          >
-            The Terrain Peptides Guarantee
-          </h2>
-          <p className="mt-3 max-w-lg text-sm leading-relaxed text-[#0A1628]/70 sm:text-base">
-            Documented quality for research and laboratory use. Every batch meets our internal purity standards.
-          </p>
-
-          <ul className="mt-8 flex w-full max-w-md flex-col gap-3 sm:max-w-lg lg:max-w-xl">
-            {cards.map((c) => (
-              <li
-                key={c.key}
-                className="flex w-full items-stretch overflow-hidden rounded-2xl border border-[#0A1628]/8 bg-white shadow-sm"
-              >
-                <div className={`w-1 shrink-0 ${c.accent}`} aria-hidden />
-                <div className="flex flex-1 items-center gap-4 px-4 py-4 sm:px-5">
-                  <div className="flex shrink-0 justify-center">{c.icon}</div>
-                  <div className="min-w-0 flex-1 text-left">
-                    <div className="flex flex-wrap items-center gap-1.5">
-                      <p className="text-sm font-bold text-[#0A1628] sm:text-base">{c.title}</p>
-                      {c.hint ? (
-                        <span className="inline-flex text-[#0A1628]/40" title="More details available at checkout and on product pages">
-                          <CircleHelp className="h-3.5 w-3.5" strokeWidth={2} aria-hidden />
-                          <span className="sr-only">More information</span>
-                        </span>
-                      ) : null}
-                    </div>
-                    <p className="mt-0.5 text-xs text-[#0A1628]/55 sm:text-sm">{c.description}</p>
-                  </div>
-                </div>
-              </li>
-            ))}
-          </ul>
         </div>
       </div>
     </section>

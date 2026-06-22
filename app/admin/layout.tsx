@@ -130,11 +130,11 @@ export default function AdminLayout({
       <div className="flex h-16 items-center border-b border-border px-4">
         <Link href="/admin">
           <Image
-            src="/images/terrain-wordmark.png"
+            src="/images/terrain-logo.png"
             alt="Terrain Peptides Admin"
-            width={220}
-            height={60}
-            className="h-8 w-auto"
+            width={603}
+            height={278}
+            className="h-11 w-auto"
           />
         </Link>
       </div>
@@ -187,11 +187,11 @@ export default function AdminLayout({
         <header className="flex h-16 items-center justify-between border-b border-border bg-background px-4 lg:hidden">
           <Link href="/admin">
             <Image
-              src="/images/terrain-wordmark.png"
+              src="/images/terrain-logo.png"
               alt="Terrain Peptides"
-              width={200}
-              height={50}
-              className="h-7 w-auto"
+              width={603}
+              height={278}
+              className="h-10 w-auto"
             />
           </Link>
           <Sheet open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>

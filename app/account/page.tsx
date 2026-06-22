@@ -1,8 +1,8 @@
 'use client'
 
 import { useSession, signOut } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { Suspense, useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import {
@@ -83,9 +83,18 @@ const STATUS_COLORS: Record<string, string> = {
   cancelled: 'bg-red-100 text-red-700',
 }
 
-export default function AccountPage() {
+function AccountPageFallback() {
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-[#f5f5f5]">
+      <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-[#0A1931]" />
+    </div>
+  )
+}
+
+function AccountPageContent() {
   const { data: session, status } = useSession()
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [activeTab, setActiveTab] = useState<Tab>('profile')
 
   const [addresses, setAddresses] = useState<Address[]>([])
@@ -116,6 +125,13 @@ export default function AccountPage() {
       if (raw) setSavedDiscounts(JSON.parse(raw))
     } catch { /* silent */ }
   }, [])
+
+  useEffect(() => {
+    const tab = searchParams.get('tab')
+    if (tab === 'profile' || tab === 'addresses' || tab === 'discounts' || tab === 'affiliate') {
+      setActiveTab(tab)
+    }
+  }, [searchParams])
 
   function copyDiscountCode(code: string) {
     navigator.clipboard.writeText(code).then(() => {
@@ -915,5 +931,13 @@ export default function AccountPage() {
         </div>
       )}
     </div>
+  )
+}
+
+export default function AccountPage() {
+  return (
+    <Suspense fallback={<AccountPageFallback />}>
+      <AccountPageContent />
+    </Suspense>
   )
 }

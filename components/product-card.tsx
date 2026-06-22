@@ -13,6 +13,7 @@ import {
   perVialPriceCentsForVariant,
 } from '@/lib/dosage-variants'
 import type { Product } from '@/lib/types'
+import { resolveProductImageSrc } from '@/lib/product-image'
 
 interface ProductCardProps {
   product: Product
@@ -20,7 +21,8 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   const [imageError, setImageError] = useState(false)
-  const imageSrc = product.image_url && !imageError ? product.image_url : null
+  const resolvedSrc = resolveProductImageSrc(product)
+  const imageSrc = resolvedSrc && !imageError ? resolvedSrc : null
 
   const multi = hasDosageVariants(product)
   const defaultVid = getDefaultDosageVariantId(product)

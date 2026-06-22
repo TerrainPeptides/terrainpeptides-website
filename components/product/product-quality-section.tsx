@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Image from 'next/image'
 import { CheckCircle2, FlaskConical } from 'lucide-react'
 import type { Product } from '@/lib/types'
+import { resolveProductImageSrc } from '@/lib/product-image'
 
 interface ProductQualitySectionProps {
   product: Product
@@ -54,7 +55,8 @@ const stats = [
 export function ProductQualitySection({ product }: ProductQualitySectionProps) {
   const [activeTab, setActiveTab] = useState<QualityTab>('potency')
   const [imageError, setImageError] = useState(false)
-  const imageSrc = product.image_url && !imageError ? product.image_url : null
+  const resolvedSrc = resolveProductImageSrc(product)
+  const imageSrc = resolvedSrc && !imageError ? resolvedSrc : null
   const tab = tabContent[activeTab]
 
   return (

@@ -2,6 +2,9 @@ import type { Product, FAQ, Vouch, ReferralCode, Order, OrderItem, ContactSubmis
 import { seedProducts, seedVouches } from '@/lib/seed-data'
 import { readPersistentStore, writePersistentStore } from '@/lib/persistent-store'
 import { getProductsFromSupabase } from '@/lib/products-supabase'
+import { mergeCatalogWithSeed } from '@/lib/catalog-merge'
+import { enrichProductImages } from '@/lib/enrich-product-images'
+import { productSlugMatches, normalizeProductSlug } from '@/lib/product-slug'
 import { buildSiteStaticFaqs } from '@/lib/site-faqs'
 
 // Back-compat exports for seed data
@@ -22,24 +25,31 @@ function filterVisible(products: Product[]): Product[] {
   return products.filter((p) => !(p as { hidden?: boolean }).hidden)
 }
 
-const SEED_SLUGS_TO_ALWAYS_INCLUDE = ['ghk-cu', 'selank', 'kisspeptin']
+/** Seed defaults first; store overrides fields but keeps seed `hidden` unless store sets it. */
+function buildCatalogFallback(seed: Product[], store: Product[]): Product[] {
+  const bySlug = new Map<string, Product>()
+  for (const p of seed) bySlug.set(p.slug, p)
+  for (const p of store) {
+    const existing = bySlug.get(p.slug)
+    bySlug.set(
+      p.slug,
+      existing
+        ? { ...existing, ...p, hidden: p.hidden !== undefined ? p.hidden : existing.hidden }
+        : p
+    )
+  }
+  return [...bySlug.values()]
+}
 
 export async function getProductsAsync(): Promise<Product[]> {
   const fromSupabase = await getProductsFromSupabase()
   const fromStoreProducts = fromStore()
-  let products: Product[]
-  if (fromSupabase && fromSupabase.length > 0) {
-    products = [...fromSupabase]
-    for (const slug of SEED_SLUGS_TO_ALWAYS_INCLUDE) {
-      if (!products.some((p) => p.slug === slug)) {
-        const seedProduct = fromStoreProducts.find((p) => p.slug === slug)
-        if (seedProduct) products.push(seedProduct)
-      }
-    }
-  } else {
-    products = fromStoreProducts
-  }
-  return filterVisible(products)
+  const catalogFallback = buildCatalogFallback(seedProducts, fromStoreProducts)
+  const products =
+    fromSupabase && fromSupabase.length > 0
+      ? mergeCatalogWithSeed(fromSupabase, catalogFallback)
+      : catalogFallback
+  return enrichProductImages(filterVisible(products))
 }
 
 export function getFeaturedProducts(): Product[] {
@@ -55,14 +65,12 @@ export function getProductBySlug(slug: string): Product | null {
   return readPersistentStore().products.find((p) => p.slug === slug) ?? null
 }
 
-const RETATRUTIDE_SLUGS = ['retatrutide', 'glp-3-rt', 'glp3-rt']
-
 export async function getProductBySlugAsync(slug: string): Promise<Product | null> {
   const products = await getProductsAsync()
-  if (RETATRUTIDE_SLUGS.includes(slug)) {
-    return products.find((p) => RETATRUTIDE_SLUGS.includes(p.slug) || p.name?.toLowerCase() === 'retatrutide') ?? null
-  }
-  return products.find((p) => p.slug === slug) ?? null
+  const normalized = normalizeProductSlug(slug)
+  return (
+    products.find((p) => productSlugMatches(slug, p.slug) || p.slug === normalized) ?? null
+  )
 }
 
 export function getProductById(id: string): Product | null {

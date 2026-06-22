@@ -1,6 +1,7 @@
 import { Suspense } from 'react'
 import { ShopContent } from '@/components/shop/shop-content'
 import { getProductsAsync } from '@/lib/data'
+import { PRODUCT_CATEGORY_VALUES } from '@/lib/product-category'
 
 /** Always read latest catalog prices from Supabase (not a stale build snapshot). */
 export const dynamic = 'force-dynamic'
@@ -11,7 +12,13 @@ export const metadata = {
 }
 
 export default async function ShopPage() {
-  const products = (await getProductsAsync()).sort((a, b) => a.name.localeCompare(b.name))
+  const categoryOrder = new Map(PRODUCT_CATEGORY_VALUES.map((c, i) => [c, i]))
+  const products = (await getProductsAsync()).sort((a, b) => {
+    const cat =
+      (categoryOrder.get(a.category) ?? 99) - (categoryOrder.get(b.category) ?? 99)
+    if (cat !== 0) return cat
+    return a.name.localeCompare(b.name)
+  })
 
   return (
     <>

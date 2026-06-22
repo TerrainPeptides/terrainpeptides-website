@@ -1,6 +1,9 @@
 import NextAuth from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
 import { createClient } from '@supabase/supabase-js'
+import { ensureAuthUrl } from '@/lib/site-url'
+
+ensureAuthUrl()
 
 function supabasePublic() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL!

@@ -49,11 +49,11 @@ export default function AdminLoginPage() {
         <CardHeader className="text-center">
           <div className="mx-auto mb-4">
             <Image
-              src="/images/terrain-wordmark.png"
+              src="/images/terrain-logo.png"
               alt="Terrain Peptides"
-              width={240}
-              height={60}
-              className="h-10 w-auto"
+              width={603}
+              height={278}
+              className="h-14 w-auto"
             />
           </div>
           <CardTitle className="flex items-center justify-center gap-2">

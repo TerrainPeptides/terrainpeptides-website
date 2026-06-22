@@ -31,11 +31,11 @@ export function Footer() {
           <div className="space-y-4">
             <Link href="/">
               <Image
-                src="/images/terrain-wordmark.png"
+                src="/images/terrain-logo.png"
                 alt="Terrain Peptides"
-                width={160}
-                height={36}
-                className="h-8 w-auto brightness-0 invert"
+                width={603}
+                height={278}
+                className="h-10 w-auto brightness-0 invert sm:h-12"
               />
             </Link>
             <p className="text-sm leading-relaxed text-white/60">

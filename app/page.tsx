@@ -15,9 +15,9 @@ export default async function HomePage() {
   return (
     <div className="flex flex-col bg-white">
       <HeroSection />
-      <TerrainGuaranteeSection />
       <QualitySection />
       <FeaturedProducts products={featuredProducts} />
+      <TerrainGuaranteeSection />
       <FaqSection faqs={faqs} />
     </div>
   )

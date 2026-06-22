@@ -258,11 +258,11 @@ function AuthPageInner() {
           {/* Mobile logo */}
           <div className="mb-8 flex justify-center md:hidden">
             <Image
-              src="/images/terrain-wordmark.png"
+              src="/images/terrain-logo.png"
               alt="Terrain"
-              width={140}
-              height={38}
-              className="h-8 w-auto"
+              width={603}
+              height={278}
+              className="h-12 w-auto"
             />
           </div>
 

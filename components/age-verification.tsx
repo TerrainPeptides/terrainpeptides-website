@@ -54,11 +54,11 @@ export function AgeVerification() {
         <DialogHeader className="text-center sm:text-center">
           <div className="mx-auto mb-4">
             <Image
-              src="/images/terrain-wordmark.png"
+              src="/images/terrain-logo.png"
               alt="Terrain Peptides"
-              width={200}
-              height={44}
-              className="h-10 w-auto"
+              width={603}
+              height={278}
+              className="h-14 w-auto sm:h-16"
             />
           </div>
           <DialogTitle className="text-xl font-semibold text-foreground">

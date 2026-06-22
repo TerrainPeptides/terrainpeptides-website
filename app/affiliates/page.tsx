@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { useSession } from 'next-auth/react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -75,6 +76,11 @@ const AUDIENCE_SIZES = ['Under 1K', '1K–10K', '10K–50K', '50K+']
 // ─── Page ──────────────────────────────────────────────────────────────────────
 
 export default function AffiliatesPage() {
+  const { data: session } = useSession()
+  const applyHref = session
+    ? '/account?tab=affiliate'
+    : '/auth?callbackUrl=%2Faccount%3Ftab%3Daffiliate'
+
   const [form, setForm] = useState({
     name: '',
     email: '',
@@ -162,14 +168,14 @@ export default function AffiliatesPage() {
           </p>
 
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <a
-              href="#apply"
+            <Link
+              href={applyHref}
               className="inline-flex items-center gap-2 rounded-lg px-8 py-3.5 text-base font-semibold text-foreground shadow-lg transition-opacity hover:opacity-90"
               style={{ background: GOLD }}
             >
               Apply Now
               <ArrowRight className="h-4 w-4" />
-            </a>
+            </Link>
             <a
               href="#how-it-works"
               className="inline-flex items-center gap-2 rounded-lg border border-white/20 px-8 py-3.5 text-base font-semibold text-white transition-colors hover:border-white/40 hover:bg-white/5"
