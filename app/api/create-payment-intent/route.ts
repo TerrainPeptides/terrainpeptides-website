@@ -5,6 +5,7 @@ import { orderLineFromCheckoutItem, type CheckoutCartItemPayload } from '@/lib/c
 import { generateOrdOrderId } from '@/lib/paypal-order-id'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import { insertPendingStripeOrderWithItems } from '@/lib/supabase/order-persist'
+import { stripeApiErrorMessage, stripeApiErrorStatus } from '@/lib/stripe-api-error'
 
 /** Card charges on PaymentIntents require suffix, not full statement_descriptor. */
 const STATEMENT_DESCRIPTOR_SUFFIX = 'Royal Auto Detailing'
@@ -160,6 +161,9 @@ export async function POST(request: Request) {
     })
   } catch (error) {
     console.error('Create payment intent error:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return NextResponse.json(
+      { error: stripeApiErrorMessage(error) },
+      { status: stripeApiErrorStatus(error) }
+    )
   }
 }

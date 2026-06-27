@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { cn } from '@/lib/utils'
 
 type NewsletterSectionProps = {
   /** Transparent area + no top padding so the card overlaps the gradient seam (home bottom promo) */
@@ -11,6 +12,24 @@ export function NewsletterSection({ variant = 'default' }: NewsletterSectionProp
   const [email, setEmail] = useState('')
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [message, setMessage] = useState('')
+  const highlightRef = useRef<HTMLSpanElement>(null)
+  const [highlightInView, setHighlightInView] = useState(false)
+
+  useEffect(() => {
+    const el = highlightRef.current
+    if (!el) return
+    const obs = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          setHighlightInView(true)
+          obs.disconnect()
+        }
+      },
+      { threshold: 0.2, rootMargin: '0px 0px -6% 0px' }
+    )
+    obs.observe(el)
+    return () => obs.disconnect()
+  }, [])
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -52,8 +71,8 @@ export function NewsletterSection({ variant = 'default' }: NewsletterSectionProp
       <div className={innerMax}>
         <div
           className={[
-            'rounded-[26px] border border-violet-200/70',
-            'bg-gradient-to-br from-[#ebe4f7] via-[#f4eef8] to-[#fdeee4]',
+            'rounded-[26px] border border-sky-200/65',
+            'bg-gradient-to-br from-[#e8f4fc] via-[#f2f8ff] to-[#dceef9]',
             variant === 'overlap'
               ? 'p-8 shadow-[0_-12px_48px_rgba(0,0,0,0.12),0_4px_24px_rgba(0,0,0,0.06)] sm:p-10 lg:p-12 lg:pl-14 lg:pr-12'
               : 'p-8 shadow-[0_1px_3px_rgba(0,0,0,0.06)] sm:p-10 lg:p-12 lg:pl-14 lg:pr-12',
@@ -70,7 +89,19 @@ export function NewsletterSection({ variant = 'default' }: NewsletterSectionProp
                   Stay Updated with Terrain
                 </h2>
                 <p className="mt-3 text-[15px] leading-relaxed text-neutral-600 sm:text-base">
-                  Subscribe to our newsletter for exclusive deals, research updates, and industry news.
+                  Subscribe to our newsletter for{' '}
+                  <span
+                    ref={highlightRef}
+                    className={cn(
+                      'newsletter-text-marker',
+                      highlightInView && 'newsletter-text-marker--in-view'
+                    )}
+                  >
+                    <span className="newsletter-text-marker__text">
+                      exclusive deals, research updates, and industry news
+                    </span>
+                  </span>
+                  .
                 </p>
                 <p className="mt-2 text-sm leading-relaxed text-neutral-600">
                   Join{' '}

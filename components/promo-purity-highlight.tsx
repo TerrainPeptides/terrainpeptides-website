@@ -3,8 +3,12 @@
 import { useEffect, useRef, useState } from 'react'
 import { cn } from '@/lib/utils'
 
-/** Blue marker sweep on “purity, transparency, and reliability” — runs once when the band scrolls into view. */
-export function PromoPurityHighlight({ className, ...props }: React.ComponentProps<'span'>) {
+/** Light-blue marker sweep on “purity, transparency, and reliability” — runs once in view. */
+export function PromoPurityHighlight({
+  className,
+  children,
+  ...props
+}: React.ComponentProps<'span'>) {
   const ref = useRef<HTMLSpanElement>(null)
   const [inView, setInView] = useState(false)
 
@@ -30,12 +34,10 @@ export function PromoPurityHighlight({ className, ...props }: React.ComponentPro
   return (
     <span
       ref={ref}
-      className={cn(
-        'hero-text-highlight-on-dark font-semibold text-white',
-        inView && 'hero-text-highlight-on-dark--in-view',
-        className
-      )}
+      className={cn('promo-purity-marker', inView && 'promo-purity-marker--in-view', className)}
       {...props}
-    />
+    >
+      <span className="promo-purity-marker__text">{children}</span>
+    </span>
   )
 }

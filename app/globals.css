@@ -357,34 +357,106 @@ a {
   }
 }
 
-/* Site bottom promo — light blue marker on dark navy (purity, transparency, reliability).
-   Base state: no sweep. `.hero-text-highlight-on-dark--in-view` runs once when scrolled into view (see PromoHeadlineHighlight). */
-.hero-text-highlight-on-dark {
+/* Site bottom promo — single light-blue highlighter stroke (left → right), dark navy band */
+@keyframes promo-purity-marker-sweep {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.promo-purity-marker {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+  white-space: nowrap;
+  font-weight: 600;
+  color: rgb(255 255 255 / 0.96);
+  vertical-align: baseline;
+  padding: 0 0.06em;
+  margin: 0 -0.06em;
+}
+
+.promo-purity-marker::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0.58em;
+  height: 0.72em;
+  z-index: 0;
+  border-radius: 0.1em;
+  transform: scaleX(0);
+  transform-origin: left center;
+  background: rgb(130 200 255 / 0.48);
+  box-shadow:
+    0 0 12px 3px rgb(120 190 255 / 0.35),
+    0 0 28px 6px rgb(100 175 255 / 0.2);
+  pointer-events: none;
+  will-change: transform;
+}
+
+.promo-purity-marker--in-view::before {
+  animation: promo-purity-marker-sweep 3.35s cubic-bezier(0.12, 0.72, 0.18, 1) forwards;
+}
+
+.promo-purity-marker__text {
+  position: relative;
+  z-index: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .promo-purity-marker::before {
+    animation: none !important;
+    transform: scaleX(1);
+  }
+}
+
+/* Newsletter card — light-blue highlighter (no multicolor); works wrapped lines via clone */
+@keyframes newsletter-marker-bg-sweep {
+  from {
+    background-size: 0% 100%;
+  }
+  to {
+    background-size: 100% 100%;
+  }
+}
+
+.newsletter-text-marker {
+  position: relative;
+  display: inline;
+  padding: 0;
+}
+
+.newsletter-text-marker__text {
+  font-weight: 600;
+  color: rgb(23 23 23);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  padding: 0 0.06em;
+  margin: 0 -0.06em;
+  border-radius: 0.06em;
   background-image: linear-gradient(
-    transparent 50%,
-    rgba(130, 205, 255, 0.42) 50%,
-    rgba(100, 185, 255, 0.52) 70%,
-    rgba(130, 205, 255, 0.32) 90%,
-    transparent 90%
+    transparent 52%,
+    rgb(165 210 255 / 0.62) 52%,
+    rgb(130 195 255 / 0.58) 78%,
+    rgb(155 215 255 / 0.45) 100%
   );
   background-size: 0% 100%;
   background-repeat: no-repeat;
   background-position: left center;
-  box-decoration-break: clone;
-  -webkit-box-decoration-break: clone;
-  padding: 0 0.08em;
-  margin: 0 -0.08em;
-  filter: drop-shadow(0 0 14px rgba(120, 195, 255, 0.45));
+  filter: drop-shadow(0 0 10px rgb(120 185 255 / 0.45));
 }
 
-.hero-text-highlight-on-dark.hero-text-highlight-on-dark--in-view {
-  animation: hero-highlight-sweep 1.1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+.newsletter-text-marker--in-view .newsletter-text-marker__text {
+  animation: newsletter-marker-bg-sweep 3.5s cubic-bezier(0.12, 0.72, 0.2, 1) forwards;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-text-highlight-on-dark,
-  .hero-text-highlight-on-dark.hero-text-highlight-on-dark--in-view {
-    animation: none;
+  .newsletter-text-marker__text {
+    animation: none !important;
     background-size: 100% 100%;
     filter: none;
   }
