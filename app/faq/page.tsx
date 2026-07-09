@@ -43,7 +43,7 @@ export default async function FAQPage() {
       <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-10 text-center">
-          <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+          <h1 className="text-3xl font-bold tracking-tight text-black sm:text-4xl">
             Frequently Asked Questions
           </h1>
           <p className="mt-2 text-muted-foreground">
@@ -60,7 +60,7 @@ export default async function FAQPage() {
               return (
             <Card key={category}>
               <CardHeader>
-                <CardTitle className="text-lg">
+                <CardTitle className="text-lg text-black">
                   {categoryLabels[category] || category}
                 </CardTitle>
               </CardHeader>
@@ -68,7 +68,7 @@ export default async function FAQPage() {
                 <Accordion type="single" collapsible className="w-full">
                   {categoryFaqs.map((faq) => (
                     <AccordionItem key={faq.id} value={faq.id}>
-                      <AccordionTrigger className="text-left">
+                      <AccordionTrigger className="text-left text-black">
                         {faq.question}
                       </AccordionTrigger>
                       <AccordionContent className="text-muted-foreground">
@@ -87,7 +87,7 @@ export default async function FAQPage() {
         <Card className="mt-12">
           <CardContent className="flex flex-col items-center p-8 text-center">
             <MessageSquare className="h-12 w-12 text-muted-foreground/50" />
-            <h2 className="mt-4 text-xl font-semibold text-foreground">
+            <h2 className="mt-4 text-xl font-semibold text-black">
               Still have questions?
             </h2>
             <p className="mt-2 text-muted-foreground">

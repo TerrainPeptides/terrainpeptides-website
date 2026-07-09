@@ -45,11 +45,11 @@ function NavbarTickerPeriod({ duplicate }: { duplicate?: boolean }) {
     >
       {TICKER_ITEMS.map((text) => (
         <Fragment key={duplicate ? `d-${text}` : text}>
-          <span className="whitespace-nowrap text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-800/90 sm:text-xs md:text-[13px]">
+          <span className="whitespace-nowrap text-[11px] font-semibold uppercase tracking-[0.12em] text-white sm:text-xs md:text-[13px]">
             {text}
           </span>
           <span
-            className="shrink-0 select-none px-1 text-sm font-medium text-slate-600/75 sm:text-[15px] md:text-base"
+            className="shrink-0 select-none px-1 text-sm font-medium text-white sm:text-[15px] md:text-base"
             aria-hidden
           >
             →
@@ -226,7 +226,7 @@ export function Navbar() {
       />
 
       <div
-        className="navbar-ticker navbar-ticker--rolling w-full border-t border-sky-200/80 py-2.5 sm:py-3"
+        className="navbar-ticker navbar-ticker--rolling w-full py-2.5 sm:py-3"
         role="region"
         aria-label="Announcements"
       >

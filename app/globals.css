@@ -89,6 +89,7 @@
 
 @theme inline {
   --font-sans: 'Inter', 'Inter Fallback', system-ui, sans-serif;
+  --font-heading: var(--font-poppins), 'Poppins', ui-sans-serif, system-ui, sans-serif;
   --font-mono: 'Geist Mono', 'Geist Mono Fallback', monospace;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -200,41 +201,13 @@ a {
   animation-play-state: paused;
 }
 
-/* Marquee strip — fluid blue gradient (light → saturated) slowly drifting */
-@keyframes navbar-ticker-bg-roll {
-  0% {
-    background-position: 0% 50%;
-  }
-  100% {
-    background-position: 200% 50%;
-  }
-}
-
 .navbar-ticker--rolling {
-  background: linear-gradient(
-    90deg,
-    #eff6ff 0%,
-    #dbeafe 12%,
-    #bfdbfe 28%,
-    #93c5fd 42%,
-    #60a5fa 52%,
-    #3b82f6 62%,
-    #2563eb 72%,
-    #60a5fa 82%,
-    #bfdbfe 92%,
-    #eff6ff 100%
-  );
-  background-size: 220% 100%;
-  animation: navbar-ticker-bg-roll 22s linear infinite;
+  background: #0f1f6b;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .navbar-ticker__track {
     animation: none;
-  }
-  .navbar-ticker--rolling {
-    animation: none;
-    background: #dbeafe;
   }
 }
 

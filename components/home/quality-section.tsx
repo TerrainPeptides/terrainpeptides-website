@@ -52,7 +52,7 @@ export function QualitySection() {
 
   return (
     <section className="bg-white py-14 sm:py-20 lg:py-24">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="px-4 sm:px-6 lg:px-8">
         <div className="overflow-hidden rounded-3xl bg-[#F2F5F8]">
           <div className="grid items-center md:grid-cols-2">
 
@@ -98,8 +98,8 @@ export function QualitySection() {
               <div className="mt-7 flex flex-wrap gap-x-8 gap-y-3 border-b border-[#0A1628]/10 pb-7">
                 {stats.map((s) => (
                   <div key={s.label}>
-                    <p className="text-xl font-extrabold text-[#0A1628]">{s.value}</p>
-                    <p className="mt-0.5 text-[0.62rem] font-semibold uppercase tracking-widest text-[#0A1628]/45">
+                <p className="text-xl font-extrabold text-[#0A1628]">{s.value}</p>
+                <p className="mt-0.5 text-[0.62rem] font-semibold uppercase tracking-widest text-[#0A1628]/45">
                       {s.label}
                     </p>
                   </div>

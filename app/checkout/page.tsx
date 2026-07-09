@@ -21,6 +21,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import { toast } from 'sonner'
+import { AddressAutocomplete, validateShippingAddress } from '@/components/address-autocomplete'
 import {
   Check,
   ArrowLeft,
@@ -452,6 +453,8 @@ export default function CheckoutPage() {
   const [isCreatingIntent, setIsCreatingIntent] = useState(false)
   const [clientSecret, setClientSecret] = useState<string | null>(null)
   const [orderNumber, setOrderNumber] = useState<string | null>(null)
+  const [addressVerified, setAddressVerified] = useState(false)
+  const [validatingAddress, setValidatingAddress] = useState(false)
 
   const [shippingInfo, setShippingInfo] = useState<ShippingInfo>({
     name: '',
@@ -482,16 +485,36 @@ export default function CheckoutPage() {
   const totalCents = afterDiscount + SHIPPING_CENTS + taxCents
 
   // ── Step 1 → Step 2 ───────────────────────────────────────────────────────
-  const handleContinueToDelivery = (e: React.FormEvent) => {
+  const handleContinueToDelivery = async (e: React.FormEvent) => {
     e.preventDefault()
     const resolvedEmail = (shippingInfo.email || session?.user?.email || '').trim()
     if (!shippingInfo.name.trim()) { toast.error('Please enter your full name'); return }
     if (!resolvedEmail) { toast.error('Please provide an email address'); return }
     if (!shippingInfo.phone.trim()) { toast.error('Please enter your phone number'); return }
-    if (!shippingInfo.address1.trim()) { toast.error('Please enter your street address'); return }
-    if (!shippingInfo.city.trim()) { toast.error('Please enter your city'); return }
-    if (!shippingInfo.state.trim()) { toast.error('Please enter your state / province'); return }
-    if (!shippingInfo.zip.trim()) { toast.error('Please enter your ZIP / postal code'); return }
+    if (!shippingInfo.address1.trim()) { toast.error('Please search and select a valid shipping address'); return }
+    if (!shippingInfo.city.trim() || !shippingInfo.state.trim() || !shippingInfo.zip.trim()) {
+      toast.error('Please select a complete address from the suggestions')
+      return
+    }
+
+    if (!addressVerified) {
+      setValidatingAddress(true)
+      const ok = await validateShippingAddress({
+        address1: shippingInfo.address1,
+        address2: shippingInfo.address2,
+        city: shippingInfo.city,
+        state: shippingInfo.state,
+        zip: shippingInfo.zip,
+        country: shippingInfo.country,
+      })
+      setValidatingAddress(false)
+      if (!ok) {
+        toast.error('Please select a valid address from the suggestions list.')
+        return
+      }
+      setAddressVerified(true)
+    }
+
     setShippingInfo(prev => ({ ...prev, email: resolvedEmail }))
     setCheckoutStep(2)
   }
@@ -552,7 +575,7 @@ export default function CheckoutPage() {
     return (
       <div className="bg-background">
         <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
-          <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">Checkout</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-black sm:text-4xl">Checkout</h1>
           <div className="mt-8 animate-pulse space-y-4">
             <div className="h-8 w-48 rounded-md bg-muted" />
             <div className="h-64 rounded-xl bg-muted" />
@@ -567,10 +590,10 @@ export default function CheckoutPage() {
     return (
       <div className="bg-background">
         <div className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
-          <h1 className="text-center text-3xl font-bold tracking-tight text-foreground sm:text-4xl">Checkout</h1>
+          <h1 className="text-center text-3xl font-bold tracking-tight text-black sm:text-4xl">Checkout</h1>
           <div className="flex flex-col items-center justify-center text-center">
             <ShoppingBag className="mt-10 h-16 w-16 text-muted-foreground/50" />
-            <h2 className="mt-6 text-2xl font-bold text-foreground">Your cart is empty</h2>
+            <h2 className="mt-6 text-2xl font-bold text-black">Your cart is empty</h2>
             <p className="mt-2 text-muted-foreground">Add items to your cart before checking out.</p>
             <Link href="/shop">
               <Button className="mt-6 bg-[#0A1628] hover:bg-[#0A1628]/90">Browse Products</Button>
@@ -584,7 +607,7 @@ export default function CheckoutPage() {
   return (
     <div className="min-h-screen bg-background">
       <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
-        <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">Checkout</h1>
+        <h1 className="text-3xl font-bold tracking-tight text-black sm:text-4xl">Checkout</h1>
         <Link
           href="/cart"
           className="mt-4 mb-8 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
@@ -604,7 +627,7 @@ export default function CheckoutPage() {
                   <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#0A1628] text-sm font-bold text-white">
                     {checkoutStep > 1 ? <Check className="h-4 w-4" strokeWidth={2.5} /> : '1'}
                   </div>
-                  <h2 className="text-lg font-bold text-foreground">Shipping Address</h2>
+                  <h2 className="text-lg font-bold text-black">Shipping Address</h2>
                   {checkoutStep > 1 && (
                     <Check className="h-5 w-5 text-green-500" strokeWidth={2.5} />
                   )}
@@ -640,7 +663,7 @@ export default function CheckoutPage() {
 
                   <form onSubmit={handleContinueToDelivery} className="space-y-6">
                     <div>
-                      <p className="mb-3 text-sm font-semibold text-foreground">Your Information</p>
+                      <p className="mb-3 text-sm font-semibold text-black">Your Information</p>
                       <div className="space-y-3">
                         <div className="space-y-1.5">
                           <Label htmlFor="name" className="text-xs text-muted-foreground">Full name *</Label>
@@ -668,12 +691,22 @@ export default function CheckoutPage() {
                     </div>
 
                     <div>
-                      <p className="mb-3 text-sm font-semibold text-foreground">Delivery Address</p>
+                      <p className="mb-3 text-sm font-semibold text-black">Delivery Address</p>
                       <div className="space-y-3">
-                        <Input
-                          placeholder="Street address *"
-                          value={shippingInfo.address1}
-                          onChange={(e) => setShippingInfo({ ...shippingInfo, address1: e.target.value })}
+                        <AddressAutocomplete
+                          value={{
+                            address1: shippingInfo.address1,
+                            address2: shippingInfo.address2,
+                            city: shippingInfo.city,
+                            state: shippingInfo.state,
+                            zip: shippingInfo.zip,
+                            country: shippingInfo.country,
+                          }}
+                          verified={addressVerified}
+                          onVerifiedChange={setAddressVerified}
+                          onChange={(fields) =>
+                            setShippingInfo((prev) => ({ ...prev, ...fields }))
+                          }
                         />
                         <Input
                           placeholder="Apartment, suite, etc. (optional)"
@@ -681,30 +714,13 @@ export default function CheckoutPage() {
                           onChange={(e) => setShippingInfo({ ...shippingInfo, address2: e.target.value })}
                         />
                         <Input
-                          placeholder="Company"
+                          placeholder="Company (optional)"
                           value={shippingInfo.company}
                           onChange={(e) => setShippingInfo({ ...shippingInfo, company: e.target.value })}
                         />
                         <Input
-                          placeholder="ZIP code *"
-                          value={shippingInfo.zip}
-                          onChange={(e) => setShippingInfo({ ...shippingInfo, zip: e.target.value })}
-                        />
-                        <div className="grid grid-cols-2 gap-3">
-                          <Input
-                            placeholder="City *"
-                            value={shippingInfo.city}
-                            onChange={(e) => setShippingInfo({ ...shippingInfo, city: e.target.value })}
-                          />
-                          <Input
-                            placeholder="State / Province *"
-                            value={shippingInfo.state}
-                            onChange={(e) => setShippingInfo({ ...shippingInfo, state: e.target.value })}
-                          />
-                        </div>
-                        <Input
                           type="tel"
-                          placeholder="Phone (for delivery)"
+                          placeholder="Phone (for delivery) *"
                           value={shippingInfo.phone}
                           onChange={(e) => setShippingInfo({ ...shippingInfo, phone: e.target.value })}
                         />
@@ -742,8 +758,13 @@ export default function CheckoutPage() {
                       <span className="text-sm text-foreground">Billing address same as shipping address</span>
                     </label>
 
-                    <Button type="submit" className="w-full bg-[#0A1628] hover:bg-[#0A1628]/90 text-white" size="lg">
-                      Continue to delivery →
+                    <Button
+                      type="submit"
+                      disabled={validatingAddress}
+                      className="w-full bg-[#0A1628] hover:bg-[#0A1628]/90 text-white"
+                      size="lg"
+                    >
+                      {validatingAddress ? 'Verifying address…' : 'Continue to delivery →'}
                     </Button>
                   </form>
                 </>
@@ -752,14 +773,14 @@ export default function CheckoutPage() {
                 <div className="mt-4 border-t border-border/60 pt-4">
                   <div className="grid grid-cols-3 gap-4 text-sm">
                     <div>
-                      <p className="mb-1.5 font-semibold text-foreground">Shipping Address</p>
+                      <p className="mb-1.5 font-semibold text-black">Shipping Address</p>
                       <p className="text-[#0A1628]">{shippingInfo.name}</p>
                       <p className="text-[#0A1628]">{shippingInfo.address1}</p>
                       <p className="text-[#0A1628]">{shippingInfo.city}, {shippingInfo.state} {shippingInfo.zip}</p>
-                      <p className="text-[#0A1628]">US</p>
+                      <p className="text-[#0A1628]">{shippingInfo.country === 'CA' ? 'Canada' : 'United States'}</p>
                     </div>
                     <div>
-                      <p className="mb-1.5 font-semibold text-foreground">Contact</p>
+                      <p className="mb-1.5 font-semibold text-black">Contact</p>
                       <p className="text-[#0A1628]">{shippingInfo.phone}</p>
                       <p className="text-[#0A1628]">{shippingInfo.email}</p>
                       <p className="mt-1 text-xs text-muted-foreground">
@@ -767,7 +788,7 @@ export default function CheckoutPage() {
                       </p>
                     </div>
                     <div>
-                      <p className="mb-1.5 font-semibold text-foreground">Billing Address</p>
+                      <p className="mb-1.5 font-semibold text-black">Billing Address</p>
                       {billingSameAsShipping ? (
                         <p>Same as <span className="text-[#0A1628]">shipping address</span></p>
                       ) : (
@@ -787,7 +808,7 @@ export default function CheckoutPage() {
                     <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#0A1628] text-sm font-bold text-white">
                       {checkoutStep > 2 ? <Check className="h-4 w-4" strokeWidth={2.5} /> : '2'}
                     </div>
-                    <h2 className="text-lg font-bold text-foreground">Delivery Method</h2>
+                    <h2 className="text-lg font-bold text-black">Delivery Method</h2>
                     {checkoutStep > 2 && (
                       <Check className="h-5 w-5 text-green-500" strokeWidth={2.5} />
                     )}
@@ -806,7 +827,7 @@ export default function CheckoutPage() {
                 {checkoutStep === 2 ? (
                   /* Active delivery step */
                   <div className="mt-5">
-                    <p className="text-sm font-semibold text-foreground">Shipping method</p>
+                    <p className="text-sm font-semibold text-black">Shipping method</p>
                     <p className="mt-0.5 mb-4 text-sm text-muted-foreground">
                       How would you like your order delivered
                     </p>
@@ -868,7 +889,7 @@ export default function CheckoutPage() {
                   <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#0A1628] text-sm font-bold text-white">
                     3
                   </div>
-                  <h2 className="text-lg font-bold text-foreground">Payment</h2>
+                  <h2 className="text-lg font-bold text-black">Payment</h2>
                 </div>
 
                 {/* Trust line */}
@@ -902,7 +923,7 @@ export default function CheckoutPage() {
           <div className="lg:col-span-2">
             <Card className="sticky top-24 border-border/60">
               <CardHeader className="pb-3">
-                <CardTitle className="text-base">Order Summary</CardTitle>
+                <CardTitle className="text-base text-black">Order Summary</CardTitle>
               </CardHeader>
               <CardContent>
                 <OrderSummary

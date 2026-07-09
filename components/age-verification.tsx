@@ -11,8 +11,10 @@ import {
 } from '@/components/ui/dialog'
 import Image from 'next/image'
 import { LEGACY_LOCAL_STORAGE_KEYS } from '@/lib/legacy-brand-storage'
-
-const LS_AGE_VERIFIED = 'terrain-age-verified'
+import {
+  LS_AGE_VERIFIED,
+  dispatchAgeVerifiedEvent,
+} from '@/lib/age-verification'
 
 export function AgeVerification() {
   const [isOpen, setIsOpen] = useState(false)
@@ -36,6 +38,7 @@ export function AgeVerification() {
     localStorage.setItem(LS_AGE_VERIFIED, 'true')
     localStorage.removeItem(LEGACY_LOCAL_STORAGE_KEYS.ageVerified)
     setIsOpen(false)
+    dispatchAgeVerifiedEvent()
   }
 
   const handleDecline = () => {

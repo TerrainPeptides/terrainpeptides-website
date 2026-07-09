@@ -71,8 +71,11 @@ function AuthPageInner() {
   const callbackUrl = searchParams.get('callbackUrl') ?? '/'
   const claimPromo = searchParams.get('claimPromo')
   const promoPercent = claimPromo === 'WELCOME15' ? 15 : null
+  const tabParam = searchParams.get('tab')
+  const affiliateSignup =
+    tabParam === 'signup' || (callbackUrl.includes('tab=affiliate') || callbackUrl.includes('tab%3Daffiliate'))
 
-  const [tab, setTab] = useState<Tab>(claimPromo ? 'signup' : 'signin')
+  const [tab, setTab] = useState<Tab>(claimPromo || affiliateSignup ? 'signup' : 'signin')
   const [loading, setLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
@@ -191,7 +194,24 @@ function AuthPageInner() {
         saveClaimedPromo(claimPromo, promoPercent)
       }
 
-      // Reliable flow: never auto sign-in here (NextAuth v5 can throw / misbehave on client).
+      try {
+        const signInResult = await signIn('credentials', {
+          email: emailLower,
+          password: signUpForm.password,
+          redirect: false,
+        })
+        if (!signInResult?.error) {
+          router.push(callbackUrl)
+          router.refresh()
+          return
+        }
+      } catch (signInErr) {
+        const msg = signInErr instanceof Error ? signInErr.message : String(signInErr)
+        if (!msg.toLowerCase().includes('credentialssignin') && !msg.toLowerCase().includes('credentials')) {
+          console.error('[auth] auto sign-in after signup:', signInErr)
+        }
+      }
+
       skipTabErrorClearRef.current = true
       setSignInForm({ email: emailLower, password: '' })
       setSignUpForm({ name: '', email: '', password: '', confirmPassword: '' })

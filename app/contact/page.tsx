@@ -47,7 +47,7 @@ export default function ContactPage() {
       <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-10 text-center">
-          <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+          <h1 className="text-3xl font-bold tracking-tight text-black sm:text-4xl">
             Contact Us
           </h1>
           <p className="mt-2 text-muted-foreground">
@@ -62,7 +62,7 @@ export default function ContactPage() {
               <CardContent className="flex items-start gap-4 p-6">
                 <Mail className="mt-1 h-5 w-5 text-primary" />
                 <div>
-                  <h3 className="font-semibold text-foreground">Email</h3>
+                  <h3 className="font-semibold text-black">Email</h3>
                   <p className="text-sm text-muted-foreground">
                     support@terrainpeptides.com
                   </p>
@@ -74,7 +74,7 @@ export default function ContactPage() {
               <CardContent className="flex items-start gap-4 p-6">
                 <Clock className="mt-1 h-5 w-5 text-primary" />
                 <div>
-                  <h3 className="font-semibold text-foreground">Response Time</h3>
+                  <h3 className="font-semibold text-black">Response Time</h3>
                   <p className="text-sm text-muted-foreground">
                     Within 24 hours
                   </p>
@@ -86,7 +86,7 @@ export default function ContactPage() {
               <CardContent className="flex items-start gap-4 p-6">
                 <MessageSquare className="mt-1 h-5 w-5 text-primary" />
                 <div>
-                  <h3 className="font-semibold text-foreground">Support Hours</h3>
+                  <h3 className="font-semibold text-black">Support Hours</h3>
                   <p className="text-sm text-muted-foreground">
                     Mon-Fri: 9AM - 6PM EST
                   </p>
@@ -98,7 +98,7 @@ export default function ContactPage() {
           {/* Contact Form */}
           <Card className="lg:col-span-2">
             <CardHeader>
-              <CardTitle>Send a Message</CardTitle>
+              <CardTitle className="text-black">Send a Message</CardTitle>
               <CardDescription>
                 Fill out the form below and we will get back to you as soon as possible.
               </CardDescription>

@@ -95,10 +95,10 @@ export default function CartPage() {
             <div className="flex h-24 w-24 items-center justify-center rounded-2xl bg-muted">
               <ShoppingBag className="h-12 w-12 text-muted-foreground/40" />
             </div>
-            <h1 className="mt-6 text-2xl font-bold text-foreground">Your cart is empty</h1>
+            <h1 className="mt-6 text-2xl font-bold text-black">Your cart is empty</h1>
             <p className="mt-2 text-muted-foreground">Browse our products and add items to your cart.</p>
             <Link href="/shop">
-              <Button className="mt-6 gap-2 bg-[#0A1628] hover:bg-[#0A1628]/90">
+              <Button className="mt-6 gap-2 bg-black hover:bg-neutral-800">
                 Shop Now
                 <ArrowRight className="h-4 w-4" />
               </Button>
@@ -112,7 +112,7 @@ export default function CartPage() {
   return (
     <div className="bg-background">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <h1 className="mb-2 text-3xl font-bold text-foreground">Shopping Cart</h1>
+        <h1 className="mb-2 text-3xl font-bold text-black">Shopping Cart</h1>
         <p className="mb-8 text-sm text-muted-foreground">
           {items.length} {items.length === 1 ? 'item' : 'items'} in your cart
         </p>
@@ -237,7 +237,7 @@ export default function CartPage() {
           {/* ── Order Summary ─────────────────────────────────────── */}
           <div>
             <div className="sticky top-24 rounded-xl border border-border/60 bg-white p-6 shadow-sm">
-              <h2 className="mb-5 text-lg font-bold text-foreground">Order Summary</h2>
+              <h2 className="mb-5 text-lg font-bold text-black">Order Summary</h2>
 
               {/* Referral code */}
               {!referralCode ? (

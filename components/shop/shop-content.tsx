@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useMemo, useCallback, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { ProductCard } from '@/components/product-card'
 import { Button } from '@/components/ui/button'
@@ -18,7 +18,10 @@ import { SHOP_CATEGORY_FILTERS } from '@/lib/product-category'
 import { cn } from '@/lib/utils'
 
 function getDisplayPrice(p: Product): number {
-  if (hasDosageVariants(p)) return perVialPriceCentsForVariant(p, getDefaultDosageVariantId(p))
+  if (hasDosageVariants(p)) {
+    const variantPrice = perVialPriceCentsForVariant(p, getDefaultDosageVariantId(p))
+    return variantPrice > 0 ? variantPrice : p.price_cents
+  }
   return p.price_cents
 }
 
@@ -34,14 +37,19 @@ export function ShopContent({ products }: ShopContentProps) {
   const [activeCategory, setActiveCategory] = useState(initialCategory)
 
   const priceExtents = useMemo(() => {
-    const prices = products.map(getDisplayPrice)
+    const prices = products.map(getDisplayPrice).filter((p) => Number.isFinite(p) && p > 0)
+    if (prices.length === 0) return { min: 0, max: 0 }
     return { min: Math.min(...prices), max: Math.max(...prices) }
   }, [products])
 
-  const [priceRange, setPriceRange] = useState<[number, number]>([
+  const [priceRange, setPriceRange] = useState<[number, number]>(() => [
     priceExtents.min,
     priceExtents.max,
   ])
+
+  useEffect(() => {
+    setPriceRange([priceExtents.min, priceExtents.max])
+  }, [priceExtents.min, priceExtents.max])
 
   const handlePriceChange = useCallback((v: number[]) => {
     setPriceRange([v[0], v[1]])
@@ -80,7 +88,7 @@ export function ShopContent({ products }: ShopContentProps) {
 
           {/* Categories */}
           <div>
-            <h3 className="mb-3 text-xs font-semibold uppercase tracking-widest text-foreground">
+            <h3 className="mb-3 text-xs font-semibold uppercase tracking-widest text-black">
               Categories
             </h3>
             <div className="flex flex-col gap-1">
@@ -104,7 +112,7 @@ export function ShopContent({ products }: ShopContentProps) {
 
           {/* Price Filter */}
           <div>
-            <h3 className="mb-4 text-xs font-semibold uppercase tracking-widest text-foreground">
+            <h3 className="mb-4 text-xs font-semibold uppercase tracking-widest text-black">
               Filter by Price
             </h3>
             <Slider
@@ -138,7 +146,7 @@ export function ShopContent({ products }: ShopContentProps) {
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center py-12 text-center">
-            <p className="text-lg font-medium text-foreground">No products found</p>
+            <p className="text-lg font-medium text-black">No products found</p>
             <p className="mt-1 text-muted-foreground">
               Try adjusting your search or filter criteria.
             </p>

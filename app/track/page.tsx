@@ -1,17 +1,33 @@
 'use client'
 
 import { Suspense, useEffect, useState } from 'react'
+import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { toast } from 'sonner'
-import { Search, Package, Truck, CheckCircle, Clock, AlertCircle, Loader2 } from 'lucide-react'
+import {
+  Search,
+  Package,
+  Truck,
+  CheckCircle,
+  Clock,
+  AlertCircle,
+  Loader2,
+} from 'lucide-react'
 import type { Order, OrderItem } from '@/lib/types'
 import { formatOrderNumberDisplay } from '@/lib/paypal-order-id'
+import type { TrackLookupMethod } from '@/lib/order-track'
+import { cn } from '@/lib/utils'
+
+const TABS: { id: TrackLookupMethod; label: string }[] = [
+  { id: 'email', label: 'Email' },
+  { id: 'name', label: 'Name' },
+  { id: 'phone', label: 'Phone' },
+  { id: 'order', label: 'Order #' },
+]
 
 const statusConfig = {
   pending: { label: 'Pending', icon: Clock, color: 'bg-yellow-100 text-yellow-700' },
@@ -24,8 +40,14 @@ const statusConfig = {
 function TrackPageContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const [orderNumber, setOrderNumber] = useState(() => searchParams.get('order')?.trim() ?? '')
-  const [email, setEmail] = useState(() => searchParams.get('email')?.trim() ?? '')
+
+  const [activeTab, setActiveTab] = useState<TrackLookupMethod>('email')
+  const [email, setEmail] = useState('')
+  const [name, setName] = useState('')
+  const [phone, setPhone] = useState('')
+  const [orderNumber, setOrderNumber] = useState('')
+  const [zip, setZip] = useState('')
+
   const [isSearching, setIsSearching] = useState(() => {
     return (
       searchParams.get('auto') === '1' &&
@@ -35,7 +57,6 @@ function TrackPageContent() {
   })
   const [order, setOrder] = useState<(Order & { items: OrderItem[] }) | null>(null)
   const [notFound, setNotFound] = useState(false)
-  /** From PayPal “I’ve confirmed” redirect (?auto=1) until lookup finishes */
   const [isConfirmingRedirect, setIsConfirmingRedirect] = useState(() => {
     return (
       searchParams.get('auto') === '1' &&
@@ -44,8 +65,7 @@ function TrackPageContent() {
     )
   })
 
-  const runLookup = async (orderNum: string, emailAddr: string) => {
-    if (!orderNum.trim() || !emailAddr.trim()) return
+  const runLookup = async (payload: Record<string, string>) => {
     setIsSearching(true)
     setNotFound(false)
     setOrder(null)
@@ -53,7 +73,7 @@ function TrackPageContent() {
       const res = await fetch('/api/orders/track', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ orderNumber: orderNum.trim(), email: emailAddr.trim() }),
+        body: JSON.stringify(payload),
       })
       const data = await res.json()
       if (data.order) {
@@ -113,171 +133,271 @@ function TrackPageContent() {
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!orderNumber.trim() || !email.trim()) return
+    if (!zip.trim()) {
+      toast.error('Please enter your ZIP code')
+      return
+    }
+
     setIsConfirmingRedirect(false)
-    await runLookup(orderNumber, email)
+
+    const payload: Record<string, string> = { method: activeTab, zip: zip.trim() }
+
+    if (activeTab === 'email') {
+      if (!email.trim()) {
+        toast.error('Please enter your email address')
+        return
+      }
+      payload.email = email.trim()
+    } else if (activeTab === 'name') {
+      if (!name.trim()) {
+        toast.error('Please enter your full name')
+        return
+      }
+      payload.name = name.trim()
+    } else if (activeTab === 'phone') {
+      if (!phone.trim()) {
+        toast.error('Please enter your phone number')
+        return
+      }
+      payload.phone = phone.trim()
+    } else {
+      if (!orderNumber.trim()) {
+        toast.error('Please enter your order number')
+        return
+      }
+      payload.orderNumber = orderNumber.trim()
+    }
+
+    await runLookup(payload)
   }
 
-  const formatPrice = (cents: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-    }).format(cents / 100)
-  }
+  const formatPrice = (cents: number) =>
+    new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(cents / 100)
 
-  const formatDate = (date: string) => {
-    return new Date(date).toLocaleDateString('en-US', {
+  const formatDate = (date: string) =>
+    new Date(date).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
     })
-  }
 
   const status = order ? statusConfig[order.status] : null
   const StatusIcon = status?.icon || Clock
 
   return (
-    <div className="bg-background">
-      <div className="mx-auto max-w-2xl px-4 py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#F5F5F5]">
+      <div className="mx-auto max-w-lg px-4 py-14 sm:px-6 sm:py-20">
         {/* Header */}
-        <div className="mb-10 text-center">
-          <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+        <div className="mb-10 flex flex-col items-center text-center">
+          <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-black text-white shadow-sm">
+            <Search className="h-5 w-5" strokeWidth={2.25} />
+          </div>
+          <h1 className="text-3xl font-bold tracking-tight text-black sm:text-[2rem]">
             Track Your Order
           </h1>
-          <p className="mt-2 text-muted-foreground">
-            Enter your order number and email to track your shipment.
+          <p className="mt-3 max-w-sm text-sm leading-relaxed text-black/55 sm:text-[15px]">
+            Enter your details below to find your order and check its status.
           </p>
         </div>
 
         {isConfirmingRedirect && (
-          <Card className="mb-8 border-primary/25 bg-primary/[0.04]">
-            <CardContent className="flex flex-col items-center gap-4 py-10 sm:py-12">
-              <Loader2 className="h-11 w-11 animate-spin text-primary" aria-hidden />
-              <div className="text-center">
-                <p className="text-lg font-semibold text-foreground">Confirming your order</p>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  We&apos;re connecting your payment to your order and loading your details…
-                </p>
-              </div>
-            </CardContent>
-          </Card>
+          <div className="mb-8 flex flex-col items-center gap-4 rounded-2xl border border-black/10 bg-white px-6 py-10 text-center shadow-sm">
+            <Loader2 className="h-10 w-10 animate-spin text-black" aria-hidden />
+            <div>
+              <p className="text-lg font-semibold text-black">Confirming your order</p>
+              <p className="mt-2 text-sm text-black/55">
+                We&apos;re connecting your payment to your order and loading your details…
+              </p>
+            </div>
+          </div>
         )}
 
-        {/* Search Form */}
-        <Card className="mb-8">
-          <CardHeader>
-            <CardTitle>Order Lookup</CardTitle>
-            <CardDescription>
-              Find your order number in your confirmation email.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSearch} className="space-y-4">
+        {/* Lookup card */}
+        <div className="overflow-hidden rounded-2xl border border-black/10 bg-white shadow-sm">
+          {/* Tabs */}
+          <div className="grid grid-cols-4 border-b border-black/10">
+            {TABS.map((tab) => (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setActiveTab(tab.id)}
+                className={cn(
+                  'border-b-2 px-2 py-3.5 text-center text-sm font-medium transition-colors',
+                  activeTab === tab.id
+                    ? 'border-black font-semibold text-black'
+                    : 'border-transparent text-black/45 hover:text-black/70'
+                )}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          <form onSubmit={handleSearch} className="space-y-5 px-6 py-7 sm:px-8 sm:py-8">
+            {activeTab === 'email' && (
               <div className="space-y-2">
-                <Label htmlFor="orderNumber">Order Number</Label>
+                <Label htmlFor="track-email" className="text-sm font-medium text-black">
+                  Email address
+                </Label>
                 <Input
-                  id="orderNumber"
-                  required
-                  value={orderNumber}
-                  onChange={(e) => setOrderNumber(e.target.value)}
-                  placeholder="e.g., #ORD-571637"
-                  disabled={isConfirmingRedirect}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="email">Email Address</Label>
-                <Input
-                  id="email"
+                  id="track-email"
                   type="email"
-                  required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="your@email.com"
+                  placeholder="you@example.com"
                   disabled={isConfirmingRedirect}
+                  className="h-11 rounded-lg border-black/15 bg-white text-black placeholder:text-black/35"
                 />
               </div>
-              <Button type="submit" disabled={isSearching || isConfirmingRedirect} className="w-full gap-2">
-                <Search className="h-4 w-4" />
-                {isSearching || isConfirmingRedirect ? 'Loading…' : 'Track Order'}
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
+            )}
 
-        {/* Not Found */}
+            {activeTab === 'name' && (
+              <div className="space-y-2">
+                <Label htmlFor="track-name" className="text-sm font-medium text-black">
+                  Full name (as entered at checkout)
+                </Label>
+                <Input
+                  id="track-name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="John Doe"
+                  disabled={isConfirmingRedirect}
+                  className="h-11 rounded-lg border-black/15 bg-white text-black placeholder:text-black/35"
+                />
+              </div>
+            )}
+
+            {activeTab === 'phone' && (
+              <div className="space-y-2">
+                <Label htmlFor="track-phone" className="text-sm font-medium text-black">
+                  Phone number
+                </Label>
+                <Input
+                  id="track-phone"
+                  type="tel"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="(555) 123-4567"
+                  disabled={isConfirmingRedirect}
+                  className="h-11 rounded-lg border-black/15 bg-white text-black placeholder:text-black/35"
+                />
+              </div>
+            )}
+
+            {activeTab === 'order' && (
+              <div className="space-y-2">
+                <Label htmlFor="track-order" className="text-sm font-medium text-black">
+                  Order number
+                </Label>
+                <Input
+                  id="track-order"
+                  value={orderNumber}
+                  onChange={(e) => setOrderNumber(e.target.value)}
+                  placeholder="ORD-123456"
+                  disabled={isConfirmingRedirect}
+                  className="h-11 rounded-lg border-black/15 bg-white text-black placeholder:text-black/35"
+                />
+              </div>
+            )}
+
+            <div className="space-y-2">
+              <Label htmlFor="track-zip" className="text-sm font-medium text-black">
+                ZIP code
+              </Label>
+              <Input
+                id="track-zip"
+                value={zip}
+                onChange={(e) => setZip(e.target.value)}
+                placeholder="12345"
+                inputMode="numeric"
+                disabled={isConfirmingRedirect}
+                className="h-11 max-w-[220px] rounded-lg border-black/15 bg-white text-black placeholder:text-black/35"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={isSearching || isConfirmingRedirect}
+              className="flex h-12 w-full items-center justify-center rounded-full bg-black text-sm font-semibold text-white transition hover:bg-neutral-800 disabled:opacity-60"
+            >
+              {isSearching || isConfirmingRedirect ? 'Searching…' : 'Find My Order'}
+            </button>
+          </form>
+        </div>
+
+        <p className="mt-8 text-center text-sm text-black/55">
+          Still can&apos;t find your order?{' '}
+          <Link href="/contact" className="font-semibold text-black underline underline-offset-2">
+            Email our support team
+          </Link>
+        </p>
+
+        {/* Not found */}
         {notFound && (
-          <Card className="border-destructive/50 bg-destructive/5">
-            <CardContent className="flex flex-col items-center p-8 text-center">
-              <AlertCircle className="h-12 w-12 text-destructive" />
-              <h2 className="mt-4 text-lg font-semibold text-foreground">
-                Order Not Found
-              </h2>
-              <p className="mt-2 text-muted-foreground">
-                We could not find an order with that number and email combination. Please check your details and try again.
-              </p>
-            </CardContent>
-          </Card>
+          <div className="mt-10 flex flex-col items-center rounded-2xl border border-red-200 bg-red-50/80 px-6 py-10 text-center">
+            <AlertCircle className="h-10 w-10 text-red-500" />
+            <h2 className="mt-4 text-lg font-semibold text-black">Order not found</h2>
+            <p className="mt-2 text-sm text-black/60">
+              We couldn&apos;t find a match with those details. Double-check your info and try again.
+            </p>
+          </div>
         )}
 
-        {/* Order Details */}
+        {/* Order details */}
         {order && (
-          <Card>
-            <CardHeader>
-              <div className="flex items-start justify-between">
+          <div className="mt-10 overflow-hidden rounded-2xl border border-black/10 bg-white shadow-sm">
+            <div className="border-b border-black/10 px-6 py-5 sm:px-8">
+              <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <CardTitle>Order {formatOrderNumberDisplay(order.order_number)}</CardTitle>
-                  <CardDescription>
-                    Placed on {formatDate(order.created_at)}
-                  </CardDescription>
+                  <h2 className="text-lg font-bold text-black">
+                    Order {formatOrderNumberDisplay(order.order_number)}
+                  </h2>
+                  <p className="mt-1 text-sm text-black/55">Placed on {formatDate(order.created_at)}</p>
                 </div>
                 <Badge className={status?.color}>
                   <StatusIcon className="mr-1 h-3 w-3" />
                   {status?.label}
                 </Badge>
               </div>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              {/* Tracking Number */}
+            </div>
+
+            <div className="space-y-6 px-6 py-6 sm:px-8">
               {order.tracking_number && (
-                <div className="rounded-lg bg-muted/50 p-4">
-                  <p className="text-sm text-muted-foreground">Tracking Number</p>
-                  <p className="mt-1 font-mono font-medium text-foreground">
+                <div className="rounded-xl bg-[#F5F5F5] px-4 py-3">
+                  <p className="text-xs font-medium uppercase tracking-wide text-black/45">
+                    Tracking number
+                  </p>
+                  <p className="mt-1 font-mono text-sm font-semibold text-black">
                     {order.tracking_number}
                   </p>
                 </div>
               )}
 
-              {/* Order Status Timeline */}
               <div>
-                <h3 className="mb-4 font-semibold text-foreground">Order Status</h3>
-                <div className="space-y-4">
-                  {['pending', 'processing', 'shipped', 'delivered'].map((step, index) => {
-                    const stepConfig = statusConfig[step as keyof typeof statusConfig]
+                <h3 className="mb-3 text-sm font-semibold text-black">Order status</h3>
+                <div className="space-y-3">
+                  {(['pending', 'processing', 'shipped', 'delivered'] as const).map((step, index) => {
+                    const stepConfig = statusConfig[step]
                     const StepIcon = stepConfig.icon
-                    const isActive = ['pending', 'processing', 'shipped', 'delivered'].indexOf(order.status) >= index
+                    const isActive =
+                      ['pending', 'processing', 'shipped', 'delivered'].indexOf(order.status) >= index
                     const isCurrent = order.status === step
-
                     return (
-                      <div key={step} className="flex items-center gap-4">
+                      <div key={step} className="flex items-center gap-3">
                         <div
-                          className={`flex h-10 w-10 items-center justify-center rounded-full ${
-                            isActive
-                              ? 'bg-primary text-primary-foreground'
-                              : 'bg-muted text-muted-foreground'
-                          }`}
+                          className={cn(
+                            'flex h-9 w-9 items-center justify-center rounded-full',
+                            isActive ? 'bg-black text-white' : 'bg-black/10 text-black/40'
+                          )}
                         >
-                          <StepIcon className="h-5 w-5" />
+                          <StepIcon className="h-4 w-4" />
                         </div>
                         <div>
-                          <p
-                            className={`font-medium ${
-                              isActive ? 'text-foreground' : 'text-muted-foreground'
-                            }`}
-                          >
+                          <p className={cn('text-sm font-medium', isActive ? 'text-black' : 'text-black/45')}>
                             {stepConfig.label}
                           </p>
                           {isCurrent && (
-                            <p className="text-sm text-muted-foreground">Current status</p>
+                            <p className="text-xs text-black/50">Current status</p>
                           )}
                         </div>
                       </div>
@@ -288,17 +408,16 @@ function TrackPageContent() {
 
               <Separator />
 
-              {/* Order Items */}
               <div>
-                <h3 className="mb-4 font-semibold text-foreground">Order Items</h3>
+                <h3 className="mb-3 text-sm font-semibold text-black">Items</h3>
                 <div className="space-y-3">
                   {order.items?.map((item) => (
-                    <div key={item.id} className="flex justify-between">
+                    <div key={item.id} className="flex justify-between gap-4 text-sm">
                       <div>
-                        <p className="font-medium text-foreground">{item.product_name}</p>
-                        <p className="text-sm text-muted-foreground">Qty: {item.quantity}</p>
+                        <p className="font-medium text-black">{item.product_name}</p>
+                        <p className="text-black/50">Qty: {item.quantity}</p>
                       </div>
-                      <p className="font-medium text-foreground">
+                      <p className="font-medium text-black">
                         {formatPrice(item.price_cents * item.quantity)}
                       </p>
                     </div>
@@ -308,25 +427,24 @@ function TrackPageContent() {
 
               <Separator />
 
-              {/* Order Total */}
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Subtotal</span>
-                  <span className="text-foreground">{formatPrice(order.subtotal_cents)}</span>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-black/55">Subtotal</span>
+                  <span className="text-black">{formatPrice(order.subtotal_cents)}</span>
                 </div>
                 {order.discount_cents > 0 && (
-                  <div className="flex justify-between text-sm">
+                  <div className="flex justify-between">
                     <span className="text-green-600">Discount</span>
                     <span className="text-green-600">-{formatPrice(order.discount_cents)}</span>
                   </div>
                 )}
                 <div className="flex justify-between font-semibold">
-                  <span className="text-foreground">Total</span>
-                  <span className="text-foreground">{formatPrice(order.total_cents)}</span>
+                  <span className="text-black">Total</span>
+                  <span className="text-black">{formatPrice(order.total_cents)}</span>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         )}
       </div>
     </div>
@@ -335,10 +453,10 @@ function TrackPageContent() {
 
 function TrackPageFallback() {
   return (
-    <div className="flex min-h-[40vh] items-center justify-center bg-background px-4">
+    <div className="flex min-h-[40vh] items-center justify-center bg-[#F5F5F5] px-4">
       <div className="flex flex-col items-center gap-3 text-center">
-        <Loader2 className="h-10 w-10 animate-spin text-primary" aria-hidden />
-        <p className="text-sm text-muted-foreground">Loading…</p>
+        <Loader2 className="h-10 w-10 animate-spin text-black" aria-hidden />
+        <p className="text-sm text-black/55">Loading…</p>
       </div>
     </div>
   )

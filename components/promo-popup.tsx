@@ -1,27 +1,51 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { X, Tag, Copy, Check } from 'lucide-react'
+import { AGE_VERIFIED_EVENT, isAgeVerifiedInStorage } from '@/lib/age-verification'
 
 const PROMO_CODE = 'WELCOME15'
 const PROMO_PERCENT = 15
+/** Delay after age confirmation before showing the discount popup. */
+const PROMO_DELAY_AFTER_AGE_MS = 7000
 
 export function PromoPopup() {
   const [visible, setVisible] = useState(false)
   const [mounted, setMounted] = useState(false)
   const [copied, setCopied] = useState(false)
   const router = useRouter()
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
     if (typeof window !== 'undefined' && sessionStorage.getItem('promo-popup-seen')) return
 
-    const timer = setTimeout(() => {
+    function showPopup() {
       setMounted(true)
       requestAnimationFrame(() => setVisible(true))
-    }, 4000)
+    }
 
-    return () => clearTimeout(timer)
+    function schedulePopup() {
+      if (timerRef.current) clearTimeout(timerRef.current)
+      timerRef.current = setTimeout(showPopup, PROMO_DELAY_AFTER_AGE_MS)
+    }
+
+    if (isAgeVerifiedInStorage()) {
+      schedulePopup()
+    } else {
+      function onAgeVerified() {
+        schedulePopup()
+      }
+      window.addEventListener(AGE_VERIFIED_EVENT, onAgeVerified)
+      return () => {
+        window.removeEventListener(AGE_VERIFIED_EVENT, onAgeVerified)
+        if (timerRef.current) clearTimeout(timerRef.current)
+      }
+    }
+
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current)
+    }
   }, [])
 
   function dismiss() {

@@ -5,9 +5,9 @@ import { dosageVariantsFromDbRow, parseResearchStudiesField } from '@/lib/dosage
 /** Map a Supabase `products` row (or seed object) to `Product`. */
 export function productFromDbRow(row: Record<string, unknown>): Product {
   const priceCents =
-    typeof row.price_cents === 'number'
-      ? row.price_cents
-      : Math.round(Number(row.price || 0) * 100)
+    row.price_cents != null && row.price_cents !== ''
+      ? Math.round(Number(row.price_cents))
+      : Math.round(Number(row.price ?? 0) * 100)
   const dv = dosageVariantsFromDbRow(row)
   const dosage_variants = dv ?? undefined
   const { displayText } = parseResearchStudiesField(row.research_studies as string | null)
