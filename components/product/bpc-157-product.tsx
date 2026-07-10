@@ -131,7 +131,7 @@ export function Bpc157Product({ product, relatedProducts = [], vouches = [] }: B
           className={`mt-16 transition-all duration-500 ease-out ${section2.visible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}
         >
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="mb-6 h-14 flex-wrap gap-2 bg-[#1C3D2A]/5 p-2">
+            <TabsList className="mb-6 h-14 flex-wrap gap-2 bg-primary/5 p-2">
               <TabsTrigger value="research" className="gap-2 px-6 py-3 text-base data-[state=active]:bg-white data-[state=active]:text-foreground">
                 <FileText className="h-4 w-4" />
                 Research
@@ -192,7 +192,7 @@ export function Bpc157Product({ product, relatedProducts = [], vouches = [] }: B
                       <p className="mt-6 text-xs text-foreground/50">Source: Peer-reviewed literature.</p>
                     </CardContent>
                   </Card>
-                  <Card className="border-0 bg-[#1C3D2A] lg:col-span-2">
+                  <Card className="border-0 bg-[primary] lg:col-span-2">
                     <CardContent className="p-6 text-white">
                       <p className="text-xs font-medium uppercase tracking-wider text-white/70">Key discovery</p>
                       <h3 className="mt-2 font-bold">Cytoprotective Angiogenic Repair With BPC-157</h3>
@@ -222,7 +222,7 @@ export function Bpc157Product({ product, relatedProducts = [], vouches = [] }: B
                 <div className="mt-4 grid gap-6 lg:grid-cols-2">
                   <Card className="border-border/10">
                     <CardContent className="p-6">
-                      <span className="rounded-full bg-[#1C3D2A]/5 px-3 py-1 text-xs text-foreground/70">🗓️ Preclinical Research — Rodent Tendon Injury Models</span>
+                      <span className="rounded-full bg-primary/5 px-3 py-1 text-xs text-foreground/70">🗓️ Preclinical Research — Rodent Tendon Injury Models</span>
                       <p className="mt-4 text-4xl font-bold" style={{ color: GREEN }}>~2x improvement</p>
                       <p className="text-xs font-medium uppercase tracking-wider text-foreground/70">Tendon mechanical strength at healing</p>
                       <div className="mt-4 text-sm font-semibold text-foreground">Comparison rows</div>
@@ -230,14 +230,14 @@ export function Bpc157Product({ product, relatedProducts = [], vouches = [] }: B
                         {COMPARISON_ROWS.map((r) => (
                           <div key={r.label} className="flex items-center gap-3">
                             <span className="w-40 shrink-0 text-xs text-foreground/70">{r.label}</span>
-                            <div className="h-3 flex-1 overflow-hidden rounded-full bg-[#1C3D2A]/10">
+                            <div className="h-3 flex-1 overflow-hidden rounded-full bg-primary/10">
                               <div className="h-full rounded-full" style={{ width: `${r.bar}%`, backgroundColor: GREEN }} />
                             </div>
                             <span className="text-xs font-medium" style={{ color: GREEN }}>{r.value}</span>
                           </div>
                         ))}
                       </div>
-                      <div className="mt-4 rounded-lg bg-[#1C3D2A]/5 p-3 text-xs text-foreground/60">
+                      <div className="mt-4 rounded-lg bg-primary/5 p-3 text-xs text-foreground/60">
                         ⚠️ In a rat Achilles tendon transection model, animals receiving BPC-157 showed faster functional recovery, significantly higher ultimate tensile strength, and better collagen fiber alignment on histology. Enhanced microvascularization and reduced peritendinous edema were observed.
                       </div>
                     </CardContent>
@@ -255,11 +255,11 @@ export function Bpc157Product({ product, relatedProducts = [], vouches = [] }: B
                             </div>
                             <p className="text-sm text-foreground/80">{t.desc}</p>
                             <p className="text-xs text-foreground/60">{t.sub}</p>
-                            <Progress value={t.percent} className="progress-green mt-2 h-2 bg-[#1C3D2A]/10" />
+                            <Progress value={t.percent} className="progress-green mt-2 h-2 bg-primary/10" />
                           </div>
                         ))}
                       </div>
-                      <div className="mt-6 rounded-lg bg-[#1C3D2A]/5 p-3 text-xs text-foreground/60">
+                      <div className="mt-6 rounded-lg bg-primary/5 p-3 text-xs text-foreground/60">
                         💡 Note: Measurement methods vary by study. Outcomes from published preclinical research.
                       </div>
                     </CardContent>
@@ -298,7 +298,7 @@ export function Bpc157Product({ product, relatedProducts = [], vouches = [] }: B
                             <li key={m}>• {m}</li>
                           ))}
                         </ul>
-                        <div className={`mt-4 rounded-lg border-l-4 ${d.calloutBorder} bg-[#1C3D2A]/5 p-3 text-xs text-foreground/80`}>
+                        <div className={`mt-4 rounded-lg border-l-4 ${d.calloutBorder} bg-primary/5 p-3 text-xs text-foreground/80`}>
                           {d.callout}
                         </div>
                       </CardContent>
@@ -336,7 +336,7 @@ export function Bpc157Product({ product, relatedProducts = [], vouches = [] }: B
                       </div>
                     </CardContent>
                   </Card>
-                  <Card className="border-0 bg-[#1C3D2A]">
+                  <Card className="border-0 bg-[primary]">
                     <CardContent className="p-6 text-white">
                       <p className="text-xs font-medium uppercase tracking-wider text-white/70">Safety advantage</p>
                       <h4 className="mt-2 font-bold">Non-Hormonal, Non-Growth Factor Peptide</h4>
@@ -365,7 +365,7 @@ export function Bpc157Product({ product, relatedProducts = [], vouches = [] }: B
                         <Beaker className="h-3.5 w-3.5" /> MOLECULAR PROFILE
                       </p>
                       <h4 className="mt-3 font-bold text-foreground">What Is BPC-157?</h4>
-                      <div className="mt-4 rounded-lg bg-[#1C3D2A]/5 p-4 space-y-2 text-sm">
+                      <div className="mt-4 rounded-lg bg-primary/5 p-4 space-y-2 text-sm">
                         <div className="flex justify-between"><span className="text-foreground/60">Type</span><span className="font-medium">Synthetic pentadecapeptide (gastric peptide fragment)</span></div>
                         <div className="flex justify-between"><span className="text-foreground/60">CAS</span><span className="font-medium">137525-51-0</span></div>
                         <div className="flex justify-between"><span className="text-foreground/60">Formula</span><span className="font-medium">C62H98N16O22</span></div>
@@ -382,22 +382,22 @@ export function Bpc157Product({ product, relatedProducts = [], vouches = [] }: B
                       </p>
                       <h4 className="mt-3 font-bold text-foreground">Stability Information</h4>
                       <div className="mt-4 space-y-3">
-                        <div className="rounded-lg bg-[#1C3D2A]/5 p-3 flex items-center gap-2">
+                        <div className="rounded-lg bg-primary/5 p-3 flex items-center gap-2">
                           <span className="text-sm text-foreground/80">Lyophilized:</span>
                           <span className="text-sm font-medium">-20°C • up to 2 years</span>
                         </div>
-                        <div className="rounded-lg bg-[#1C3D2A]/5 p-3 flex items-center gap-2">
+                        <div className="rounded-lg bg-primary/5 p-3 flex items-center gap-2">
                           <span className="text-sm text-foreground/80">Reconstituted:</span>
                           <span className="text-sm font-medium">2-8°C • up to 30 days</span>
                         </div>
-                        <div className="rounded-lg bg-[#1C3D2A]/5 p-3 flex items-center gap-2">
+                        <div className="rounded-lg bg-primary/5 p-3 flex items-center gap-2">
                           <span className="text-sm text-foreground/80">Note:</span>
                           <span className="text-sm font-medium">Avoid repeated freeze-thaw</span>
                         </div>
                       </div>
                     </CardContent>
                   </Card>
-                  <Card className="border-0 bg-[#1C3D2A]">
+                  <Card className="border-0 bg-[primary]">
                     <CardContent className="p-6 text-white">
                       <p className="text-xs font-medium uppercase tracking-wider text-white/70 flex items-center gap-1">
                         <FileText className="h-3.5 w-3.5" /> REGULATORY STATUS

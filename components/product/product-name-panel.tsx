@@ -20,6 +20,10 @@ import {
   Star,
   ChevronDown,
   X,
+  ShieldCheck,
+  MapPin,
+  Microscope,
+  Package,
 } from 'lucide-react'
 import { CoaButton } from '@/components/product/coa-button'
 import type { Product } from '@/lib/types'
@@ -39,10 +43,10 @@ function volumeDiscountLabel(n: number): string {
 }
 
 const TRUST_BADGES = [
-  { emoji: '•', label: 'Third-party Tested' },
-  { emoji: 'us', label: 'American Sourced' },
-  { emoji: '◎', label: '>99% Purity' },
-  { emoji: '📦', label: 'Secure Packaging' },
+  { icon: Microscope, label: 'Third-party Tested' },
+  { icon: MapPin, label: 'American Sourced' },
+  { icon: ShieldCheck, label: '>99% Purity' },
+  { icon: Package, label: 'Secure Packaging' },
 ]
 
 interface ProductNamePanelProps {
@@ -82,15 +86,15 @@ export function ProductNamePanel({ product, theme = 'navy' }: ProductNamePanelPr
 
   const isNavy = theme === 'navy'
   const text = isNavy ? 'text-foreground' : 'text-foreground'
-  const muted = isNavy ? 'text-foreground/60' : 'text-muted-foreground'
+  const muted = 'text-foreground/70'
 
   const fieldShell =
-    'w-full rounded-lg border border-black/35 bg-white px-4 py-3 text-sm font-medium text-foreground outline-none transition-[box-shadow,border-color] focus-visible:border-black/55 focus-visible:ring-2 focus-visible:ring-black/15'
+    'w-full rounded-md border-2 border-border bg-white px-4 py-3 text-base font-medium text-navy outline-none transition-[box-shadow,border-color] focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/15'
 
   return (
     <div className="flex flex-col">
       {/* Title */}
-      <h1 className={`text-2xl font-bold tracking-tight sm:text-3xl ${text}`}>
+      <h1 className={`text-2xl font-bold tracking-tight text-navy sm:text-3xl lg:text-4xl ${text}`}>
         {product.name}
       </h1>
 
@@ -111,8 +115,8 @@ export function ProductNamePanel({ product, theme = 'navy' }: ProductNamePanelPr
           ))}
         </div>
         {product.in_stock ? (
-          <span className="flex items-center gap-1.5 text-sm font-medium text-green-600">
-            <span className="h-2 w-2 rounded-full bg-green-500" />
+          <span className="flex items-center gap-1.5 text-sm font-semibold text-clinical-teal">
+            <span className="h-2 w-2 rounded-full bg-clinical-teal" />
             In Stock
           </span>
         ) : (
@@ -125,19 +129,19 @@ export function ProductNamePanel({ product, theme = 'navy' }: ProductNamePanelPr
 
       {/* Description */}
       {product.description && (
-        <p className={`mt-3 text-sm leading-relaxed ${muted}`}>
+        <p className={`mt-3 text-base leading-relaxed ${muted}`}>
           {product.description}
         </p>
       )}
 
       {/* Price */}
-      <p className={`mt-4 text-2xl font-bold tabular-nums ${text}`}>
+      <p className="mt-4 text-3xl font-bold tabular-nums text-primary">
         {formatUsdCents(perVial)}
       </p>
 
       {/* Dosage */}
       <div className="mt-5 space-y-2">
-        <p className={`text-sm font-medium ${text}`}>Dosage:</p>
+        <p className="text-sm font-semibold text-navy">Dosage:</p>
         <div className="relative">
           {multiDose ? (
             <select
@@ -163,7 +167,7 @@ export function ProductNamePanel({ product, theme = 'navy' }: ProductNamePanelPr
       {/* Quantity */}
       <div className="relative mt-4 flex items-start gap-2">
         <div className="min-w-0 flex-1 space-y-2">
-          <p className={`text-sm font-medium ${text}`}>Quantity:</p>
+          <p className="text-sm font-semibold text-navy">Quantity:</p>
           <div className="relative">
             <select
               value={quantity}
@@ -209,7 +213,7 @@ export function ProductNamePanel({ product, theme = 'navy' }: ProductNamePanelPr
           type="button"
           onClick={handleAddToCart}
           disabled={!product.in_stock}
-          className="flex-1 rounded-full bg-[#0A1628] py-3.5 text-sm font-semibold text-white transition-colors hover:bg-[#0A1628]/90 disabled:opacity-50"
+          className="flex-1 rounded-md bg-primary py-3.5 text-base font-semibold text-white transition-colors hover:bg-primary/90 disabled:opacity-50"
         >
           {product.in_stock ? (
             <span className="flex items-center justify-center gap-2">
@@ -225,13 +229,9 @@ export function ProductNamePanel({ product, theme = 'navy' }: ProductNamePanelPr
         {TRUST_BADGES.map((b) => (
           <div
             key={b.label}
-            className={`flex items-center gap-2 rounded-lg border px-3 py-2.5 text-xs font-medium ${
-              isNavy
-                ? 'border-border/12 text-foreground'
-                : 'border-border text-foreground'
-            }`}
+            className="flex items-center gap-2 rounded-md border-2 border-border bg-section-subtle px-3 py-2.5 text-xs font-semibold text-navy sm:text-sm"
           >
-            <span>{b.emoji}</span>
+            <b.icon className="h-4 w-4 shrink-0 text-primary" aria-hidden />
             {b.label}
           </div>
         ))}

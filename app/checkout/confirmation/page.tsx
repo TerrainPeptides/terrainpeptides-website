@@ -109,7 +109,7 @@ function ConfirmationContent() {
               )}
               <div className="mt-8 w-full space-y-3">
                 <Link href="/checkout" className="block">
-                  <Button className="w-full bg-[#0A1628] hover:bg-[#0A1628]/90">
+                  <Button className="w-full bg-primary hover:bg-primary/90">
                     Return to Checkout
                   </Button>
                 </Link>
@@ -161,7 +161,7 @@ function ConfirmationContent() {
               </div>
 
               <Link href="/track" className="block">
-                <Button className="w-full gap-2 bg-[#0A1628] hover:bg-[#0A1628]/90">
+                <Button className="w-full gap-2 bg-primary hover:bg-primary/90">
                   Track Your Order
                   <ArrowRight className="h-4 w-4" />
                 </Button>

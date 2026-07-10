@@ -50,10 +50,12 @@ export function AgeVerification() {
   return (
     <Dialog open={isOpen} onOpenChange={() => {}}>
       <DialogContent 
-        className="sm:max-w-md border-border bg-background"
+        className="overflow-hidden sm:max-w-md border-border bg-background p-0"
         onPointerDownOutside={(e) => e.preventDefault()}
         onEscapeKeyDown={(e) => e.preventDefault()}
       >
+        <div className="clinical-strip" aria-hidden />
+        <div className="p-6 sm:p-8">
         <DialogHeader className="text-center sm:text-center">
           <div className="mx-auto mb-4">
             <Image
@@ -61,10 +63,13 @@ export function AgeVerification() {
               alt="Terrain Peptides"
               width={603}
               height={278}
-              className="h-14 w-auto sm:h-16"
+              className="h-12 w-auto sm:h-14"
             />
           </div>
-          <DialogTitle className="text-xl font-semibold text-foreground">
+          <p className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-primary">
+            Access verification
+          </p>
+          <DialogTitle className="mt-2 text-xl font-semibold text-navy">
             Age Verification Required
           </DialogTitle>
           <DialogDescription className="text-muted-foreground">
@@ -73,8 +78,8 @@ export function AgeVerification() {
         </DialogHeader>
         
         <div className="mt-6 space-y-4">
-          <div className="rounded-lg border border-border bg-muted/50 p-4">
-            <p className="text-center text-sm text-muted-foreground">
+          <div className="rounded-md border border-clinical-teal/25 bg-clinical-teal/5 p-4">
+            <p className="text-center text-sm leading-relaxed text-muted-foreground">
               All products on this website are intended for laboratory research purposes only and are not for human or animal consumption.
             </p>
           </div>
@@ -82,18 +87,19 @@ export function AgeVerification() {
           <div className="flex flex-col gap-3 sm:flex-row">
             <Button
               onClick={handleVerify}
-              className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90"
+              className="flex-1 rounded-md bg-primary text-primary-foreground hover:bg-primary/90"
             >
               I am 21 or older
             </Button>
             <Button
               onClick={handleDecline}
               variant="outline"
-              className="flex-1"
+              className="flex-1 rounded-md"
             >
               Exit
             </Button>
           </div>
+        </div>
         </div>
       </DialogContent>
     </Dialog>

@@ -109,7 +109,7 @@ export function Aod9604Research({ product, vouches: _vouches }: Props) {
               <p className="mt-6 text-xs text-foreground/50">Source: Peer-reviewed literature.</p>
             </CardContent>
           </Card>
-          <Card className="border-0 bg-[#1C3D2A] lg:col-span-2">
+          <Card className="border-0 bg-[primary] lg:col-span-2">
             <CardContent className="p-6 text-white">
               <p className="text-xs font-medium uppercase tracking-wider text-white/70">Key discovery</p>
               <h3 className="mt-2 font-bold">Fat Loss Signal. Nothing Else.</h3>
@@ -131,7 +131,7 @@ export function Aod9604Research({ product, vouches: _vouches }: Props) {
         <div className="mt-4 grid gap-6 lg:grid-cols-2">
           <Card className="border-border/10">
             <CardContent className="p-6">
-              <span className="rounded-full bg-[#1C3D2A]/5 px-3 py-1 text-xs text-foreground/70">12-Week Randomized Human Obesity Trial</span>
+              <span className="rounded-full bg-primary/5 px-3 py-1 text-xs text-foreground/70">12-Week Randomized Human Obesity Trial</span>
               <p className="mt-4 text-4xl font-bold" style={{ color: GREEN }}>2.6 kg</p>
               <p className="text-xs font-medium uppercase tracking-wider text-foreground/70">AVERAGE WEIGHT LOSS VS 0.8 KG ON PLACEBO</p>
               <div className="mt-4 text-sm font-semibold text-foreground">Comparison rows</div>
@@ -139,14 +139,14 @@ export function Aod9604Research({ product, vouches: _vouches }: Props) {
                 {COMPARISON_ROWS.map((r) => (
                   <div key={r.label} className="flex items-center gap-3">
                     <span className="w-40 shrink-0 text-xs text-foreground/70">{r.label}</span>
-                    <div className="h-3 flex-1 overflow-hidden rounded-full bg-[#1C3D2A]/10">
+                    <div className="h-3 flex-1 overflow-hidden rounded-full bg-primary/10">
                       <div className="h-full rounded-full" style={{ width: `${r.bar}%`, backgroundColor: GREEN }} />
                     </div>
                     <span className="shrink-0 text-xs font-medium" style={{ color: GREEN }}>{r.value}</span>
                   </div>
                 ))}
               </div>
-              <div className="mt-4 rounded-lg bg-[#1C3D2A]/5 p-3 text-xs text-foreground/60">
+              <div className="mt-4 rounded-lg bg-primary/5 p-3 text-xs text-foreground/60">
                 In a 12-week human obesity trial, AOD-9604 produced more than 3x the weight loss of placebo with a clean safety profile. No significant IGF-1 rise was detected — confirming its selective fat-loss mechanism.
               </div>
             </CardContent>
@@ -163,7 +163,7 @@ export function Aod9604Research({ product, vouches: _vouches }: Props) {
                       <span className="text-foreground/70">{t.label}</span>
                     </div>
                     <p className="text-sm text-foreground/80">{t.desc}</p>
-                    <Progress value={t.percent} className="progress-green mt-2 h-2 bg-[#1C3D2A]/10" />
+                    <Progress value={t.percent} className="progress-green mt-2 h-2 bg-primary/10" />
                   </div>
                 ))}
               </div>
@@ -203,7 +203,7 @@ export function Aod9604Research({ product, vouches: _vouches }: Props) {
                     <li key={m}>• {m}</li>
                   ))}
                 </ul>
-                <div className={`mt-4 rounded-lg border-l-4 ${d.calloutBorder} bg-[#1C3D2A]/5 p-3 text-xs text-foreground/80`}>
+                <div className={`mt-4 rounded-lg border-l-4 ${d.calloutBorder} bg-primary/5 p-3 text-xs text-foreground/80`}>
                   {d.callout}
                 </div>
               </CardContent>
@@ -241,7 +241,7 @@ export function Aod9604Research({ product, vouches: _vouches }: Props) {
               </div>
             </CardContent>
           </Card>
-          <Card className="border-0 bg-[#1C3D2A]">
+          <Card className="border-0 bg-[primary]">
             <CardContent className="p-6 text-white">
               <p className="text-xs font-medium uppercase tracking-wider text-white/70">Safety advantage</p>
               <h4 className="mt-2 font-bold">Placebo-Like Tolerability in Human Trials</h4>
@@ -269,7 +269,7 @@ export function Aod9604Research({ product, vouches: _vouches }: Props) {
                 <Beaker className="h-3.5 w-3.5" /> MOLECULAR PROFILE
               </p>
               <h4 className="mt-3 font-bold text-foreground">What Is AOD-9604?</h4>
-              <div className="mt-4 rounded-lg bg-[#1C3D2A]/5 p-4 space-y-2 text-sm">
+              <div className="mt-4 rounded-lg bg-primary/5 p-4 space-y-2 text-sm">
                 <div className="flex justify-between"><span className="text-foreground/60">Type</span><span className="font-medium">Synthetic HGH fragment peptide (residues 177-191 of human growth hormone)</span></div>
                 <div className="flex justify-between"><span className="text-foreground/60">CAS</span><span className="font-medium">221231-10-3</span></div>
                 <div className="flex justify-between"><span className="text-foreground/60">Formula</span><span className="font-medium">Not widely disclosed — confirm from supplier COA</span></div>
@@ -286,18 +286,18 @@ export function Aod9604Research({ product, vouches: _vouches }: Props) {
               </p>
               <h4 className="mt-3 font-bold text-foreground">Stability Information</h4>
               <div className="mt-4 space-y-3">
-                <div className="rounded-lg bg-[#1C3D2A]/5 p-3 flex items-center gap-2">
+                <div className="rounded-lg bg-primary/5 p-3 flex items-center gap-2">
                   <span className="text-sm text-foreground/80">Lyophilized:</span>
                   <span className="text-sm font-medium">Stable at room temp • Protect from light</span>
                 </div>
-                <div className="rounded-lg bg-[#1C3D2A]/5 p-3 flex items-center gap-2">
+                <div className="rounded-lg bg-primary/5 p-3 flex items-center gap-2">
                   <span className="text-sm text-foreground/80">Reconstituted:</span>
                   <span className="text-sm font-medium">Refrigerate • Protect from light</span>
                 </div>
               </div>
             </CardContent>
           </Card>
-          <Card className="border-0 bg-[#1C3D2A]">
+          <Card className="border-0 bg-[primary]">
             <CardContent className="p-6 text-white">
               <p className="text-xs font-medium uppercase tracking-wider text-white/70 flex items-center gap-1">
                 <FileText className="h-3.5 w-3.5" /> REGULATORY STATUS

@@ -86,7 +86,7 @@ const STATUS_COLORS: Record<string, string> = {
 function AccountPageFallback() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#f5f5f5]">
-      <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-[#0A1931]" />
+      <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-navy" />
     </div>
   )
 }
@@ -293,7 +293,7 @@ function AccountPageContent() {
   if (status === 'loading' || !session) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[#f5f5f5]">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-[#0A1931]" />
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-navy" />
       </div>
     )
   }
@@ -475,7 +475,7 @@ function AccountPageContent() {
                   >
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="font-mono text-base font-extrabold tracking-widest text-[#0A1628]">
+                        <span className="font-mono text-base font-extrabold tracking-widest text-primary">
                           {d.code}
                         </span>
                         <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[0.65rem] font-bold text-emerald-700">
@@ -499,7 +499,7 @@ function AccountPageContent() {
                       </button>
                       <button
                         onClick={() => applyToCart(d.code, d.percent)}
-                        className="flex items-center gap-1.5 rounded-lg bg-[#0A1628] px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-[#132744]"
+                        className="flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-navy-light"
                       >
                         <ShoppingCart className="h-3.5 w-3.5" />
                         Apply to Cart
@@ -546,7 +546,7 @@ function AccountPageContent() {
                     <div className="mt-6">
                       <button
                         onClick={() => document.getElementById('claim-code-input')?.focus()}
-                        className="inline-flex items-center gap-2 rounded-full bg-[#0A1628] px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[#132744]"
+                        className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-navy-light"
                       >
                         Become a Partner →
                       </button>
@@ -596,7 +596,7 @@ function AccountPageContent() {
                   <button
                     type="submit"
                     disabled={claimLoading || claimInput.length < 3}
-                    className="flex items-center gap-2 rounded-xl bg-[#0A1628] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#132744] disabled:opacity-50"
+                    className="flex items-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-white transition hover:bg-navy-light disabled:opacity-50"
                   >
                     {claimLoading ? <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/30 border-t-white" /> : <Link2 className="h-3.5 w-3.5" />}
                     Claim Code
@@ -622,7 +622,7 @@ function AccountPageContent() {
                   {/* Your code card */}
                   <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:col-span-1">
                     <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">Your Code</p>
-                    <p className="mt-1.5 font-mono text-2xl font-extrabold tracking-widest text-[#0A1628]">
+                    <p className="mt-1.5 font-mono text-2xl font-extrabold tracking-widest text-primary">
                       {affiliateCode.code}
                     </p>
                     <p className="mt-1 text-xs text-gray-400">{affiliateCode.discount_percent}% off for customers</p>
@@ -765,7 +765,7 @@ function AccountPageContent() {
 
           {ordersLoading ? (
             <div className="flex justify-center py-12">
-              <div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-200 border-t-[#0A1931]" />
+              <div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-200 border-t-navy" />
             </div>
           ) : orders.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-14 text-center">
@@ -774,7 +774,7 @@ function AccountPageContent() {
               <p className="mt-1 text-xs text-gray-400">When you place an order, it will appear here.</p>
               <Link
                 href="/shop"
-                className="mt-5 rounded-full bg-[#0A1931] px-6 py-2.5 text-sm font-medium text-white transition hover:bg-[#0d2040]"
+                className="mt-5 rounded-full bg-navy px-6 py-2.5 text-sm font-medium text-white transition hover:bg-navy-light"
               >
                 Start Shopping
               </Link>
@@ -920,7 +920,7 @@ function AccountPageContent() {
                 <button
                   type="submit"
                   disabled={addLoading}
-                  className="flex items-center gap-2 rounded-full bg-[#0A1931] px-5 py-2 text-sm font-medium text-white transition hover:bg-[#0d2040] disabled:opacity-60"
+                  className="flex items-center gap-2 rounded-full bg-navy px-5 py-2 text-sm font-medium text-white transition hover:bg-navy-light disabled:opacity-60"
                 >
                   {addLoading ? <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/30 border-t-white" /> : null}
                   Save →

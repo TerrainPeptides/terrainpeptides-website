@@ -180,7 +180,7 @@ export function AddressAutocomplete({
                   i === highlight ? 'bg-muted/80' : 'hover:bg-muted/50'
                 )}
               >
-                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[#0A1628]/60" />
+                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-primary/60" />
                 <span className="min-w-0">
                   <span className="block truncate text-sm font-medium text-foreground">{s.label}</span>
                   <span className="block text-xs text-muted-foreground">{s.sublabel}</span>

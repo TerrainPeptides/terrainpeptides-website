@@ -6,7 +6,12 @@ import { ProductCard } from '@/components/product-card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Slider } from '@/components/ui/slider'
-import { Search } from 'lucide-react'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
+import { Search, ChevronDown, SlidersHorizontal } from 'lucide-react'
 import { formatUsdCents } from '@/lib/format-price'
 import {
   getDefaultDosageVariantId,
@@ -16,6 +21,8 @@ import {
 import type { Product } from '@/lib/types'
 import { SHOP_CATEGORY_FILTERS } from '@/lib/product-category'
 import { cn } from '@/lib/utils'
+
+type SortOption = 'featured' | 'name-asc' | 'price-asc' | 'price-desc'
 
 function getDisplayPrice(p: Product): number {
   if (hasDosageVariants(p)) {
@@ -35,6 +42,7 @@ export function ShopContent({ products }: ShopContentProps) {
 
   const [search, setSearch] = useState('')
   const [activeCategory, setActiveCategory] = useState(initialCategory)
+  const [sortBy, setSortBy] = useState<SortOption>('featured')
 
   const priceExtents = useMemo(() => {
     const prices = products.map(getDisplayPrice).filter((p) => Number.isFinite(p) && p > 0)
@@ -47,16 +55,23 @@ export function ShopContent({ products }: ShopContentProps) {
     priceExtents.max,
   ])
 
+  const priceFilterActive =
+    priceRange[0] > priceExtents.min || priceRange[1] < priceExtents.max
+
   useEffect(() => {
     setPriceRange([priceExtents.min, priceExtents.max])
   }, [priceExtents.min, priceExtents.max])
+
+  useEffect(() => {
+    setActiveCategory(initialCategory)
+  }, [initialCategory])
 
   const handlePriceChange = useCallback((v: number[]) => {
     setPriceRange([v[0], v[1]])
   }, [])
 
   const filteredProducts = useMemo(() => {
-    return products.filter((product) => {
+    const filtered = products.filter((product) => {
       const matchesCategory =
         activeCategory === 'all' || product.category === activeCategory
       const matchesSearch =
@@ -67,103 +82,154 @@ export function ShopContent({ products }: ShopContentProps) {
       const matchesPrice = price >= priceRange[0] && price <= priceRange[1]
       return matchesCategory && matchesSearch && matchesPrice
     })
-  }, [products, activeCategory, search, priceRange])
+
+    const sorted = [...filtered]
+    switch (sortBy) {
+      case 'name-asc':
+        sorted.sort((a, b) => a.name.localeCompare(b.name))
+        break
+      case 'price-asc':
+        sorted.sort((a, b) => getDisplayPrice(a) - getDisplayPrice(b))
+        break
+      case 'price-desc':
+        sorted.sort((a, b) => getDisplayPrice(b) - getDisplayPrice(a))
+        break
+      default:
+        break
+    }
+    return sorted
+  }, [products, activeCategory, search, priceRange, sortBy])
+
+  const clearFilters = () => {
+    setSearch('')
+    setActiveCategory('all')
+    setSortBy('featured')
+    setPriceRange([priceExtents.min, priceExtents.max])
+  }
 
   return (
-    <div className="flex flex-col gap-8 lg:flex-row">
-      {/* Sidebar Filters */}
-      <aside className="w-full lg:w-64 lg:shrink-0">
-        <div className="sticky top-20 space-y-6">
-          {/* Search */}
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search products..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="pl-10"
-            />
-          </div>
+    <div className="space-y-6">
+      {/* Search + sort */}
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:gap-6">
+        <div className="relative min-w-0 flex-1">
+          <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-navy/45" />
+          <Input
+            type="search"
+            placeholder="Search products..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="h-11 rounded-full border-2 border-navy/12 bg-white pl-11 text-base text-navy shadow-sm focus-visible:border-primary"
+          />
+        </div>
 
-          {/* Categories */}
-          <div>
-            <h3 className="mb-3 text-xs font-semibold uppercase tracking-widest text-black">
-              Categories
-            </h3>
-            <div className="flex flex-col gap-1">
-              {SHOP_CATEGORY_FILTERS.map((cat) => (
+        <div className="flex flex-wrap items-center gap-3 lg:shrink-0">
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                type="button"
+                variant="outline"
+                className={cn(
+                  'h-11 gap-2 rounded-full border-2 border-border bg-white px-4 font-semibold text-navy shadow-sm hover:bg-section-clinical',
+                  priceFilterActive && 'border-primary/40 bg-section-clinical text-primary',
+                )}
+              >
+                <SlidersHorizontal className="h-4 w-4" />
+                Price
+                {priceFilterActive && (
+                  <span className="h-1.5 w-1.5 rounded-full bg-primary" aria-hidden />
+                )}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent align="end" className="w-72">
+              <p className="mb-4 text-sm font-semibold text-navy">Filter by price</p>
+              <Slider
+                min={priceExtents.min}
+                max={priceExtents.max}
+                step={100}
+                value={priceRange}
+                onValueChange={handlePriceChange}
+                className="[&_[data-slot=slider-range]]:!bg-primary [&_[data-slot=slider-thumb]]:!border-primary [&_[data-slot=slider-thumb]]:!ring-primary/25"
+              />
+              <div className="mt-4 flex items-center justify-between text-sm font-semibold tabular-nums text-navy">
+                <span>{formatUsdCents(priceRange[0])}</span>
+                <span>{formatUsdCents(priceRange[1])}</span>
+              </div>
+              {priceFilterActive && (
                 <Button
-                  key={cat.value}
                   variant="ghost"
                   size="sm"
-                  className={cn(
-                    'justify-start text-sm font-normal',
-                    activeCategory === cat.value &&
-                      'bg-section-subtle text-primary hover:bg-section-subtle hover:text-primary',
-                  )}
-                  onClick={() => setActiveCategory(cat.value)}
+                  className="mt-3 w-full text-primary"
+                  onClick={() => setPriceRange([priceExtents.min, priceExtents.max])}
                 >
-                  {cat.label}
+                  Reset price
                 </Button>
-              ))}
-            </div>
-          </div>
+              )}
+            </PopoverContent>
+          </Popover>
 
-          {/* Price Filter */}
-          <div>
-            <h3 className="mb-4 text-xs font-semibold uppercase tracking-widest text-black">
-              Filter by Price
-            </h3>
-            <Slider
-              min={priceExtents.min}
-              max={priceExtents.max}
-              step={100}
-              value={priceRange}
-              onValueChange={handlePriceChange}
-              className="[&_[data-slot=slider-range]]:!bg-neutral-950 [&_[data-slot=slider-thumb]]:!border-neutral-950 [&_[data-slot=slider-thumb]]:!ring-neutral-950/25"
-            />
-            <div className="mt-3 flex items-center justify-between text-sm">
-              <span className="font-medium text-foreground">
-                {formatUsdCents(priceRange[0])} &mdash; {formatUsdCents(priceRange[1])}
-              </span>
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-medium text-navy/65">Sort by:</span>
+            <div className="relative">
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as SortOption)}
+                className="h-11 appearance-none rounded-full border-2 border-border bg-white py-2 pl-4 pr-10 text-sm font-semibold text-navy shadow-sm outline-none transition-colors hover:border-primary/30 focus:border-primary focus:ring-2 focus:ring-primary/15"
+                aria-label="Sort products"
+              >
+                <option value="featured">Featured</option>
+                <option value="name-asc">Name A–Z</option>
+                <option value="price-asc">Price: Low to High</option>
+                <option value="price-desc">Price: High to Low</option>
+              </select>
+              <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-foreground/50" />
             </div>
           </div>
         </div>
-      </aside>
-
-      {/* Products Grid */}
-      <div className="min-w-0 flex-1">
-        <p className="mb-6 text-sm text-muted-foreground">
-          Showing {filteredProducts.length} {filteredProducts.length === 1 ? 'product' : 'products'}
-        </p>
-
-        {filteredProducts.length > 0 ? (
-          <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-            {filteredProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
-        ) : (
-          <div className="flex flex-col items-center justify-center py-12 text-center">
-            <p className="text-lg font-medium text-black">No products found</p>
-            <p className="mt-1 text-muted-foreground">
-              Try adjusting your search or filter criteria.
-            </p>
-            <Button
-              variant="outline"
-              className="mt-4"
-              onClick={() => {
-                setSearch('')
-                setActiveCategory('all')
-                setPriceRange([priceExtents.min, priceExtents.max])
-              }}
-            >
-              Clear Filters
-            </Button>
-          </div>
-        )}
       </div>
+
+      {/* Category pills */}
+      <div className="flex flex-wrap gap-2">
+        {SHOP_CATEGORY_FILTERS.map((cat) => (
+          <button
+            key={cat.value}
+            type="button"
+            onClick={() => setActiveCategory(cat.value)}
+            className={cn(
+              'rounded-full border-2 px-4 py-2 text-sm font-semibold transition-colors',
+              activeCategory === cat.value
+                ? 'border-navy bg-navy text-white shadow-sm'
+                : 'border-transparent bg-white text-navy/70 shadow-sm hover:border-navy/15 hover:bg-section-clinical hover:text-navy',
+            )}
+          >
+            {cat.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Results count */}
+      <p className="text-sm font-medium text-navy/60">
+        Showing {filteredProducts.length}{' '}
+        {filteredProducts.length === 1 ? 'product' : 'products'}
+      </p>
+
+      {/* Product grid — 4 columns on large screens */}
+      {filteredProducts.length > 0 ? (
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {filteredProducts.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
+      ) : (
+        <div className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-border bg-white py-16 text-center">
+          <p className="text-lg font-semibold text-navy">No products found</p>
+          <p className="mt-2 text-base text-foreground/70">
+            Try adjusting your search or filter criteria.
+          </p>
+          <Button variant="outline" className="mt-6 rounded-full" onClick={clearFilters}>
+            Clear filters
+          </Button>
+        </div>
+      )}
     </div>
   )
 }

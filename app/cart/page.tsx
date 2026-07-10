@@ -89,16 +89,16 @@ export default function CartPage() {
 
   if (items.length === 0) {
     return (
-      <div className="bg-background">
+      <div className="min-h-[60vh] bg-section-subtle">
         <div className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center justify-center text-center">
-            <div className="flex h-24 w-24 items-center justify-center rounded-2xl bg-muted">
-              <ShoppingBag className="h-12 w-12 text-muted-foreground/40" />
+            <div className="flex h-20 w-20 items-center justify-center rounded-lg border-2 border-border bg-white shadow-sm">
+              <ShoppingBag className="h-10 w-10 text-primary/50" />
             </div>
-            <h1 className="mt-6 text-2xl font-bold text-black">Your cart is empty</h1>
-            <p className="mt-2 text-muted-foreground">Browse our products and add items to your cart.</p>
+            <h1 className="page-title mt-6 text-2xl font-bold">Your cart is empty</h1>
+            <p className="mt-2 text-base text-foreground/75">Browse our catalog and add research compounds to your cart.</p>
             <Link href="/shop">
-              <Button className="mt-6 gap-2 bg-black hover:bg-neutral-800">
+              <Button className="mt-6 gap-2">
                 Shop Now
                 <ArrowRight className="h-4 w-4" />
               </Button>
@@ -110,13 +110,17 @@ export default function CartPage() {
   }
 
   return (
-    <div className="bg-background">
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <h1 className="mb-2 text-3xl font-bold text-black">Shopping Cart</h1>
-        <p className="mb-8 text-sm text-muted-foreground">
-          {items.length} {items.length === 1 ? 'item' : 'items'} in your cart
-        </p>
-
+    <div className="min-h-screen bg-section-subtle">
+      <div className="clinical-navy-band border-b border-border bg-white">
+        <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+          <p className="clinical-eyebrow">Checkout</p>
+          <h1 className="page-title mt-2 text-3xl font-bold">Shopping Cart</h1>
+          <p className="mt-2 text-base text-foreground/75">
+            {items.length} {items.length === 1 ? 'item' : 'items'} in your cart
+          </p>
+        </div>
+      </div>
+      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
         <div className="grid gap-8 lg:grid-cols-3">
           {/* ── Cart Items ───────────────────────────────────────── */}
           <div className="lg:col-span-2 space-y-4">
@@ -129,7 +133,7 @@ export default function CartPage() {
               return (
                 <div
                   key={`${item.product.id}-${item.dosage_variant_id}`}
-                  className="flex gap-5 rounded-xl border border-border/60 bg-white p-5 shadow-sm"
+                  className="flex gap-5 rounded-lg border-2 border-border bg-white p-5 shadow-sm"
                 >
                   {/* Product image */}
                   <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-lg border border-border/50 bg-muted/30">
@@ -154,7 +158,7 @@ export default function CartPage() {
                       <div className="min-w-0">
                         <Link
                           href={`/product/${item.product.slug}`}
-                          className="text-base font-semibold text-foreground hover:text-foreground hover:underline"
+                          className="text-base font-bold text-navy hover:text-primary hover:underline"
                         >
                           {item.product.name}
                         </Link>
@@ -162,7 +166,7 @@ export default function CartPage() {
                           <p className="text-sm text-muted-foreground">{dose}</p>
                         )}
                         {showVials && (
-                          <div className="mt-1.5 inline-flex items-center gap-1.5 rounded-md bg-[#0A1628]/8 px-2.5 py-1 text-xs font-semibold text-foreground">
+                          <div className="mt-1.5 inline-flex items-center gap-1.5 rounded-md bg-primary/8 px-2.5 py-1 text-xs font-semibold text-foreground">
                             <Package className="h-3.5 w-3.5 shrink-0" />
                             {item.quantity === 1
                               ? '1 research vial'
@@ -218,17 +222,17 @@ export default function CartPage() {
             })}
 
             {/* Trust bar */}
-            <div className="mt-2 grid grid-cols-3 gap-3 rounded-xl border border-border/50 bg-muted/20 px-4 py-3">
-              <div className="flex items-center justify-center gap-2 text-xs font-medium text-muted-foreground">
-                <Shield className="h-4 w-4 text-foreground" />
+            <div className="mt-2 grid grid-cols-1 gap-2 rounded-lg border-2 border-border bg-white px-4 py-3 sm:grid-cols-3 sm:gap-3">
+              <div className="flex items-center justify-center gap-2 text-sm font-semibold text-navy sm:justify-start">
+                <Shield className="h-4 w-4 text-primary" />
                 Secure Checkout
               </div>
-              <div className="flex items-center justify-center gap-2 text-xs font-medium text-muted-foreground">
-                <FlaskConical className="h-4 w-4 text-foreground" />
+              <div className="flex items-center justify-center gap-2 text-sm font-semibold text-navy sm:justify-start">
+                <FlaskConical className="h-4 w-4 text-primary" />
                 99%+ Purity
               </div>
-              <div className="flex items-center justify-center gap-2 text-xs font-medium text-muted-foreground">
-                <Truck className="h-4 w-4 text-foreground" />
+              <div className="flex items-center justify-center gap-2 text-sm font-semibold text-navy sm:justify-start">
+                <Truck className="h-4 w-4 text-primary" />
                 USA Warehouse
               </div>
             </div>
@@ -236,8 +240,8 @@ export default function CartPage() {
 
           {/* ── Order Summary ─────────────────────────────────────── */}
           <div>
-            <div className="sticky top-24 rounded-xl border border-border/60 bg-white p-6 shadow-sm">
-              <h2 className="mb-5 text-lg font-bold text-black">Order Summary</h2>
+            <div className="sticky top-24 rounded-lg border-2 border-border bg-white p-6 shadow-sm">
+              <h2 className="mb-5 text-lg font-bold text-navy">Order Summary</h2>
 
               {/* Referral code */}
               {!referralCode ? (
@@ -310,7 +314,7 @@ export default function CartPage() {
               <p className="mt-1 text-xs text-muted-foreground">Tax (if applicable) calculated at checkout</p>
 
               <Link href="/checkout" className="mt-5 block">
-                <Button className="w-full gap-2 bg-[#0A1628] hover:bg-[#0A1628]/90" size="lg">
+                <Button className="w-full gap-2 bg-primary hover:bg-primary/90" size="lg">
                   Proceed to Checkout
                   <ArrowRight className="h-4 w-4" />
                 </Button>

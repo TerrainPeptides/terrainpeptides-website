@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { Inter, Geist_Mono, Poppins } from 'next/font/google'
+import { Source_Sans_3, Geist_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 import { Navbar } from '@/components/navbar'
@@ -12,14 +12,13 @@ import { SiteBottomPromoGate } from '@/components/site-bottom-promo-gate'
 import { PromoPopup } from '@/components/promo-popup'
 import { getSiteUrl } from '@/lib/site-url'
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
-const geistMono = Geist_Mono({ subsets: ['latin'], variable: '--font-geist-mono' })
-const poppins = Poppins({
+const sourceSans = Source_Sans_3({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
-  variable: '--font-poppins',
+  variable: '--font-source-sans',
   display: 'swap',
 })
+const geistMono = Geist_Mono({ subsets: ['latin'], variable: '--font-geist-mono' })
 
 const siteDescription =
   'Premium quality research peptides for scientific research. 99%+ purity, third-party tested, with certificates of analysis.'
@@ -58,7 +57,7 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: '#ffffff',
+  themeColor: '#F8FAFC',
   width: 'device-width',
   initialScale: 1,
 }
@@ -70,7 +69,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${geistMono.variable} ${poppins.variable} font-sans antialiased`}>
+      <body className={`${sourceSans.variable} ${geistMono.variable} font-sans antialiased`}>
         <AuthProvider>
           <CartProvider>
             <AgeVerification />

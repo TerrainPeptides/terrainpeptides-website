@@ -22,18 +22,15 @@ export default async function ShopPage() {
 
   return (
     <>
-      <div className="bg-white">
+      <div className="clinical-navy-band bg-section-subtle">
         <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-          {/* Header */}
-          <div className="mb-10 text-center">
-            <p className="text-[0.7rem] font-bold uppercase tracking-[0.28em] text-black sm:text-xs">
-              Catalog
-            </p>
-            <h1 className="mt-3 text-4xl font-extrabold tracking-tight text-black sm:text-5xl sm:tracking-tighter">
-              Research Peptides
+          <div className="mb-8 pb-6 text-left">
+            <p className="clinical-eyebrow">Research catalog</p>
+            <h1 className="page-title mt-2 text-3xl font-bold sm:text-4xl">
+              All Products
             </h1>
-            <p className="mx-auto mt-4 max-w-lg text-sm leading-relaxed text-black/60">
-              All products are third-party tested with 99%+ purity guaranteed.
+            <p className="mt-2 max-w-xl text-base text-foreground/75">
+              Premium research peptides with 99%+ purity — third-party tested, COA included.
             </p>
           </div>
 

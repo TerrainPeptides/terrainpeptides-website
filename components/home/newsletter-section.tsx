@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from 'react'
 import { cn } from '@/lib/utils'
 
 type NewsletterSectionProps = {
-  /** Transparent area + no top padding so the card overlaps the gradient seam (home bottom promo) */
   variant?: 'default' | 'overlap'
 }
 
@@ -70,26 +69,28 @@ export function NewsletterSection({ variant = 'default' }: NewsletterSectionProp
     <section className={sectionClass}>
       <div className={innerMax}>
         <div
-          className={[
-            'rounded-[26px] border border-sky-200/65',
-            'bg-gradient-to-br from-[#e8f4fc] via-[#f2f8ff] to-[#dceef9]',
+          className={cn(
+            'rounded-lg border border-border bg-white',
             variant === 'overlap'
-              ? 'p-8 shadow-[0_-12px_48px_rgba(0,0,0,0.12),0_4px_24px_rgba(0,0,0,0.06)] sm:p-10 lg:p-12 lg:pl-14 lg:pr-12'
-              : 'p-8 shadow-[0_1px_3px_rgba(0,0,0,0.06)] sm:p-10 lg:p-12 lg:pl-14 lg:pr-12',
-          ].join(' ')}
+              ? 'p-8 shadow-lg sm:p-10 lg:p-12'
+              : 'p-8 shadow-sm sm:p-10 lg:p-12',
+          )}
         >
           {status === 'success' ? (
-            <div className="rounded-2xl border border-emerald-200/80 bg-white/80 px-6 py-5 text-center backdrop-blur-sm">
-              <p className="text-sm font-medium text-emerald-800">{message}</p>
+            <div className="rounded-md border border-clinical-teal/30 bg-clinical-teal/5 px-6 py-5 text-center">
+              <p className="text-sm font-medium text-clinical-teal">{message}</p>
             </div>
           ) : (
             <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between lg:gap-10 xl:gap-16">
               <div className="max-w-xl shrink-0 text-left">
-                <h2 className="text-2xl font-bold tracking-tight text-neutral-900 sm:text-[1.65rem] lg:text-[1.75rem] xl:text-3xl">
-                  Stay Updated with Terrain
+                <p className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-primary">
+                  Research updates
+                </p>
+                <h2 className="mt-2 text-2xl font-semibold tracking-tight text-navy sm:text-[1.65rem] lg:text-3xl">
+                  Stay Informed
                 </h2>
-                <p className="mt-3 text-[15px] leading-relaxed text-neutral-600 sm:text-base">
-                  Subscribe to our newsletter for{' '}
+                <p className="mt-3 text-[15px] leading-relaxed text-muted-foreground sm:text-base">
+                  Subscribe for{' '}
                   <span
                     ref={highlightRef}
                     className={cn(
@@ -98,33 +99,33 @@ export function NewsletterSection({ variant = 'default' }: NewsletterSectionProp
                     )}
                   >
                     <span className="newsletter-text-marker__text">
-                      exclusive deals, research updates, and industry news
+                      batch releases, COA updates, and research news
                     </span>
                   </span>
                   .
                 </p>
-                <p className="mt-2 text-sm leading-relaxed text-neutral-600">
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                   Join{' '}
-                  <span className="font-bold text-neutral-900">500+</span> researchers. No spam,
+                  <span className="font-semibold text-navy">500+</span> researchers. No spam,
                   unsubscribe anytime.
                 </p>
               </div>
 
               <div className="w-full min-w-0 lg:max-w-[min(100%,28rem)] xl:max-w-[32rem] lg:flex-1 lg:flex lg:justify-end">
                 <form onSubmit={handleSubmit} className="w-full">
-                  <div className="flex w-full items-center gap-1 rounded-full border border-neutral-200/90 bg-white p-1.5 pl-4 shadow-sm sm:pl-5">
+                  <div className="flex w-full items-center gap-2 rounded-md border border-border bg-section-subtle p-1.5 pl-4 sm:pl-5">
                     <input
                       type="email"
                       value={email}
                       onChange={e => setEmail(e.target.value)}
                       placeholder="Enter your email"
                       required
-                      className="min-w-0 flex-1 border-0 bg-transparent py-2.5 text-sm text-neutral-900 outline-none placeholder:text-neutral-400"
+                      className="min-w-0 flex-1 border-0 bg-transparent py-2.5 text-sm text-foreground outline-none placeholder:text-muted-foreground"
                     />
                     <button
                       type="submit"
                       disabled={status === 'loading'}
-                      className="flex shrink-0 items-center justify-center gap-2 rounded-full bg-neutral-900 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-neutral-800 disabled:cursor-not-allowed disabled:opacity-60 sm:px-6"
+                      className="flex shrink-0 items-center justify-center gap-2 rounded-md bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60 sm:px-6"
                     >
                       {status === 'loading' ? (
                         <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
@@ -134,7 +135,7 @@ export function NewsletterSection({ variant = 'default' }: NewsletterSectionProp
                     </button>
                   </div>
                   {status === 'error' && (
-                    <p className="mt-2 text-left text-xs text-red-600">{message}</p>
+                    <p className="mt-2 text-left text-xs text-destructive">{message}</p>
                   )}
                 </form>
               </div>

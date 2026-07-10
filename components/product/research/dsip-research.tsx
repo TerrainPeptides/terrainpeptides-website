@@ -108,7 +108,7 @@ export function DsipResearch({ product, vouches: _vouches }: Props) {
               <p className="mt-6 text-xs text-foreground/50">Source: Peer-reviewed literature.</p>
             </CardContent>
           </Card>
-          <Card className="border-0 bg-[#1C3D2A] lg:col-span-2">
+          <Card className="border-0 bg-[primary] lg:col-span-2">
             <CardContent className="p-6 text-white">
               <p className="text-xs font-medium uppercase tracking-wider text-white/70">Key discovery</p>
               <h3 className="mt-2 font-bold">The Peptide That Actually Fixes Your Sleep</h3>
@@ -130,7 +130,7 @@ export function DsipResearch({ product, vouches: _vouches }: Props) {
         <div className="mt-4 grid gap-6 lg:grid-cols-2">
           <Card className="border-border/10">
             <CardContent className="p-6">
-              <span className="rounded-full bg-[#1C3D2A]/5 px-3 py-1 text-xs text-foreground/70">Double-Blind Crossover Trial — 12 Healthy Male Subjects</span>
+              <span className="rounded-full bg-primary/5 px-3 py-1 text-xs text-foreground/70">Double-Blind Crossover Trial — 12 Healthy Male Subjects</span>
               <p className="mt-4 text-4xl font-bold" style={{ color: GREEN }}>+42%</p>
               <p className="text-xs font-medium uppercase tracking-wider text-foreground/70">MORE TIME IN DEEP SLEEP VS PLACEBO</p>
               <div className="mt-4 text-sm font-semibold text-foreground">Comparison rows</div>
@@ -138,14 +138,14 @@ export function DsipResearch({ product, vouches: _vouches }: Props) {
                 {CLINICAL_ROWS.map((r) => (
                   <div key={r.label} className="flex items-center gap-3">
                     <span className="w-40 shrink-0 text-xs text-foreground/70">{r.label}</span>
-                    <div className="h-3 flex-1 overflow-hidden rounded-full bg-[#1C3D2A]/10">
+                    <div className="h-3 flex-1 overflow-hidden rounded-full bg-primary/10">
                       <div className="h-full rounded-full" style={{ width: `${r.bar}%`, backgroundColor: GREEN }} />
                     </div>
                     <span className="text-xs font-medium" style={{ color: GREEN }}>{r.value}</span>
                   </div>
                 ))}
               </div>
-              <div className="mt-4 rounded-lg bg-[#1C3D2A]/5 p-3 text-xs text-foreground/60">
+              <div className="mt-4 rounded-lg bg-primary/5 p-3 text-xs text-foreground/60">
                 12 healthy men received IV DSIP or a placebo across 7 nights. Brainwave monitoring confirmed DSIP dramatically increased deep sleep time without reducing REM or total sleep duration.
               </div>
             </CardContent>
@@ -162,7 +162,7 @@ export function DsipResearch({ product, vouches: _vouches }: Props) {
                       <span className="text-foreground/70">{t.label}</span>
                     </div>
                     <p className="text-sm text-foreground/80">{t.desc}</p>
-                    <Progress value={t.percent} className="progress-green mt-2 h-2 bg-[#1C3D2A]/10" />
+                    <Progress value={t.percent} className="progress-green mt-2 h-2 bg-primary/10" />
                   </div>
                 ))}
               </div>
@@ -202,7 +202,7 @@ export function DsipResearch({ product, vouches: _vouches }: Props) {
                     <li key={m}>• {m}</li>
                   ))}
                 </ul>
-                <div className={`mt-4 rounded-lg border-l-4 ${d.calloutBorder} bg-[#1C3D2A]/5 p-3 text-xs text-foreground/80`}>
+                <div className={`mt-4 rounded-lg border-l-4 ${d.calloutBorder} bg-primary/5 p-3 text-xs text-foreground/80`}>
                   {d.callout}
                 </div>
               </CardContent>
@@ -240,7 +240,7 @@ export function DsipResearch({ product, vouches: _vouches }: Props) {
               </div>
             </CardContent>
           </Card>
-          <Card className="border-0 bg-[#1C3D2A]">
+          <Card className="border-0 bg-[primary]">
             <CardContent className="p-6 text-white">
               <p className="text-xs font-medium uppercase tracking-wider text-white/70">Safety advantage</p>
               <h4 className="mt-2 font-bold">No Dependency or Hormonal Suppression</h4>
@@ -268,7 +268,7 @@ export function DsipResearch({ product, vouches: _vouches }: Props) {
                 <Beaker className="h-3.5 w-3.5" /> MOLECULAR PROFILE
               </p>
               <h4 className="mt-3 font-bold text-foreground">What Is DSIP?</h4>
-              <div className="mt-4 rounded-lg bg-[#1C3D2A]/5 p-4 space-y-2 text-sm">
+              <div className="mt-4 rounded-lg bg-primary/5 p-4 space-y-2 text-sm">
                 <div className="flex justify-between"><span className="text-foreground/60">Type</span><span className="font-medium">Neuropeptide (non-opioid sleep modulator)</span></div>
                 <div className="flex justify-between"><span className="text-foreground/60">CAS</span><span className="font-medium">62568-57-4</span></div>
                 <div className="flex justify-between"><span className="text-foreground/60">Formula</span><span className="font-medium">Not widely disclosed — confirm from supplier COA</span></div>
@@ -285,18 +285,18 @@ export function DsipResearch({ product, vouches: _vouches }: Props) {
               </p>
               <h4 className="mt-3 font-bold text-foreground">Stability Information</h4>
               <div className="mt-4 space-y-3">
-                <div className="rounded-lg bg-[#1C3D2A]/5 p-3 flex items-center gap-2">
+                <div className="rounded-lg bg-primary/5 p-3 flex items-center gap-2">
                   <span className="text-sm text-foreground/80">Lyophilized:</span>
                   <span className="text-sm font-medium">-20°C • protect from light and moisture</span>
                 </div>
-                <div className="rounded-lg bg-[#1C3D2A]/5 p-3 flex items-center gap-2">
+                <div className="rounded-lg bg-primary/5 p-3 flex items-center gap-2">
                   <span className="text-sm text-foreground/80">Reconstituted:</span>
                   <span className="text-sm font-medium">Refrigerate • protect from light and moisture</span>
                 </div>
               </div>
             </CardContent>
           </Card>
-          <Card className="border-0 bg-[#1C3D2A]">
+          <Card className="border-0 bg-[primary]">
             <CardContent className="p-6 text-white">
               <p className="text-xs font-medium uppercase tracking-wider text-white/70 flex items-center gap-1">
                 <FileText className="h-3.5 w-3.5" /> REGULATORY STATUS

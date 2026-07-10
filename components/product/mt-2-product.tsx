@@ -127,7 +127,7 @@ export function Mt2Product({ product, relatedProducts = [], vouches = [] }: Mt2P
           className={`mt-16 transition-all duration-500 ease-out ${section2.visible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}
         >
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="mb-6 h-14 flex-wrap gap-2 bg-[#1C3D2A]/5 p-2">
+            <TabsList className="mb-6 h-14 flex-wrap gap-2 bg-primary/5 p-2">
               <TabsTrigger value="research" className="gap-2 px-6 py-3 text-base data-[state=active]:bg-white data-[state=active]:text-foreground">
                 <FileText className="h-4 w-4" />
                 Research
@@ -188,7 +188,7 @@ export function Mt2Product({ product, relatedProducts = [], vouches = [] }: Mt2P
                       <p className="mt-6 text-xs text-foreground/50">Source: Peer-reviewed literature.</p>
                     </CardContent>
                   </Card>
-                  <Card className="border-0 bg-[#1C3D2A] lg:col-span-2">
+                  <Card className="border-0 bg-[primary] lg:col-span-2">
                     <CardContent className="p-6 text-white">
                       <p className="text-xs font-medium uppercase tracking-wider text-white/70">Key discovery</p>
                       <h3 className="mt-2 font-bold">Non-Selective Melanocortin Agonism</h3>
@@ -210,7 +210,7 @@ export function Mt2Product({ product, relatedProducts = [], vouches = [] }: Mt2P
                 <div className="mt-4 grid gap-6 lg:grid-cols-2">
                   <Card className="border-border/10">
                     <CardContent className="p-6">
-                      <span className="rounded-full bg-[#1C3D2A]/5 px-3 py-1 text-xs text-foreground/70">Early Human and Preclinical Melanocortin Research</span>
+                      <span className="rounded-full bg-primary/5 px-3 py-1 text-xs text-foreground/70">Early Human and Preclinical Melanocortin Research</span>
                       <p className="mt-4 text-4xl font-bold" style={{ color: GREEN }}>Robust activation</p>
                       <p className="text-xs font-medium uppercase tracking-wider text-foreground/70">Of MC1/MC4 melanocortin receptors in vitro and in vivo models</p>
                       <div className="mt-4 text-sm font-semibold text-foreground">Comparison</div>
@@ -218,14 +218,14 @@ export function Mt2Product({ product, relatedProducts = [], vouches = [] }: Mt2P
                         {COMPARISON_ROWS.map((r) => (
                           <div key={r.label} className="flex items-center gap-3">
                             <span className="w-48 shrink-0 text-xs text-foreground/70">{r.label}</span>
-                            <div className="h-3 flex-1 overflow-hidden rounded-full bg-[#1C3D2A]/10">
-                              <div className="h-full rounded-full" style={{ width: `${r.bar}%`, backgroundColor: r.bar > 0 ? GREEN : '#1C3D2A' }} />
+                            <div className="h-3 flex-1 overflow-hidden rounded-full bg-primary/10">
+                              <div className="h-full rounded-full" style={{ width: `${r.bar}%`, backgroundColor: r.bar > 0 ? GREEN : 'primary' }} />
                             </div>
                             <span className="text-xs font-medium text-foreground/80">{r.value}</span>
                           </div>
                         ))}
                       </div>
-                      <div className="mt-4 rounded-lg bg-[#1C3D2A]/5 p-3 text-xs text-foreground/60">
+                      <div className="mt-4 rounded-lg bg-primary/5 p-3 text-xs text-foreground/60">
                         MT-2 originated from academic programs exploring synthetic α-MSH analogues to increase tanning and investigate centrally mediated sexual responses. Controlled investigations describe increased skin pigmentation and sexual arousal, but trials have been small and heterogeneous, not pursued through full regulatory pathways, so effect sizes and population-level safety are not fully characterized.
                       </div>
                     </CardContent>
@@ -249,7 +249,7 @@ export function Mt2Product({ product, relatedProducts = [], vouches = [] }: Mt2P
                           </div>
                         ))}
                       </div>
-                      <div className="mt-6 rounded-lg bg-[#1C3D2A]/5 p-3 text-xs text-foreground/60">
+                      <div className="mt-6 rounded-lg bg-primary/5 p-3 text-xs text-foreground/60">
                         💡 Note: Outcomes from early human and preclinical research. Effect sizes not fully characterized.
                       </div>
                     </CardContent>
@@ -288,7 +288,7 @@ export function Mt2Product({ product, relatedProducts = [], vouches = [] }: Mt2P
                             <li key={m}>• {m}</li>
                           ))}
                         </ul>
-                        <div className={`mt-4 rounded-lg border-l-4 ${d.calloutBorder} bg-[#1C3D2A]/5 p-3 text-xs text-foreground/80`}>
+                        <div className={`mt-4 rounded-lg border-l-4 ${d.calloutBorder} bg-primary/5 p-3 text-xs text-foreground/80`}>
                           {d.callout}
                         </div>
                       </CardContent>
@@ -326,7 +326,7 @@ export function Mt2Product({ product, relatedProducts = [], vouches = [] }: Mt2P
                       </div>
                     </CardContent>
                   </Card>
-                  <Card className="border-0 bg-[#1C3D2A]">
+                  <Card className="border-0 bg-[primary]">
                     <CardContent className="p-6 text-white">
                       <p className="text-xs font-medium uppercase tracking-wider text-white/70">Safety consideration</p>
                       <h4 className="mt-2 font-bold">Non-Hormonal Peptide Mechanism</h4>
@@ -355,7 +355,7 @@ export function Mt2Product({ product, relatedProducts = [], vouches = [] }: Mt2P
                         <Beaker className="h-3.5 w-3.5" /> MOLECULAR PROFILE
                       </p>
                       <h4 className="mt-3 font-bold text-foreground">What Is MT-2?</h4>
-                      <div className="mt-4 rounded-lg bg-[#1C3D2A]/5 p-4 space-y-2 text-sm">
+                      <div className="mt-4 rounded-lg bg-primary/5 p-4 space-y-2 text-sm">
                         <div className="flex justify-between"><span className="text-foreground/60">Type</span><span className="font-medium">Synthetic cyclic heptapeptide, α-MSH analogue</span></div>
                         <div className="flex justify-between"><span className="text-foreground/60">CAS</span><span className="font-medium">121062-08-6</span></div>
                         <div className="flex justify-between"><span className="text-foreground/60">Formula</span><span className="font-medium">C52H73N15O11</span></div>
@@ -372,22 +372,22 @@ export function Mt2Product({ product, relatedProducts = [], vouches = [] }: Mt2P
                       </p>
                       <h4 className="mt-3 font-bold text-foreground">Stability Information</h4>
                       <div className="mt-4 space-y-3">
-                        <div className="rounded-lg bg-[#1C3D2A]/5 p-3 flex items-center gap-2">
+                        <div className="rounded-lg bg-primary/5 p-3 flex items-center gap-2">
                           <span className="text-sm text-foreground/80">Lyophilized:</span>
                           <span className="text-sm font-medium">Frozen -20°C</span>
                         </div>
-                        <div className="rounded-lg bg-[#1C3D2A]/5 p-3 flex items-center gap-2">
+                        <div className="rounded-lg bg-primary/5 p-3 flex items-center gap-2">
                           <span className="text-sm text-foreground/80">Reconstituted:</span>
                           <span className="text-sm font-medium">Refrigerated after reconstitution</span>
                         </div>
-                        <div className="rounded-lg bg-[#1C3D2A]/5 p-3 flex items-center gap-2">
+                        <div className="rounded-lg bg-primary/5 p-3 flex items-center gap-2">
                           <span className="text-sm text-foreground/80">Note:</span>
                           <span className="text-sm font-medium">Follow supplier COA</span>
                         </div>
                       </div>
                     </CardContent>
                   </Card>
-                  <Card className="border-0 bg-[#1C3D2A]">
+                  <Card className="border-0 bg-[primary]">
                     <CardContent className="p-6 text-white">
                       <p className="text-xs font-medium uppercase tracking-wider text-white/70 flex items-center gap-1">
                         <FileText className="h-3.5 w-3.5" /> REGULATORY STATUS

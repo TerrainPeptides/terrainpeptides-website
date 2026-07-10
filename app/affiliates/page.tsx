@@ -8,56 +8,76 @@ import {
   Tag,
   FlaskConical,
   TrendingUp,
+  ShieldCheck,
+  BarChart3,
+  Users,
+  Wallet,
+  CheckCircle2,
 } from 'lucide-react'
-
-const GOLD = '#C9A84C'
-const NAVY = '#0A1931'
+import { Button } from '@/components/ui/button'
 
 const stats = [
-  { value: '10%', label: 'Commission Per Sale' },
-  { value: 'Instant', label: 'Payouts' },
-  { value: '500+', label: 'Active Affiliates' },
+  { value: '10%', label: 'Commission per sale', icon: Percent },
+  { value: 'Instant', label: 'Payout processing', icon: Wallet },
+  { value: '500+', label: 'Active partners', icon: Users },
 ]
 
 const steps = [
   {
     n: '01',
-    title: 'Sign Up',
-    desc: 'Create your Terrain account — it only takes a minute.',
+    title: 'Create Account',
+    desc: 'Register as a verified Terrain member — takes under two minutes.',
   },
   {
     n: '02',
-    title: 'Get Your Code',
-    desc: 'Claim your unique referral code from your affiliate dashboard.',
+    title: 'Claim Your Code',
+    desc: 'Access your affiliate dashboard and generate a unique referral code.',
   },
   {
     n: '03',
-    title: 'Start Earning',
-    desc: 'Share your code and earn 10% commission on every order you refer.',
+    title: 'Earn Commission',
+    desc: 'Share your code and earn 10% on every qualified order you refer.',
   },
 ]
 
 const benefits = [
   {
     icon: Percent,
-    title: '10% Commission on Every Sale',
-    desc: 'Earn a flat 10% on every order you refer. No minimums, no caps.',
+    title: '10% Flat Commission',
+    desc: 'Earn on every referred sale. No tier caps, no minimum volume requirements.',
   },
   {
     icon: Tag,
-    title: 'Your Own Rep Code',
-    desc: 'Get a unique discount code your audience can use — tracked automatically.',
+    title: 'Tracked Referral Codes',
+    desc: 'Unique discount codes with automatic attribution and reporting.',
   },
   {
     icon: FlaskConical,
-    title: 'Early Product Access',
-    desc: 'Be the first to try new compounds before they go live to the public.',
+    title: 'Premium Product Line',
+    desc: 'Promote lab-verified compounds with 99%+ purity and full COA documentation.',
   },
   {
     icon: TrendingUp,
-    title: 'Performance Bonuses',
-    desc: 'Top affiliates earn monthly bonus payouts based on sales volume.',
+    title: 'Volume Bonuses',
+    desc: 'Top-performing partners qualify for monthly performance incentives.',
   },
+  {
+    icon: BarChart3,
+    title: 'Partner Dashboard',
+    desc: 'Real-time referral stats, earnings history, and payout tracking.',
+  },
+  {
+    icon: ShieldCheck,
+    title: 'Brand You Can Trust',
+    desc: 'US warehouse, third-party tested batches, and research-grade standards.',
+  },
+]
+
+const requirements = [
+  'Must be 21+ with a verified Terrain account',
+  'Comply with research-use-only messaging guidelines',
+  'No medical claims or human-use promotion permitted',
+  'Commissions paid on completed, non-refunded orders',
 ]
 
 export default function AffiliatesPage() {
@@ -67,169 +87,198 @@ export default function AffiliatesPage() {
     : '/auth?tab=signup&callbackUrl=%2Faccount%3Ftab%3Daffiliate'
 
   return (
-    <div className="flex flex-col font-sans">
-      <section
-        className="relative overflow-hidden"
-        style={{ background: `radial-gradient(ellipse 80% 60% at 50% -10%, #132744 0%, ${NAVY} 60%, #060f1f 100%)` }}
-      >
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 opacity-[0.04]"
-          style={{
-            backgroundImage:
-              'linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)',
-            backgroundSize: '48px 48px',
-          }}
-        />
-        <div
-          aria-hidden
-          className="pointer-events-none absolute -left-40 -top-40 h-[480px] w-[480px] rounded-full opacity-10 blur-3xl"
-          style={{ background: GOLD }}
-        />
-        <div
-          aria-hidden
-          className="pointer-events-none absolute -bottom-20 right-0 h-[360px] w-[360px] rounded-full opacity-10 blur-3xl"
-          style={{ background: GOLD }}
-        />
+    <div className="flex flex-col">
+      {/* Hero */}
+      <section className="relative overflow-hidden border-b border-border bg-section-clinical clinical-grid-bg">
+        <div className="clinical-strip" aria-hidden />
+        <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
+          <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
+            <div>
+              <p className="inline-flex items-center gap-2 rounded border border-primary/20 bg-white px-3 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-primary">
+                Partner program
+              </p>
+              <h1 className="page-title mt-5 text-balance text-3xl font-semibold sm:text-4xl lg:text-[2.75rem] lg:leading-[1.12]">
+                Research Affiliate{' '}
+                <span className="text-primary">Partnership Program</span>
+              </h1>
+              <p className="mt-5 max-w-lg text-base leading-relaxed text-muted-foreground sm:text-lg">
+                Partner with a premium research peptide supplier. Earn{' '}
+                <span className="font-semibold text-navy">10% commission</span> on every order
+                you refer — backed by documented quality and US fulfillment.
+              </p>
 
-        <div className="relative mx-auto max-w-4xl px-4 pb-24 pt-20 text-center sm:px-6 sm:pb-32 sm:pt-28 lg:px-8">
-          <span
-            className="mb-6 inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold uppercase tracking-widest"
-            style={{ background: `${GOLD}22`, color: GOLD, border: `1px solid ${GOLD}44` }}
-          >
-            Affiliate Program
-          </span>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Button size="lg" className="rounded-md px-8 font-semibold" asChild>
+                  <Link href={applyHref}>
+                    Apply Now
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="rounded-md border-primary/30 text-primary hover:bg-white"
+                  asChild
+                >
+                  <a href="#how-it-works">How It Works</a>
+                </Button>
+              </div>
+            </div>
 
-          <h1 className="text-balance text-5xl font-extrabold tracking-tight text-white sm:text-6xl lg:text-7xl">
-            EARN WITH{' '}
-            <span style={{ color: GOLD }}>TERRAIN</span>
-          </h1>
-
-          <p className="mx-auto mt-6 max-w-2xl text-pretty text-lg leading-relaxed text-white/70 sm:text-xl">
-            Join our research affiliate program and earn{' '}
-            <span className="font-semibold text-white">10% commission</span> on every order
-            you refer. No cap on earnings.
-          </p>
-
-          <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <Link
-              href={applyHref}
-              className="inline-flex items-center gap-2 rounded-lg px-8 py-3.5 text-base font-semibold text-foreground shadow-lg transition-opacity hover:opacity-90"
-              style={{ background: GOLD }}
-            >
-              Apply Now
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-            <a
-              href="#how-it-works"
-              className="inline-flex items-center gap-2 rounded-lg border border-white/20 px-8 py-3.5 text-base font-semibold text-white transition-colors hover:border-white/40 hover:bg-white/5"
-            >
-              Learn More
-            </a>
+            {/* Commission card */}
+            <div className="rounded-lg border border-border bg-white shadow-sm">
+              <div className="border-b border-border bg-section-subtle px-5 py-3">
+                <p className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                  Commission structure
+                </p>
+              </div>
+              <div className="p-6 sm:p-8">
+                <div className="flex items-baseline gap-2">
+                  <span className="text-5xl font-bold tabular-nums text-primary">10%</span>
+                  <span className="text-sm font-medium text-muted-foreground">per qualified sale</span>
+                </div>
+                <ul className="mt-6 space-y-3 border-t border-border pt-6">
+                  {[
+                    'Automatic tracking via unique referral code',
+                    'Instant payout processing on completed orders',
+                    'No cap on monthly earnings',
+                    'Performance bonuses for top partners',
+                  ].map((item) => (
+                    <li key={item} className="flex items-start gap-2.5 text-sm text-muted-foreground">
+                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-clinical-teal" aria-hidden />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="border-y border-border bg-white dark:bg-card">
-        <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
-            {stats.map((s, i) => (
-              <div
-                key={s.label}
-                className={`flex flex-col items-center gap-1 text-center${
-                  i > 0 ? ' border-t border-border pt-8 sm:border-l sm:border-t-0 sm:pt-0' : ''
-                }`}
-              >
-                <span
-                  className="text-4xl font-extrabold tracking-tight sm:text-5xl"
-                  style={{ color: NAVY }}
-                >
-                  {s.value}
-                </span>
-                <span className="text-base font-medium text-muted-foreground">{s.label}</span>
+      {/* Stats */}
+      <section className="border-b border-border bg-white">
+        <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-3 sm:gap-0 sm:divide-x sm:divide-border">
+            {stats.map((s) => (
+              <div key={s.label} className="flex flex-col items-center gap-2 px-4 text-center sm:py-2">
+                <s.icon className="h-5 w-5 text-clinical-teal" aria-hidden />
+                <span className="text-3xl font-bold tabular-nums text-primary sm:text-4xl">{s.value}</span>
+                <span className="text-sm font-medium text-muted-foreground">{s.label}</span>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section id="how-it-works" className="bg-background py-20 sm:py-28">
+      {/* How it works */}
+      <section id="how-it-works" className="bg-section-subtle py-16 sm:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mb-14 text-center">
-            <h2 className="text-3xl font-extrabold tracking-tight text-black sm:text-4xl">
+          <div className="mb-12 text-center">
+            <p className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-primary">
+              Onboarding
+            </p>
+            <h2 className="mt-2 text-2xl font-semibold tracking-tight text-navy sm:text-3xl">
               How It Works
             </h2>
-            <p className="mx-auto mt-3 max-w-xl text-lg text-muted-foreground">
-              Three simple steps to start earning with Terrain Peptides.
+            <p className="mx-auto mt-3 max-w-xl text-muted-foreground">
+              Three steps to start earning as a Terrain research partner.
             </p>
           </div>
 
-          <div className="relative grid gap-8 sm:grid-cols-3">
-            <div
-              aria-hidden
-              className="absolute left-[calc(16.67%+1rem)] right-[calc(16.67%+1rem)] top-8 hidden h-px sm:block"
-              style={{ background: `linear-gradient(90deg, transparent 0%, ${NAVY}30 20%, ${NAVY}30 80%, transparent 100%)` }}
-            />
-
+          <div className="grid gap-6 sm:grid-cols-3">
             {steps.map((step) => (
-              <div key={step.n} className="relative flex flex-col items-center gap-4 text-center">
-                <div
-                  className="relative z-10 flex h-16 w-16 items-center justify-center rounded-2xl text-xl font-extrabold tracking-tight text-white shadow-lg"
-                  style={{ background: NAVY }}
-                >
+              <div
+                key={step.n}
+                className="relative flex flex-col rounded-lg border border-border bg-white p-6 shadow-sm"
+              >
+                <span className="inline-flex h-10 w-10 items-center justify-center rounded-md bg-primary text-sm font-bold text-primary-foreground">
                   {step.n}
-                </div>
-                <div>
-                  <h3 className="text-lg font-bold tracking-tight text-black">{step.title}</h3>
-                  <p className="mt-2 text-base leading-relaxed text-muted-foreground">{step.desc}</p>
-                </div>
+                </span>
+                <h3 className="mt-4 text-base font-semibold text-navy">{step.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{step.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="py-20 sm:py-28" style={{ background: NAVY }}>
+      {/* Benefits */}
+      <section className="border-y border-border bg-white py-16 sm:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mb-14 text-center">
-            <h2 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
-              Why Partner With Us
+          <div className="mb-12 text-center">
+            <p className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-primary">
+              Partner benefits
+            </p>
+            <h2 className="mt-2 text-2xl font-semibold tracking-tight text-navy sm:text-3xl">
+              Why Partner With Terrain
             </h2>
-            <p className="mx-auto mt-3 max-w-xl text-lg text-white/60">
-              Built for creators and researchers who want a premium brand behind them.
+            <p className="mx-auto mt-3 max-w-xl text-muted-foreground">
+              A clinical-grade brand built for researchers, educators, and content creators.
             </p>
           </div>
 
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {benefits.map((b) => (
               <div
                 key={b.title}
-                className="group flex flex-col gap-4 rounded-2xl p-6 transition-colors hover:bg-white/5"
-                style={{ border: '1px solid rgba(255,255,255,0.1)' }}
+                className="group flex flex-col rounded-md border border-border bg-section-subtle/50 p-6 transition hover:border-primary/20 hover:bg-white hover:shadow-sm"
               >
-                <div
-                  className="flex h-12 w-12 items-center justify-center rounded-xl"
-                  style={{ background: `${GOLD}22` }}
-                >
-                  <b.icon className="h-6 w-6" style={{ color: GOLD }} />
+                <div className="flex h-10 w-10 items-center justify-center rounded-md border border-primary/15 bg-section-clinical transition group-hover:border-primary/30">
+                  <b.icon className="h-5 w-5 text-primary" aria-hidden />
                 </div>
-                <div>
-                  <h3 className="text-base font-bold text-white">{b.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-white/60">{b.desc}</p>
-                </div>
+                <h3 className="mt-4 text-sm font-semibold text-navy">{b.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{b.desc}</p>
               </div>
             ))}
           </div>
+        </div>
+      </section>
 
-          <div className="mt-14 text-center">
-            <Link
-              href={applyHref}
-              className="inline-flex items-center gap-2 rounded-lg px-8 py-3.5 text-base font-semibold text-foreground shadow-lg transition-opacity hover:opacity-90"
-              style={{ background: GOLD }}
-            >
-              Apply Now
-              <ArrowRight className="h-4 w-4" />
-            </Link>
+      {/* Requirements + CTA */}
+      <section className="bg-navy py-16 sm:py-20">
+        <div className="clinical-strip" aria-hidden />
+        <div className="mx-auto max-w-7xl px-4 pt-12 sm:px-6 sm:pt-16 lg:px-8">
+          <div className="grid gap-10 lg:grid-cols-2 lg:items-center lg:gap-16">
+            <div>
+              <p className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-sky-300/90">
+                Program guidelines
+              </p>
+              <h2 className="mt-2 text-2xl font-semibold tracking-tight text-white sm:text-3xl">
+                Partner Requirements
+              </h2>
+              <ul className="mt-6 space-y-3">
+                {requirements.map((req) => (
+                  <li key={req} className="flex items-start gap-2.5 text-sm text-white/70">
+                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-sky-300" aria-hidden />
+                    {req}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="rounded-lg border border-white/10 bg-white/5 p-8 backdrop-blur-sm">
+              <h3 className="text-xl font-semibold text-white">Ready to apply?</h3>
+              <p className="mt-3 text-sm leading-relaxed text-white/65">
+                Create your account and claim your referral code from the affiliate tab in your dashboard.
+              </p>
+              <Button
+                size="lg"
+                className="mt-6 w-full rounded-md bg-white font-semibold text-navy hover:bg-white/90 sm:w-auto"
+                asChild
+              >
+                <Link href={applyHref}>
+                  Start Application
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+              <p className="mt-4 text-xs text-white/45">
+                Already a member?{' '}
+                <Link href="/account?tab=affiliate" className="text-sky-300 underline underline-offset-2 hover:text-sky-200">
+                  Go to your dashboard
+                </Link>
+              </p>
+            </div>
           </div>
         </div>
       </section>

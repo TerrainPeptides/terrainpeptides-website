@@ -68,7 +68,7 @@ export function ProductScience({ product, vouches = [] }: ProductScienceProps) {
 
       <Tabs defaultValue={isKiss ? 'research' : 'overview'} className="w-full">
         {isKiss ? (
-          <TabsList className="mb-6 h-14 flex-wrap gap-2 bg-[#1C3D2A]/5 p-2">
+          <TabsList className="mb-6 h-14 flex-wrap gap-2 bg-primary/5 p-2">
             <TabsTrigger value="research" className="gap-2 px-6 py-3 text-base data-[state=active]:bg-white data-[state=active]:text-foreground">
               <FileText className="h-4 w-4" />
               Research
@@ -118,10 +118,10 @@ export function ProductScience({ product, vouches = [] }: ProductScienceProps) {
                   <div className="rounded-lg bg-muted/50 p-4">
                     <h4 className="mb-2 font-semibold text-foreground">Quality Assurance</h4>
                     <ul className="space-y-2 text-sm text-muted-foreground">
-                      <li className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-green-500" />Third-party HPLC purity testing</li>
-                      <li className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-green-500" />Mass spectrometry verification</li>
-                      <li className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-green-500" />Certificate of Analysis included</li>
-                      <li className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-green-500" />Batch-specific documentation</li>
+                      <li className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-clinical-teal" />Third-party HPLC purity testing</li>
+                      <li className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-clinical-teal" />Mass spectrometry verification</li>
+                      <li className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-clinical-teal" />Certificate of Analysis included</li>
+                      <li className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-clinical-teal" />Batch-specific documentation</li>
                     </ul>
                   </div>
                 </CardContent>
@@ -197,7 +197,7 @@ export function ProductScience({ product, vouches = [] }: ProductScienceProps) {
                       </div>
                     </CardContent>
                   </Card>
-                  <Card className="border-0 bg-[#1C3D2A] lg:col-span-2 text-white">
+                  <Card className="border-0 bg-[primary] lg:col-span-2 text-white">
                     <CardContent className="p-6">
                       <p className="text-xs font-medium uppercase tracking-wider text-white/70">Key discovery</p>
                       <h3 className="mt-2 font-bold">Master Switch for Human Reproduction</h3>
@@ -308,7 +308,7 @@ export function ProductScience({ product, vouches = [] }: ProductScienceProps) {
                       </table>
                     </CardContent>
                   </Card>
-                  <Card className="border-0 bg-[#1C3D2A] text-white">
+                  <Card className="border-0 bg-[primary] text-white">
                     <CardContent className="p-6">
                       <p className="text-xs font-medium uppercase tracking-wider text-white/70">Safety advantage</p>
                       <h4 className="mt-2 font-bold">Physiology-Mimicking Hormone Control</h4>
@@ -354,7 +354,7 @@ export function ProductScience({ product, vouches = [] }: ProductScienceProps) {
                       </div>
                     </CardContent>
                   </Card>
-                  <Card className="border-0 bg-[#1C3D2A] text-white">
+                  <Card className="border-0 bg-[primary] text-white">
                     <CardContent className="p-6">
                       <p className="text-xs font-medium uppercase tracking-wider text-white/70"><FileText className="h-3.5 w-3.5 inline mr-1" /> REGULATORY STATUS</p>
                       <h4 className="mt-3 font-bold">Where It Stands</h4>

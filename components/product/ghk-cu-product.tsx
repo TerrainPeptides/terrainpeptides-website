@@ -105,7 +105,7 @@ export function GhkCuProduct({ product, relatedProducts = [], vouches = [] }: Gh
           className={`mt-16 transition-all duration-500 ease-out ${section2.visible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}
         >
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="mb-6 h-14 flex-wrap gap-2 bg-[#1C3D2A]/5 p-2">
+            <TabsList className="mb-6 h-14 flex-wrap gap-2 bg-primary/5 p-2">
               <TabsTrigger value="research" className="gap-2 px-6 py-3 text-base data-[state=active]:bg-white data-[state=active]:text-foreground">
                 <FileText className="h-4 w-4" />
                 Research
@@ -166,7 +166,7 @@ export function GhkCuProduct({ product, relatedProducts = [], vouches = [] }: Gh
                       <p className="mt-6 text-xs text-foreground/50">Source: Peer-reviewed literature.</p>
                     </CardContent>
                   </Card>
-                  <Card className="border-0 bg-[#1C3D2A] lg:col-span-2">
+                  <Card className="border-0 bg-[primary] lg:col-span-2">
                     <CardContent className="p-6 text-white">
                       <p className="text-xs font-medium uppercase tracking-wider text-white/70">Key discovery</p>
                       <h3 className="mt-2 font-bold">Unprecedented Gene Influence</h3>
@@ -193,34 +193,34 @@ export function GhkCuProduct({ product, relatedProducts = [], vouches = [] }: Gh
                 <div className="mt-4 grid gap-6 lg:grid-cols-2">
                   <Card className="border-border/10">
                     <CardContent className="p-6">
-                      <span className="rounded-full bg-[#1C3D2A]/5 px-3 py-1 text-xs text-foreground/70">🗓️ 12-Week Facial Study — 71 Women</span>
+                      <span className="rounded-full bg-primary/5 px-3 py-1 text-xs text-foreground/70">🗓️ 12-Week Facial Study — 71 Women</span>
                       <p className="mt-4 text-4xl font-bold" style={{ color: GREEN }}>55.8%</p>
                       <p className="text-xs font-medium uppercase tracking-wider text-foreground/70">Wrinkle volume reduction</p>
                       <p className="mt-4 text-sm font-semibold text-foreground">Wrinkle reduction comparison</p>
                       <div className="mt-3 space-y-3">
                         <div className="flex items-center gap-3">
                           <span className="w-32 shrink-0 text-xs text-foreground/70">GHK-Cu vs Control</span>
-                          <div className="h-3 flex-1 overflow-hidden rounded-full bg-[#1C3D2A]/10">
+                          <div className="h-3 flex-1 overflow-hidden rounded-full bg-primary/10">
                             <div className="h-full rounded-full" style={{ width: '100%', backgroundColor: GREEN }} />
                           </div>
                           <span className="text-xs font-medium" style={{ color: GREEN }}>-55.8%</span>
                         </div>
                         <div className="flex items-center gap-3">
                           <span className="w-32 shrink-0 text-xs text-foreground/70">GHK-Cu vs Matrixyl</span>
-                          <div className="h-3 flex-1 overflow-hidden rounded-full bg-[#1C3D2A]/10">
-                            <div className="h-full rounded-full bg-[#1C3D2A]/40" style={{ width: '57%' }} />
+                          <div className="h-3 flex-1 overflow-hidden rounded-full bg-primary/10">
+                            <div className="h-full rounded-full bg-primary/40" style={{ width: '57%' }} />
                           </div>
                           <span className="text-xs text-foreground/70">-31.6%</span>
                         </div>
                         <div className="flex items-center gap-3">
                           <span className="w-32 shrink-0 text-xs text-foreground/70">Placebo</span>
-                          <div className="h-3 flex-1 overflow-hidden rounded-full bg-[#1C3D2A]/10">
-                            <div className="h-full rounded-full bg-[#1C3D2A]/20" style={{ width: '4%' }} />
+                          <div className="h-3 flex-1 overflow-hidden rounded-full bg-primary/10">
+                            <div className="h-full rounded-full bg-primary/20" style={{ width: '4%' }} />
                           </div>
                           <span className="text-xs text-foreground/70">-0%</span>
                         </div>
                       </div>
-                      <div className="mt-4 rounded-lg bg-[#1C3D2A]/5 p-3 text-xs text-foreground/60">
+                      <div className="mt-4 rounded-lg bg-primary/5 p-3 text-xs text-foreground/60">
                         ⚠️ Based on thigh skin biopsy studies measuring collagen production after 1 month of treatment.
                       </div>
                     </CardContent>
@@ -238,11 +238,11 @@ export function GhkCuProduct({ product, relatedProducts = [], vouches = [] }: Gh
                             </div>
                             <p className="text-sm text-foreground/80">{t.desc}</p>
                             <p className="text-xs text-foreground/60">{t.sub}</p>
-                            <Progress value={t.percent} className="progress-green mt-2 h-2 bg-[#1C3D2A]/10" />
+                            <Progress value={t.percent} className="progress-green mt-2 h-2 bg-primary/10" />
                           </div>
                         ))}
                       </div>
-                      <div className="mt-6 rounded-lg bg-[#1C3D2A]/5 p-3 text-xs text-foreground/60">
+                      <div className="mt-6 rounded-lg bg-primary/5 p-3 text-xs text-foreground/60">
                         💡 Note: Measurement methods vary by study. Outcomes from published clinical and preclinical research.
                       </div>
                     </CardContent>
@@ -259,7 +259,7 @@ export function GhkCuProduct({ product, relatedProducts = [], vouches = [] }: Gh
                 {COA_CARDS.map((coa) => (
                   <Card key={coa.lot} className="w-full min-w-[280px] max-w-[340px] border-border/10">
                     <CardContent className="p-6">
-                      <span className="rounded bg-[#1C3D2A] px-2 py-0.5 text-xs font-medium text-white">LATEST</span>
+                      <span className="rounded bg-[primary] px-2 py-0.5 text-xs font-medium text-white">LATEST</span>
                       <p className="mt-4 text-4xl font-bold" style={{ color: GREEN }}>{coa.purity}%</p>
                       <p className="text-xs font-medium uppercase tracking-wider text-foreground/60">Purity</p>
                       <dl className="mt-6 space-y-2 text-sm">
@@ -286,7 +286,7 @@ export function GhkCuProduct({ product, relatedProducts = [], vouches = [] }: Gh
                       </dl>
                       <Button
                         asChild
-                        className="mt-6 w-full gap-2 bg-[#0A1628] text-white hover:bg-[#0A1628]/90"
+                        className="mt-6 w-full gap-2 bg-primary text-white hover:bg-primary/90"
                       >
                         <a href={product.coa_url || '/contact'} target={product.coa_url ? '_blank' : undefined} rel={product.coa_url ? 'noopener noreferrer' : undefined}>
                           <FileText className="h-4 w-4" />

@@ -29,11 +29,11 @@ export function CoaButton({ coaUrl, theme = 'default', compact = false }: CoaBut
 
   const isNavy = theme === 'navy'
   const btnClass = isNavy
-    ? 'border-border/35 text-foreground hover:bg-[#0A1628]/5'
+    ? 'border-border/35 text-foreground hover:bg-primary/5'
     : ''
 
   const compactClass = compact
-    ? 'rounded-full border border-black/15 px-4 py-3.5 text-sm font-semibold text-[#0A1628] hover:bg-gray-50 transition-colors'
+    ? 'rounded-full border border-black/15 px-4 py-3.5 text-sm font-semibold text-primary hover:bg-gray-50 transition-colors'
     : `mt-4 gap-2 ${btnClass}`
 
   if (coaUrl) {
@@ -116,7 +116,7 @@ export function CoaButton({ coaUrl, theme = 'default', compact = false }: CoaBut
               <X className="h-4 w-4" />
             </button>
 
-            <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-[#0A1628]/8">
+            <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-primary/8">
               <FileText className="h-5 w-5 text-foreground" />
             </div>
 
@@ -139,7 +139,7 @@ export function CoaButton({ coaUrl, theme = 'default', compact = false }: CoaBut
               <Button
                 type="submit"
                 disabled={submitting}
-                className="w-full bg-[#0A1628] text-white hover:bg-[#0A1628]/90"
+                className="w-full bg-primary text-white hover:bg-primary/90"
               >
                 {submitting ? 'Submitting…' : 'Notify Me'}
               </Button>

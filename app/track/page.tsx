@@ -185,37 +185,35 @@ function TrackPageContent() {
   const StatusIcon = status?.icon || Clock
 
   return (
-    <div className="min-h-screen bg-[#F5F5F5]">
+    <div className="min-h-screen bg-section-subtle">
       <div className="mx-auto max-w-lg px-4 py-14 sm:px-6 sm:py-20">
-        {/* Header */}
         <div className="mb-10 flex flex-col items-center text-center">
-          <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-black text-white shadow-sm">
+          <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-md border border-primary/20 bg-section-clinical text-primary shadow-sm">
             <Search className="h-5 w-5" strokeWidth={2.25} />
           </div>
-          <h1 className="text-3xl font-bold tracking-tight text-black sm:text-[2rem]">
+          <p className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-primary">Order lookup</p>
+          <h1 className="page-title mt-2 text-3xl font-semibold sm:text-[2rem]">
             Track Your Order
           </h1>
-          <p className="mt-3 max-w-sm text-sm leading-relaxed text-black/55 sm:text-[15px]">
+          <p className="mt-3 max-w-sm text-sm leading-relaxed text-muted-foreground sm:text-[15px]">
             Enter your details below to find your order and check its status.
           </p>
         </div>
 
         {isConfirmingRedirect && (
-          <div className="mb-8 flex flex-col items-center gap-4 rounded-2xl border border-black/10 bg-white px-6 py-10 text-center shadow-sm">
-            <Loader2 className="h-10 w-10 animate-spin text-black" aria-hidden />
+          <div className="mb-8 flex flex-col items-center gap-4 rounded-lg border border-border bg-white px-6 py-10 text-center shadow-sm">
+            <Loader2 className="h-10 w-10 animate-spin text-primary" aria-hidden />
             <div>
-              <p className="text-lg font-semibold text-black">Confirming your order</p>
-              <p className="mt-2 text-sm text-black/55">
+              <p className="text-lg font-semibold text-navy">Confirming your order</p>
+              <p className="mt-2 text-sm text-muted-foreground">
                 We&apos;re connecting your payment to your order and loading your details…
               </p>
             </div>
           </div>
         )}
 
-        {/* Lookup card */}
-        <div className="overflow-hidden rounded-2xl border border-black/10 bg-white shadow-sm">
-          {/* Tabs */}
-          <div className="grid grid-cols-4 border-b border-black/10">
+        <div className="overflow-hidden rounded-lg border border-border bg-white shadow-sm">
+          <div className="grid grid-cols-4 border-b border-border">
             {TABS.map((tab) => (
               <button
                 key={tab.id}
@@ -224,8 +222,8 @@ function TrackPageContent() {
                 className={cn(
                   'border-b-2 px-2 py-3.5 text-center text-sm font-medium transition-colors',
                   activeTab === tab.id
-                    ? 'border-black font-semibold text-black'
-                    : 'border-transparent text-black/45 hover:text-black/70'
+                    ? 'border-primary font-semibold text-primary'
+                    : 'border-transparent text-muted-foreground hover:text-foreground'
                 )}
               >
                 {tab.label}
@@ -236,7 +234,7 @@ function TrackPageContent() {
           <form onSubmit={handleSearch} className="space-y-5 px-6 py-7 sm:px-8 sm:py-8">
             {activeTab === 'email' && (
               <div className="space-y-2">
-                <Label htmlFor="track-email" className="text-sm font-medium text-black">
+                <Label htmlFor="track-email" className="text-sm font-medium text-navy">
                   Email address
                 </Label>
                 <Input
@@ -246,14 +244,14 @@ function TrackPageContent() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@example.com"
                   disabled={isConfirmingRedirect}
-                  className="h-11 rounded-lg border-black/15 bg-white text-black placeholder:text-black/35"
+                  className="h-11 rounded-lg border-border bg-white text-navy placeholder:text-muted-foreground/60"
                 />
               </div>
             )}
 
             {activeTab === 'name' && (
               <div className="space-y-2">
-                <Label htmlFor="track-name" className="text-sm font-medium text-black">
+                <Label htmlFor="track-name" className="text-sm font-medium text-navy">
                   Full name (as entered at checkout)
                 </Label>
                 <Input
@@ -262,14 +260,14 @@ function TrackPageContent() {
                   onChange={(e) => setName(e.target.value)}
                   placeholder="John Doe"
                   disabled={isConfirmingRedirect}
-                  className="h-11 rounded-lg border-black/15 bg-white text-black placeholder:text-black/35"
+                  className="h-11 rounded-lg border-border bg-white text-navy placeholder:text-muted-foreground/60"
                 />
               </div>
             )}
 
             {activeTab === 'phone' && (
               <div className="space-y-2">
-                <Label htmlFor="track-phone" className="text-sm font-medium text-black">
+                <Label htmlFor="track-phone" className="text-sm font-medium text-navy">
                   Phone number
                 </Label>
                 <Input
@@ -279,14 +277,14 @@ function TrackPageContent() {
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder="(555) 123-4567"
                   disabled={isConfirmingRedirect}
-                  className="h-11 rounded-lg border-black/15 bg-white text-black placeholder:text-black/35"
+                  className="h-11 rounded-lg border-border bg-white text-navy placeholder:text-muted-foreground/60"
                 />
               </div>
             )}
 
             {activeTab === 'order' && (
               <div className="space-y-2">
-                <Label htmlFor="track-order" className="text-sm font-medium text-black">
+                <Label htmlFor="track-order" className="text-sm font-medium text-navy">
                   Order number
                 </Label>
                 <Input
@@ -295,13 +293,13 @@ function TrackPageContent() {
                   onChange={(e) => setOrderNumber(e.target.value)}
                   placeholder="ORD-123456"
                   disabled={isConfirmingRedirect}
-                  className="h-11 rounded-lg border-black/15 bg-white text-black placeholder:text-black/35"
+                  className="h-11 rounded-lg border-border bg-white text-navy placeholder:text-muted-foreground/60"
                 />
               </div>
             )}
 
             <div className="space-y-2">
-              <Label htmlFor="track-zip" className="text-sm font-medium text-black">
+              <Label htmlFor="track-zip" className="text-sm font-medium text-navy">
                 ZIP code
               </Label>
               <Input
@@ -311,33 +309,33 @@ function TrackPageContent() {
                 placeholder="12345"
                 inputMode="numeric"
                 disabled={isConfirmingRedirect}
-                className="h-11 max-w-[220px] rounded-lg border-black/15 bg-white text-black placeholder:text-black/35"
+                className="h-11 max-w-[220px] rounded-lg border-border bg-white text-navy placeholder:text-muted-foreground/60"
               />
             </div>
 
             <button
               type="submit"
               disabled={isSearching || isConfirmingRedirect}
-              className="flex h-12 w-full items-center justify-center rounded-full bg-black text-sm font-semibold text-white transition hover:bg-neutral-800 disabled:opacity-60"
+              className="flex h-12 w-full items-center justify-center rounded-md bg-primary text-sm font-semibold text-primary-foreground transition hover:bg-primary/90 disabled:opacity-60"
             >
               {isSearching || isConfirmingRedirect ? 'Searching…' : 'Find My Order'}
             </button>
           </form>
         </div>
 
-        <p className="mt-8 text-center text-sm text-black/55">
+        <p className="mt-8 text-center text-sm text-muted-foreground">
           Still can&apos;t find your order?{' '}
-          <Link href="/contact" className="font-semibold text-black underline underline-offset-2">
+          <Link href="/contact" className="font-semibold text-navy underline underline-offset-2">
             Email our support team
           </Link>
         </p>
 
         {/* Not found */}
         {notFound && (
-          <div className="mt-10 flex flex-col items-center rounded-2xl border border-red-200 bg-red-50/80 px-6 py-10 text-center">
+          <div className="mt-10 flex flex-col items-center rounded-lg border border-red-200 bg-red-50/80 px-6 py-10 text-center">
             <AlertCircle className="h-10 w-10 text-red-500" />
-            <h2 className="mt-4 text-lg font-semibold text-black">Order not found</h2>
-            <p className="mt-2 text-sm text-black/60">
+            <h2 className="mt-4 text-lg font-semibold text-navy">Order not found</h2>
+            <p className="mt-2 text-sm text-muted-foreground">
               We couldn&apos;t find a match with those details. Double-check your info and try again.
             </p>
           </div>
@@ -345,14 +343,14 @@ function TrackPageContent() {
 
         {/* Order details */}
         {order && (
-          <div className="mt-10 overflow-hidden rounded-2xl border border-black/10 bg-white shadow-sm">
-            <div className="border-b border-black/10 px-6 py-5 sm:px-8">
+          <div className="mt-10 overflow-hidden rounded-lg border border-border bg-white shadow-sm">
+            <div className="border-b border-border px-6 py-5 sm:px-8">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <h2 className="text-lg font-bold text-black">
+                  <h2 className="text-lg font-bold text-navy">
                     Order {formatOrderNumberDisplay(order.order_number)}
                   </h2>
-                  <p className="mt-1 text-sm text-black/55">Placed on {formatDate(order.created_at)}</p>
+                  <p className="mt-1 text-sm text-muted-foreground">Placed on {formatDate(order.created_at)}</p>
                 </div>
                 <Badge className={status?.color}>
                   <StatusIcon className="mr-1 h-3 w-3" />
@@ -364,17 +362,17 @@ function TrackPageContent() {
             <div className="space-y-6 px-6 py-6 sm:px-8">
               {order.tracking_number && (
                 <div className="rounded-xl bg-[#F5F5F5] px-4 py-3">
-                  <p className="text-xs font-medium uppercase tracking-wide text-black/45">
+                  <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                     Tracking number
                   </p>
-                  <p className="mt-1 font-mono text-sm font-semibold text-black">
+                  <p className="mt-1 font-mono text-sm font-semibold text-navy">
                     {order.tracking_number}
                   </p>
                 </div>
               )}
 
               <div>
-                <h3 className="mb-3 text-sm font-semibold text-black">Order status</h3>
+                <h3 className="mb-3 text-sm font-semibold text-navy">Order status</h3>
                 <div className="space-y-3">
                   {(['pending', 'processing', 'shipped', 'delivered'] as const).map((step, index) => {
                     const stepConfig = statusConfig[step]
@@ -387,17 +385,17 @@ function TrackPageContent() {
                         <div
                           className={cn(
                             'flex h-9 w-9 items-center justify-center rounded-full',
-                            isActive ? 'bg-black text-white' : 'bg-black/10 text-black/40'
+                            isActive ? 'bg-black text-white' : 'bg-black/10 text-muted-foreground'
                           )}
                         >
                           <StepIcon className="h-4 w-4" />
                         </div>
                         <div>
-                          <p className={cn('text-sm font-medium', isActive ? 'text-black' : 'text-black/45')}>
+                          <p className={cn('text-sm font-medium', isActive ? 'text-navy' : 'text-muted-foreground')}>
                             {stepConfig.label}
                           </p>
                           {isCurrent && (
-                            <p className="text-xs text-black/50">Current status</p>
+                            <p className="text-xs text-muted-foreground">Current status</p>
                           )}
                         </div>
                       </div>
@@ -409,15 +407,15 @@ function TrackPageContent() {
               <Separator />
 
               <div>
-                <h3 className="mb-3 text-sm font-semibold text-black">Items</h3>
+                <h3 className="mb-3 text-sm font-semibold text-navy">Items</h3>
                 <div className="space-y-3">
                   {order.items?.map((item) => (
                     <div key={item.id} className="flex justify-between gap-4 text-sm">
                       <div>
-                        <p className="font-medium text-black">{item.product_name}</p>
-                        <p className="text-black/50">Qty: {item.quantity}</p>
+                        <p className="font-medium text-navy">{item.product_name}</p>
+                        <p className="text-muted-foreground">Qty: {item.quantity}</p>
                       </div>
-                      <p className="font-medium text-black">
+                      <p className="font-medium text-navy">
                         {formatPrice(item.price_cents * item.quantity)}
                       </p>
                     </div>
@@ -429,8 +427,8 @@ function TrackPageContent() {
 
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-black/55">Subtotal</span>
-                  <span className="text-black">{formatPrice(order.subtotal_cents)}</span>
+                  <span className="text-muted-foreground">Subtotal</span>
+                  <span className="text-navy">{formatPrice(order.subtotal_cents)}</span>
                 </div>
                 {order.discount_cents > 0 && (
                   <div className="flex justify-between">
@@ -439,8 +437,8 @@ function TrackPageContent() {
                   </div>
                 )}
                 <div className="flex justify-between font-semibold">
-                  <span className="text-black">Total</span>
-                  <span className="text-black">{formatPrice(order.total_cents)}</span>
+                  <span className="text-navy">Total</span>
+                  <span className="text-navy">{formatPrice(order.total_cents)}</span>
                 </div>
               </div>
             </div>
@@ -455,8 +453,8 @@ function TrackPageFallback() {
   return (
     <div className="flex min-h-[40vh] items-center justify-center bg-[#F5F5F5] px-4">
       <div className="flex flex-col items-center gap-3 text-center">
-        <Loader2 className="h-10 w-10 animate-spin text-black" aria-hidden />
-        <p className="text-sm text-black/55">Loading…</p>
+        <Loader2 className="h-10 w-10 animate-spin text-navy" aria-hidden />
+        <p className="text-sm text-muted-foreground">Loading…</p>
       </div>
     </div>
   )

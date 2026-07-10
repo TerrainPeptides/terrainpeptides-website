@@ -93,25 +93,28 @@ const sections: TermsSection[] = [
 
 function SectionHeader({ title }: { title: string }) {
   return (
-    <div className="inline-flex rounded-md border border-[#0A1628]/12 bg-[#0A1628]/[0.04] px-4 py-2 backdrop-blur-sm">
-      <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-black">{title}</h2>
+    <div className="inline-flex rounded-md border border-primary/12 bg-primary/[0.04] px-4 py-2 backdrop-blur-sm">
+      <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-navy">{title}</h2>
     </div>
   )
 }
 
 export default function TermsPage() {
   return (
-    <div className="bg-background">
-      <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
-        <header className="mb-12 text-center">
-          <h1 className="text-3xl font-bold tracking-tight text-black sm:text-4xl">
+    <div className="min-h-screen bg-section-subtle">
+      <section className="border-b border-border bg-section-clinical clinical-grid-bg">
+        <div className="clinical-strip" aria-hidden />
+        <div className="mx-auto max-w-3xl px-4 py-12 text-center sm:px-6 sm:py-14 lg:px-8">
+          <p className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-primary">Legal</p>
+          <h1 className="page-title mt-3 text-3xl font-semibold sm:text-4xl">
             Terms of Service
           </h1>
-          <p className="mx-auto mt-3 max-w-xl text-base leading-relaxed text-black/60">
+          <p className="mx-auto mt-3 max-w-xl text-muted-foreground">
             Effective Date: July 4, 2026
           </p>
-        </header>
-
+        </div>
+      </section>
+      <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
         <div className="space-y-8">
           {sections.map((section) => (
             <article key={section.title} className="space-y-3">
@@ -121,7 +124,7 @@ export default function TermsPage() {
                   {section.title === '16. Contact' ? (
                     <>
                       For questions regarding these Terms, contact us via the{' '}
-                      <Link href="/contact" className="font-medium text-[#0A1628] hover:underline">
+                      <Link href="/contact" className="font-medium text-primary hover:underline">
                         Contact page
                       </Link>{' '}
                       at terrainpeptides.com.
@@ -144,11 +147,11 @@ export default function TermsPage() {
 
         <p className="mt-14 border-t border-border pt-8 text-center text-sm text-muted-foreground">
           Effective July 4, 2026. For questions, visit our{' '}
-          <Link href="/contact" className="font-medium text-[#0A1628] hover:underline">
+          <Link href="/contact" className="font-medium text-primary hover:underline">
             Contact page
           </Link>{' '}
           or email{' '}
-          <a href="mailto:support@terrainpeptides.com" className="font-medium text-[#0A1628] hover:underline">
+          <a href="mailto:support@terrainpeptides.com" className="font-medium text-primary hover:underline">
             support@terrainpeptides.com
           </a>
           .

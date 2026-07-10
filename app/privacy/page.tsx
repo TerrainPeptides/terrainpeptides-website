@@ -174,7 +174,7 @@ const sections: PrivacySection[] = [
 
 function SectionHeader({ title }: { title: string }) {
   return (
-    <div className="inline-flex rounded-md border border-[#0A1628]/12 bg-[#0A1628]/[0.04] px-4 py-2 backdrop-blur-sm">
+    <div className="inline-flex rounded-md border border-primary/12 bg-primary/[0.04] px-4 py-2 backdrop-blur-sm">
       <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-black">{title}</h2>
     </div>
   )
@@ -182,7 +182,7 @@ function SectionHeader({ title }: { title: string }) {
 
 function ContactLink() {
   return (
-    <Link href="/contact" className="font-medium text-[#0A1628] hover:underline">
+    <Link href="/contact" className="font-medium text-primary hover:underline">
       Contact page
     </Link>
   )
@@ -262,7 +262,7 @@ export default function PrivacyPage() {
 
         <p className="mt-14 border-t border-border pt-8 text-center text-sm text-muted-foreground">
           Effective July 4, 2026. For questions, visit our <ContactLink /> or email{' '}
-          <a href="mailto:support@terrainpeptides.com" className="font-medium text-[#0A1628] hover:underline">
+          <a href="mailto:support@terrainpeptides.com" className="font-medium text-primary hover:underline">
             support@terrainpeptides.com
           </a>
           .

@@ -256,7 +256,7 @@ function RiskComparisonBarRow({
   return (
     <div className="flex items-center gap-2 sm:gap-3">
       <span className="w-36 shrink-0 text-xs leading-snug text-foreground/70 sm:w-48">{label}</span>
-      <div className="h-3 min-w-0 flex-1 overflow-hidden rounded-full bg-[#1C3D2A]/10">
+      <div className="h-3 min-w-0 flex-1 overflow-hidden rounded-full bg-primary/10">
         <div className="h-full rounded-full" style={{ width: `${barWidth}%`, backgroundColor: barColor }} />
       </div>
       <span className="shrink-0 text-xs font-medium" style={{ color: barColor }}>
@@ -319,7 +319,7 @@ export function SemaxProduct({ product, relatedProducts = [], vouches = [] }: Se
           className={`mt-16 transition-all duration-500 ease-out ${section2.visible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}
         >
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="mb-6 h-14 flex-wrap gap-2 bg-[#1C3D2A]/5 p-2">
+            <TabsList className="mb-6 h-14 flex-wrap gap-2 bg-primary/5 p-2">
               <TabsTrigger
                 value="research"
                 className="gap-2 px-6 py-3 text-base data-[state=active]:bg-white data-[state=active]:text-foreground"
@@ -407,7 +407,7 @@ export function SemaxProduct({ product, relatedProducts = [], vouches = [] }: Se
                       <p className="mt-6 text-xs text-foreground/50">Source: Peer-reviewed literature.</p>
                     </CardContent>
                   </Card>
-                  <Card className="border-0 bg-[#1C3D2A] lg:col-span-2">
+                  <Card className="border-0 bg-[primary] lg:col-span-2">
                     <CardContent className="p-6 text-white">
                       <p className="text-xs font-medium uppercase tracking-wider text-white/70">
                         Key discovery
@@ -439,7 +439,7 @@ export function SemaxProduct({ product, relatedProducts = [], vouches = [] }: Se
                 <div className="mt-4 grid gap-6 lg:grid-cols-2">
                   <Card className="border-border/10">
                     <CardContent className="p-6">
-                      <span className="rounded-full bg-[#1C3D2A]/5 px-3 py-1 text-xs text-foreground/70">
+                      <span className="rounded-full bg-primary/5 px-3 py-1 text-xs text-foreground/70">
                         🗓️ Russian Clinical Trial — Healthy Volunteers & Stroke Patients
                       </span>
                       <p className="mt-4 text-4xl font-bold" style={{ color: GREEN }}>
@@ -455,7 +455,7 @@ export function SemaxProduct({ product, relatedProducts = [], vouches = [] }: Se
                             <span className="w-28 shrink-0 text-xs leading-snug text-foreground/70 sm:w-40">
                               {row.label}
                             </span>
-                            <div className="h-3 min-w-0 flex-1 overflow-hidden rounded-full bg-[#1C3D2A]/10">
+                            <div className="h-3 min-w-0 flex-1 overflow-hidden rounded-full bg-primary/10">
                               <div
                                 className="h-full rounded-full"
                                 style={{ width: `${row.barWidth}%`, backgroundColor: GREEN }}
@@ -475,7 +475,7 @@ export function SemaxProduct({ product, relatedProducts = [], vouches = [] }: Se
                         a prescription drug for cognitive impairment and stroke recovery — one of the only peptides
                         in the world to achieve that status.
                       </p>
-                      <div className="mt-4 rounded-lg bg-[#1C3D2A]/5 p-3 text-xs text-foreground/60">
+                      <div className="mt-4 rounded-lg bg-primary/5 p-3 text-xs text-foreground/60">
                         💡 Note: Outcomes summarized from published clinical research; approval status refers to
                         Russia.
                       </div>
@@ -497,12 +497,12 @@ export function SemaxProduct({ product, relatedProducts = [], vouches = [] }: Se
                             <p className="text-sm text-foreground/80">{t.sub}</p>
                             <Progress
                               value={t.progress}
-                              className="progress-green mt-2 h-2 bg-[#1C3D2A]/10"
+                              className="progress-green mt-2 h-2 bg-primary/10"
                             />
                           </div>
                         ))}
                       </div>
-                      <div className="mt-6 rounded-lg bg-[#1C3D2A]/5 p-3 text-xs text-foreground/60">
+                      <div className="mt-6 rounded-lg bg-primary/5 p-3 text-xs text-foreground/60">
                         💡 Note: Measurement methods vary by study. Outcomes from published clinical and preclinical
                         research.
                       </div>
@@ -554,7 +554,7 @@ export function SemaxProduct({ product, relatedProducts = [], vouches = [] }: Se
                           ))}
                         </ul>
                         <div
-                          className={`mt-4 rounded-lg border-l-4 ${d.calloutBorder} bg-[#1C3D2A]/5 p-3 text-xs text-foreground/80`}
+                          className={`mt-4 rounded-lg border-l-4 ${d.calloutBorder} bg-primary/5 p-3 text-xs text-foreground/80`}
                         >
                           {d.callout}
                         </div>
@@ -597,7 +597,7 @@ export function SemaxProduct({ product, relatedProducts = [], vouches = [] }: Se
                       </div>
                     </CardContent>
                   </Card>
-                  <Card className="border-0 bg-[#1C3D2A]">
+                  <Card className="border-0 bg-[primary]">
                     <CardContent className="p-6 text-white">
                       <p className="text-xs font-medium uppercase tracking-wider text-white/70">
                         Safety advantage

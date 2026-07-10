@@ -145,7 +145,7 @@ export function RetatrutideProduct({ product, relatedProducts = [], vouches = []
           className={`mt-16 transition-all duration-500 ease-out ${section2.visible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}
         >
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="mb-6 h-14 flex-wrap gap-2 bg-[#1C3D2A]/5 p-2">
+            <TabsList className="mb-6 h-14 flex-wrap gap-2 bg-primary/5 p-2">
               <TabsTrigger value="research" className="gap-2 px-6 py-3 text-base data-[state=active]:bg-white data-[state=active]:text-foreground">
                 <FileText className="h-4 w-4" />
                 Research
@@ -206,7 +206,7 @@ export function RetatrutideProduct({ product, relatedProducts = [], vouches = []
                       <p className="mt-6 text-xs text-foreground/50">Source: Peer-reviewed literature.</p>
                     </CardContent>
                   </Card>
-                  <Card className="border-0 bg-[#1C3D2A] lg:col-span-2">
+                  <Card className="border-0 bg-[primary] lg:col-span-2">
                     <CardContent className="p-6 text-white">
                       <p className="text-xs font-medium uppercase tracking-wider text-white/70">Key discovery</p>
                       <h3 className="mt-2 font-bold">Triple Incretin-Glucagon Co-Agonism</h3>
@@ -236,7 +236,7 @@ export function RetatrutideProduct({ product, relatedProducts = [], vouches = []
                 <div className="mt-4 grid gap-6 lg:grid-cols-2">
                   <Card className="border-border/10">
                     <CardContent className="p-6">
-                      <span className="rounded-full bg-[#1C3D2A]/5 px-3 py-1 text-xs text-foreground/70">🗓️ Phase 2 Obesity Trial — Adults with Overweight/Obesity</span>
+                      <span className="rounded-full bg-primary/5 px-3 py-1 text-xs text-foreground/70">🗓️ Phase 2 Obesity Trial — Adults with Overweight/Obesity</span>
                       <p className="mt-4 text-4xl font-bold" style={{ color: GREEN }}>≈24-26% reduction</p>
                       <p className="text-xs font-medium uppercase tracking-wider text-foreground/70">Mean body weight loss at top dose after ~1 year</p>
                       <p className="mt-4 text-sm font-semibold text-foreground">Weight loss comparison</p>
@@ -244,15 +244,15 @@ export function RetatrutideProduct({ product, relatedProducts = [], vouches = []
                         {COMPARISON_ROWS.map((r) => (
                           <div key={r.label} className="flex items-center gap-3">
                             <span className="w-48 shrink-0 text-xs text-foreground/70">{r.label}</span>
-                            <div className="h-3 flex-1 overflow-hidden rounded-full bg-[#1C3D2A]/10">
-                              <div className="h-full rounded-full" style={{ width: `${r.bar}%`, backgroundColor: r.bar === 100 ? GREEN : r.bar > 50 ? 'rgba(22,163,74,0.8)' : '#1C3D2A' }} />
+                            <div className="h-3 flex-1 overflow-hidden rounded-full bg-primary/10">
+                              <div className="h-full rounded-full" style={{ width: `${r.bar}%`, backgroundColor: r.bar === 100 ? GREEN : r.bar > 50 ? 'rgba(22,163,74,0.8)' : 'primary' }} />
                             </div>
                             <span className="text-xs font-medium" style={{ color: r.bar === 100 ? GREEN : undefined }}>{r.value}</span>
                           </div>
                         ))}
                       </div>
                       <p className="mt-4 text-xs font-medium text-foreground/70">Trial details:</p>
-                      <div className="mt-1 rounded-lg bg-[#1C3D2A]/5 p-3 text-xs text-foreground/60">
+                      <div className="mt-1 rounded-lg bg-primary/5 p-3 text-xs text-foreground/60">
                         Adults with obesity were randomized to once-weekly Retatrutide at multiple doses or placebo for approximately 48-72 weeks. Retatrutide arms demonstrated dose-dependent reductions in body weight, waist circumference, glycemic markers, blood pressure, and liver fat. Highest doses achieved ~24-26% mean weight loss. GI adverse events occurred mainly during dose escalation with acceptable discontinuation rates.
                       </div>
                     </CardContent>
@@ -269,11 +269,11 @@ export function RetatrutideProduct({ product, relatedProducts = [], vouches = []
                               <span className="text-foreground/70">{t.label}</span>
                             </div>
                             <p className="text-sm text-foreground/80">{t.desc}</p>
-                            <Progress value={t.percent} className="progress-green mt-2 h-2 bg-[#1C3D2A]/10" />
+                            <Progress value={t.percent} className="progress-green mt-2 h-2 bg-primary/10" />
                           </div>
                         ))}
                       </div>
-                      <div className="mt-6 rounded-lg bg-[#1C3D2A]/5 p-3 text-xs text-foreground/60">
+                      <div className="mt-6 rounded-lg bg-primary/5 p-3 text-xs text-foreground/60">
                         💡 Note: Outcomes from Phase 2 clinical trials. Phase 3 studies ongoing.
                       </div>
                     </CardContent>
@@ -312,7 +312,7 @@ export function RetatrutideProduct({ product, relatedProducts = [], vouches = []
                             <li key={m}>• {m}</li>
                           ))}
                         </ul>
-                        <div className={`mt-4 rounded-lg border-l-4 ${d.calloutBorder} bg-[#1C3D2A]/5 p-3 text-xs text-foreground/80`}>
+                        <div className={`mt-4 rounded-lg border-l-4 ${d.calloutBorder} bg-primary/5 p-3 text-xs text-foreground/80`}>
                           {d.callout}
                         </div>
                       </CardContent>
@@ -350,7 +350,7 @@ export function RetatrutideProduct({ product, relatedProducts = [], vouches = []
                       </div>
                     </CardContent>
                   </Card>
-                  <Card className="border-0 bg-[#1C3D2A]">
+                  <Card className="border-0 bg-[primary]">
                     <CardContent className="p-6 text-white">
                       <p className="text-xs font-medium uppercase tracking-wider text-white/70">Safety advantage</p>
                       <h4 className="mt-2 font-bold">Glucose-Dependent Mechanism</h4>
@@ -379,7 +379,7 @@ export function RetatrutideProduct({ product, relatedProducts = [], vouches = []
                         <Beaker className="h-3.5 w-3.5" /> MOLECULAR PROFILE
                       </p>
                       <h4 className="mt-3 font-bold text-foreground">What Is Retatrutide?</h4>
-                      <div className="mt-4 rounded-lg bg-[#1C3D2A]/5 p-4 space-y-2 text-sm">
+                      <div className="mt-4 rounded-lg bg-primary/5 p-4 space-y-2 text-sm">
                         <div className="flex justify-between"><span className="text-foreground/60">Type</span><span className="font-medium">Synthetic peptide triple agonist (GIP/GLP-1/glucagon receptor agonist)</span></div>
                         <div className="flex justify-between"><span className="text-foreground/60">CAS</span><span className="font-medium">Not yet publicly standardized — confirm before publishing</span></div>
                         <div className="flex justify-between"><span className="text-foreground/60">Formula</span><span className="font-medium">Proprietary large peptide analog</span></div>
@@ -396,22 +396,22 @@ export function RetatrutideProduct({ product, relatedProducts = [], vouches = []
                       </p>
                       <h4 className="mt-3 font-bold text-foreground">Stability Information</h4>
                       <div className="mt-4 space-y-3">
-                        <div className="rounded-lg bg-[#1C3D2A]/5 p-3 flex items-center gap-2">
+                        <div className="rounded-lg bg-primary/5 p-3 flex items-center gap-2">
                           <span className="text-sm text-foreground/80">Storage:</span>
                           <span className="text-sm font-medium">Refrigerated sterile solution</span>
                         </div>
-                        <div className="rounded-lg bg-[#1C3D2A]/5 p-3 flex items-center gap-2">
+                        <div className="rounded-lg bg-primary/5 p-3 flex items-center gap-2">
                           <span className="text-sm text-foreground/80">Protect:</span>
                           <span className="text-sm font-medium">From light</span>
                         </div>
-                        <div className="rounded-lg bg-[#1C3D2A]/5 p-3 flex items-center gap-2">
+                        <div className="rounded-lg bg-primary/5 p-3 flex items-center gap-2">
                           <span className="text-sm text-foreground/80">Note:</span>
                           <span className="text-sm font-medium">Do not freeze</span>
                         </div>
                       </div>
                     </CardContent>
                   </Card>
-                  <Card className="border-0 bg-[#1C3D2A]">
+                  <Card className="border-0 bg-[primary]">
                     <CardContent className="p-6 text-white">
                       <p className="text-xs font-medium uppercase tracking-wider text-white/70 flex items-center gap-1">
                         <FileText className="h-3.5 w-3.5" /> REGULATORY STATUS

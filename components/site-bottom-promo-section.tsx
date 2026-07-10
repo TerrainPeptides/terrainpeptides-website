@@ -9,7 +9,7 @@ const SHOW_BOTTOM_PROMO_HEADLINE = false
 /** Newsletter + headline band — rendered once in root layout above the footer on every page */
 export function SiteBottomPromoSection() {
   return (
-    <section className="relative bg-[#0A1628]">
+    <section className="relative border-t border-white/10 bg-navy">
       {SHOW_BOTTOM_PROMO_HEADLINE && (
         <div
           className={[

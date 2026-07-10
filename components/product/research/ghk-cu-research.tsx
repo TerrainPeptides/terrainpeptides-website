@@ -87,7 +87,7 @@ export function GhkCuResearch({ product, vouches: _vouches }: Props) {
               <p className="mt-6 text-xs text-foreground/50">Source: Peer-reviewed literature.</p>
             </CardContent>
           </Card>
-          <Card className="border-0 bg-[#1C3D2A] lg:col-span-2">
+          <Card className="border-0 bg-[primary] lg:col-span-2">
             <CardContent className="p-6 text-white">
               <p className="text-xs font-medium uppercase tracking-wider text-white/70">Key discovery</p>
               <h3 className="mt-2 font-bold">Unprecedented Gene Influence</h3>
@@ -114,34 +114,34 @@ export function GhkCuResearch({ product, vouches: _vouches }: Props) {
         <div className="mt-4 grid gap-6 lg:grid-cols-2">
           <Card className="border-border/10">
             <CardContent className="p-6">
-              <span className="rounded-full bg-[#1C3D2A]/5 px-3 py-1 text-xs text-foreground/70">🗓️ 12-Week Facial Study — 71 Women</span>
+              <span className="rounded-full bg-primary/5 px-3 py-1 text-xs text-foreground/70">🗓️ 12-Week Facial Study — 71 Women</span>
               <p className="mt-4 text-4xl font-bold" style={{ color: GREEN }}>55.8%</p>
               <p className="text-xs font-medium uppercase tracking-wider text-foreground/70">Wrinkle volume reduction</p>
               <p className="mt-4 text-sm font-semibold text-foreground">Wrinkle reduction comparison</p>
               <div className="mt-3 space-y-3">
                 <div className="flex items-center gap-3">
                   <span className="w-32 shrink-0 text-xs text-foreground/70">GHK-Cu vs Control</span>
-                  <div className="h-3 flex-1 overflow-hidden rounded-full bg-[#1C3D2A]/10">
+                  <div className="h-3 flex-1 overflow-hidden rounded-full bg-primary/10">
                     <div className="h-full rounded-full" style={{ width: '100%', backgroundColor: GREEN }} />
                   </div>
                   <span className="text-xs font-medium" style={{ color: GREEN }}>-55.8%</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <span className="w-32 shrink-0 text-xs text-foreground/70">GHK-Cu vs Matrixyl</span>
-                  <div className="h-3 flex-1 overflow-hidden rounded-full bg-[#1C3D2A]/10">
-                    <div className="h-full rounded-full bg-[#1C3D2A]/40" style={{ width: '57%' }} />
+                  <div className="h-3 flex-1 overflow-hidden rounded-full bg-primary/10">
+                    <div className="h-full rounded-full bg-primary/40" style={{ width: '57%' }} />
                   </div>
                   <span className="text-xs text-foreground/70">-31.6%</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <span className="w-32 shrink-0 text-xs text-foreground/70">Placebo</span>
-                  <div className="h-3 flex-1 overflow-hidden rounded-full bg-[#1C3D2A]/10">
-                    <div className="h-full rounded-full bg-[#1C3D2A]/20" style={{ width: '4%' }} />
+                  <div className="h-3 flex-1 overflow-hidden rounded-full bg-primary/10">
+                    <div className="h-full rounded-full bg-primary/20" style={{ width: '4%' }} />
                   </div>
                   <span className="text-xs text-foreground/70">-0%</span>
                 </div>
               </div>
-              <div className="mt-4 rounded-lg bg-[#1C3D2A]/5 p-3 text-xs text-foreground/60">
+              <div className="mt-4 rounded-lg bg-primary/5 p-3 text-xs text-foreground/60">
                 ⚠️ Based on thigh skin biopsy studies measuring collagen production after 1 month of treatment.
               </div>
             </CardContent>
@@ -159,11 +159,11 @@ export function GhkCuResearch({ product, vouches: _vouches }: Props) {
                     </div>
                     <p className="text-sm text-foreground/80">{t.desc}</p>
                     <p className="text-xs text-foreground/60">{t.sub}</p>
-                    <Progress value={t.percent} className="progress-green mt-2 h-2 bg-[#1C3D2A]/10" />
+                    <Progress value={t.percent} className="progress-green mt-2 h-2 bg-primary/10" />
                   </div>
                 ))}
               </div>
-              <div className="mt-6 rounded-lg bg-[#1C3D2A]/5 p-3 text-xs text-foreground/60">
+              <div className="mt-6 rounded-lg bg-primary/5 p-3 text-xs text-foreground/60">
                 💡 Note: Measurement methods vary by study. Outcomes from published clinical and preclinical research.
               </div>
             </CardContent>

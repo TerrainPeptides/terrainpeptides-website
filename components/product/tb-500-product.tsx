@@ -122,7 +122,7 @@ export function Tb500Product({ product, relatedProducts = [], vouches = [] }: Tb
           className={`mt-16 transition-all duration-500 ease-out ${section2.visible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}
         >
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="mb-6 h-14 flex-wrap gap-2 bg-[#1C3D2A]/5 p-2">
+            <TabsList className="mb-6 h-14 flex-wrap gap-2 bg-primary/5 p-2">
               <TabsTrigger value="research" className="gap-2 px-6 py-3 text-base data-[state=active]:bg-white data-[state=active]:text-foreground">
                 <FileText className="h-4 w-4" />
                 Research
@@ -183,7 +183,7 @@ export function Tb500Product({ product, relatedProducts = [], vouches = [] }: Tb
                       <p className="mt-6 text-xs text-foreground/50">Source: Peer-reviewed literature.</p>
                     </CardContent>
                   </Card>
-                  <Card className="border-0 bg-[#1C3D2A] lg:col-span-2">
+                  <Card className="border-0 bg-[primary] lg:col-span-2">
                     <CardContent className="p-6 text-white">
                       <p className="text-xs font-medium uppercase tracking-wider text-white/70">Key discovery</p>
                       <h3 className="mt-2 font-bold">The Peptide That Moves Repair Cells Into Action</h3>
@@ -205,7 +205,7 @@ export function Tb500Product({ product, relatedProducts = [], vouches = [] }: Tb
                 <div className="mt-4 grid gap-6 lg:grid-cols-2">
                   <Card className="border-border/10">
                     <CardContent className="p-6">
-                      <span className="rounded-full bg-[#1C3D2A]/5 px-3 py-1 text-xs text-foreground/70">Preclinical & Translational Research — Thymosin Beta-4 Biology</span>
+                      <span className="rounded-full bg-primary/5 px-3 py-1 text-xs text-foreground/70">Preclinical & Translational Research — Thymosin Beta-4 Biology</span>
                       <p className="mt-4 text-4xl font-bold" style={{ color: GREEN }}>↑↑↑</p>
                       <p className="text-xs font-medium uppercase tracking-wider text-foreground/70">CELL MIGRATION, VASCULARIZATION & INFLAMMATION ALL MOVE IN THE RIGHT DIRECTION</p>
                       <div className="mt-4 text-sm font-semibold text-foreground">Comparison rows</div>
@@ -213,14 +213,14 @@ export function Tb500Product({ product, relatedProducts = [], vouches = [] }: Tb
                         {COMPARISON_ROWS.map((r) => (
                           <div key={r.label} className="flex items-center gap-3">
                             <span className="w-48 shrink-0 text-xs text-foreground/70">{r.label}</span>
-                            <div className="h-3 flex-1 overflow-hidden rounded-full bg-[#1C3D2A]/10">
+                            <div className="h-3 flex-1 overflow-hidden rounded-full bg-primary/10">
                               <div className="h-full rounded-full" style={{ width: `${r.bar}%`, backgroundColor: GREEN }} />
                             </div>
                             <span className="shrink-0 text-xs font-medium" style={{ color: GREEN }}>{r.value}</span>
                           </div>
                         ))}
                       </div>
-                      <div className="mt-4 rounded-lg bg-[#1C3D2A]/5 p-3 text-xs text-foreground/60">
+                      <div className="mt-4 rounded-lg bg-primary/5 p-3 text-xs text-foreground/60">
                         Multiple preclinical reviews confirm TB-500&apos;s actin-binding mechanism drives repair cell movement, new vessel formation, and anti-inflammatory activity across muscle, tendon, skin, and cardiac tissue models.
                       </div>
                     </CardContent>
@@ -237,7 +237,7 @@ export function Tb500Product({ product, relatedProducts = [], vouches = [] }: Tb
                               <span className="text-foreground/70">{t.label}</span>
                             </div>
                             <p className="text-sm text-foreground/80">{t.desc}</p>
-                            <Progress value={t.percent} className="progress-green mt-2 h-2 bg-[#1C3D2A]/10" />
+                            <Progress value={t.percent} className="progress-green mt-2 h-2 bg-primary/10" />
                           </div>
                         ))}
                       </div>
@@ -277,7 +277,7 @@ export function Tb500Product({ product, relatedProducts = [], vouches = [] }: Tb
                             <li key={m}>• {m}</li>
                           ))}
                         </ul>
-                        <div className={`mt-4 rounded-lg border-l-4 ${d.calloutBorder} bg-[#1C3D2A]/5 p-3 text-xs text-foreground/80`}>
+                        <div className={`mt-4 rounded-lg border-l-4 ${d.calloutBorder} bg-primary/5 p-3 text-xs text-foreground/80`}>
                           {d.callout}
                         </div>
                       </CardContent>
@@ -315,7 +315,7 @@ export function Tb500Product({ product, relatedProducts = [], vouches = [] }: Tb
                       </div>
                     </CardContent>
                   </Card>
-                  <Card className="border-0 bg-[#1C3D2A]">
+                  <Card className="border-0 bg-[primary]">
                     <CardContent className="p-6 text-white">
                       <p className="text-xs font-medium uppercase tracking-wider text-white/70">Safety advantage</p>
                       <h4 className="mt-2 font-bold">Wide Preclinical Safety Margin</h4>
@@ -343,7 +343,7 @@ export function Tb500Product({ product, relatedProducts = [], vouches = [] }: Tb
                         <Beaker className="h-3.5 w-3.5" /> MOLECULAR PROFILE
                       </p>
                       <h4 className="mt-3 font-bold text-foreground">What Is TB-500?</h4>
-                      <div className="mt-4 rounded-lg bg-[#1C3D2A]/5 p-4 space-y-2 text-sm">
+                      <div className="mt-4 rounded-lg bg-primary/5 p-4 space-y-2 text-sm">
                         <div className="flex justify-between"><span className="text-foreground/60">Type</span><span className="font-medium">Synthetic thymosin beta-4 fragment / TB-4 derived peptide</span></div>
                         <div className="flex justify-between"><span className="text-foreground/60">CAS</span><span className="font-medium">77591-33-4</span></div>
                         <div className="flex justify-between"><span className="text-foreground/60">Formula</span><span className="font-medium">Not widely disclosed — confirm from supplier COA</span></div>
@@ -360,18 +360,18 @@ export function Tb500Product({ product, relatedProducts = [], vouches = [] }: Tb
                       </p>
                       <h4 className="mt-3 font-bold text-foreground">Stability Information</h4>
                       <div className="mt-4 space-y-3">
-                        <div className="rounded-lg bg-[#1C3D2A]/5 p-3 flex items-center gap-2">
+                        <div className="rounded-lg bg-primary/5 p-3 flex items-center gap-2">
                           <span className="text-sm text-foreground/80">Lyophilized:</span>
                           <span className="text-sm font-medium">Stable at room temp • Protect from light</span>
                         </div>
-                        <div className="rounded-lg bg-[#1C3D2A]/5 p-3 flex items-center gap-2">
+                        <div className="rounded-lg bg-primary/5 p-3 flex items-center gap-2">
                           <span className="text-sm text-foreground/80">Reconstituted:</span>
                           <span className="text-sm font-medium">Refrigerate • Protect from light</span>
                         </div>
                       </div>
                     </CardContent>
                   </Card>
-                  <Card className="border-0 bg-[#1C3D2A]">
+                  <Card className="border-0 bg-[primary]">
                     <CardContent className="p-6 text-white">
                       <p className="text-xs font-medium uppercase tracking-wider text-white/70 flex items-center gap-1">
                         <FileText className="h-3.5 w-3.5" /> REGULATORY STATUS

@@ -10,17 +10,17 @@ import { Eye, EyeOff, FlaskConical, Truck, Microscope } from 'lucide-react'
 const AUTH_HERO_FEATURES = [
   {
     icon: FlaskConical,
-    iconClass: 'text-emerald-400',
-    text: 'High Quality · Lab Tested · Verified COAs',
+    iconClass: 'text-sky-300',
+    text: 'High quality · Lab tested · Verified COAs',
   },
   {
     icon: Truck,
-    iconClass: 'text-orange-400',
+    iconClass: 'text-clinical-teal',
     text: 'Same-day shipping on orders before 1PM PST',
   },
   {
     icon: Microscope,
-    iconClass: 'text-sky-400',
+    iconClass: 'text-sky-200',
     text: 'Research use only · Verified accounts',
   },
 ] as const
@@ -46,7 +46,7 @@ export default function AuthPage() {
 function AuthPageSkeleton() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-white">
-      <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-200 border-t-[#0A1931]" />
+      <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-200 border-t-navy" />
     </div>
   )
 }
@@ -248,7 +248,7 @@ function AuthPageInner() {
               <h1 className="text-3xl font-bold leading-[1.1] tracking-tight text-white sm:text-4xl xl:text-[2.65rem] xl:leading-[1.08]">
                 Member-only
                 <br />
-                <span className="text-[#7FB5FF]">research access.</span>
+                <span className="text-[#BAE6FD]">research access.</span>
               </h1>
               <p className="mt-5 max-w-none text-[15px] leading-relaxed text-[#cbd5e1] sm:text-base">
                 Sign up to browse our full catalog of lab-tested, high-purity peptides — for verified
@@ -257,7 +257,7 @@ function AuthPageInner() {
               <ul className="mt-9 space-y-4">
                 {AUTH_HERO_FEATURES.map(({ icon: Icon, iconClass, text }) => (
                   <li key={text} className="flex items-start gap-3.5">
-                    <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-white/15 bg-black/20 backdrop-blur-[2px]">
+                    <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-white/20 bg-white/10 backdrop-blur-[2px]">
                       <Icon className={`h-4 w-4 ${iconClass}`} strokeWidth={2} />
                     </span>
                     <span className="pt-1 text-sm font-medium leading-snug text-white/95">{text}</span>
@@ -288,7 +288,7 @@ function AuthPageInner() {
 
           {/* Promo claim banner */}
           {claimPromo && promoPercent && (
-            <div className="mb-6 rounded-2xl bg-[#0A1628] px-5 py-4 text-white">
+            <div className="mb-6 rounded-2xl bg-primary px-5 py-4 text-white">
               <div className="flex items-start gap-3">
                 <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/10">
                   <span className="text-sm">🎁</span>
@@ -314,7 +314,7 @@ function AuthPageInner() {
                 onClick={() => setTab('signin')}
                 className={`pb-3 pr-6 text-sm font-semibold transition-all ${
                   tab === 'signin'
-                    ? 'border-b-2 border-[#0A1931] text-[#0A1931]'
+                    ? 'border-b-2 border-navy text-navy'
                     : 'text-gray-400 hover:text-gray-600'
                 }`}
               >
@@ -324,7 +324,7 @@ function AuthPageInner() {
                 onClick={() => setTab('signup')}
                 className={`pb-3 px-4 text-sm font-semibold transition-all ${
                   tab === 'signup'
-                    ? 'border-b-2 border-[#0A1931] text-[#0A1931]'
+                    ? 'border-b-2 border-navy text-navy'
                     : 'text-gray-400 hover:text-gray-600'
                 }`}
               >
@@ -353,7 +353,7 @@ function AuthPageInner() {
                   placeholder="you@example.com"
                   value={signInForm.email}
                   onChange={e => setSignInForm(f => ({ ...f, email: e.target.value }))}
-                  className={`w-full rounded-lg border px-4 py-2.5 text-sm outline-none transition focus:border-[#0A1931] focus:ring-2 focus:ring-[#0A1931]/10 ${
+                  className={`w-full rounded-lg border px-4 py-2.5 text-sm outline-none transition focus:border-navy focus:ring-2 focus:ring-navy/10 ${
                     errors.email ? 'border-red-400 bg-red-50' : 'border-gray-300 bg-white'
                   }`}
                 />
@@ -371,7 +371,7 @@ function AuthPageInner() {
                     placeholder="••••••••"
                     value={signInForm.password}
                     onChange={e => setSignInForm(f => ({ ...f, password: e.target.value }))}
-                    className={`w-full rounded-lg border px-4 py-2.5 pr-11 text-sm outline-none transition focus:border-[#0A1931] focus:ring-2 focus:ring-[#0A1931]/10 ${
+                    className={`w-full rounded-lg border px-4 py-2.5 pr-11 text-sm outline-none transition focus:border-navy focus:ring-2 focus:ring-navy/10 ${
                       errors.password ? 'border-red-400 bg-red-50' : 'border-gray-300 bg-white'
                     }`}
                   />
@@ -390,7 +390,7 @@ function AuthPageInner() {
               <div className="flex justify-end">
                 <Link
                   href="/auth/forgot-password"
-                  className="text-xs font-medium text-[#0A1931]/70 hover:text-[#0A1931] transition-colors"
+                  className="text-xs font-medium text-navy/70 hover:text-navy transition-colors"
                 >
                   Forgot password?
                 </Link>
@@ -399,7 +399,7 @@ function AuthPageInner() {
               <button
                 type="submit"
                 disabled={loading}
-                className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#0A1931] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#0d2040] disabled:cursor-not-allowed disabled:opacity-60"
+                className="flex w-full items-center justify-center gap-2 rounded-lg bg-navy px-4 py-3 text-sm font-semibold text-white transition hover:bg-navy-light disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {loading ? (
                   <>
@@ -416,7 +416,7 @@ function AuthPageInner() {
                 <button
                   type="button"
                   onClick={() => setTab('signup')}
-                  className="font-semibold text-[#0A1931] hover:underline"
+                  className="font-semibold text-navy hover:underline"
                 >
                   Create one
                 </button>
@@ -437,7 +437,7 @@ function AuthPageInner() {
                   placeholder="Dr. Jane Smith"
                   value={signUpForm.name}
                   onChange={e => setSignUpForm(f => ({ ...f, name: e.target.value }))}
-                  className={`w-full rounded-lg border px-4 py-2.5 text-sm outline-none transition focus:border-[#0A1931] focus:ring-2 focus:ring-[#0A1931]/10 ${
+                  className={`w-full rounded-lg border px-4 py-2.5 text-sm outline-none transition focus:border-navy focus:ring-2 focus:ring-navy/10 ${
                     errors.name ? 'border-red-400 bg-red-50' : 'border-gray-300 bg-white'
                   }`}
                 />
@@ -454,7 +454,7 @@ function AuthPageInner() {
                   placeholder="you@example.com"
                   value={signUpForm.email}
                   onChange={e => setSignUpForm(f => ({ ...f, email: e.target.value }))}
-                  className={`w-full rounded-lg border px-4 py-2.5 text-sm outline-none transition focus:border-[#0A1931] focus:ring-2 focus:ring-[#0A1931]/10 ${
+                  className={`w-full rounded-lg border px-4 py-2.5 text-sm outline-none transition focus:border-navy focus:ring-2 focus:ring-navy/10 ${
                     errors.email ? 'border-red-400 bg-red-50' : 'border-gray-300 bg-white'
                   }`}
                 />
@@ -472,7 +472,7 @@ function AuthPageInner() {
                     placeholder="Min. 8 characters"
                     value={signUpForm.password}
                     onChange={e => setSignUpForm(f => ({ ...f, password: e.target.value }))}
-                    className={`w-full rounded-lg border px-4 py-2.5 pr-11 text-sm outline-none transition focus:border-[#0A1931] focus:ring-2 focus:ring-[#0A1931]/10 ${
+                    className={`w-full rounded-lg border px-4 py-2.5 pr-11 text-sm outline-none transition focus:border-navy focus:ring-2 focus:ring-navy/10 ${
                       errors.password ? 'border-red-400 bg-red-50' : 'border-gray-300 bg-white'
                     }`}
                   />
@@ -499,7 +499,7 @@ function AuthPageInner() {
                     placeholder="Re-enter your password"
                     value={signUpForm.confirmPassword}
                     onChange={e => setSignUpForm(f => ({ ...f, confirmPassword: e.target.value }))}
-                    className={`w-full rounded-lg border px-4 py-2.5 pr-11 text-sm outline-none transition focus:border-[#0A1931] focus:ring-2 focus:ring-[#0A1931]/10 ${
+                    className={`w-full rounded-lg border px-4 py-2.5 pr-11 text-sm outline-none transition focus:border-navy focus:ring-2 focus:ring-navy/10 ${
                       errors.confirmPassword ? 'border-red-400 bg-red-50' : 'border-gray-300 bg-white'
                     }`}
                   />
@@ -520,7 +520,7 @@ function AuthPageInner() {
               <button
                 type="submit"
                 disabled={loading}
-                className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#0A1931] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#0d2040] disabled:cursor-not-allowed disabled:opacity-60"
+                className="flex w-full items-center justify-center gap-2 rounded-lg bg-navy px-4 py-3 text-sm font-semibold text-white transition hover:bg-navy-light disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {loading ? (
                   <>
@@ -537,7 +537,7 @@ function AuthPageInner() {
                 <button
                   type="button"
                   onClick={() => setTab('signin')}
-                  className="font-semibold text-[#0A1931] hover:underline"
+                  className="font-semibold text-navy hover:underline"
                 >
                   Sign in
                 </button>

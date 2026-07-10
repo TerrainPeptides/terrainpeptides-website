@@ -145,7 +145,7 @@ function StripePaymentSection({
   if (stripe === undefined) {
     return (
       <div className="flex flex-col items-center justify-center gap-3 rounded-lg border border-border bg-muted/20 py-10 text-center text-sm text-muted-foreground">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-muted-foreground border-t-[#0A1628]" />
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-muted-foreground border-t-primary" />
         <p>Loading secure payment form…</p>
       </div>
     )
@@ -162,7 +162,7 @@ function StripePaymentSection({
         appearance: {
           theme: 'stripe',
           variables: {
-            colorPrimary: '#0A1628',
+            colorPrimary: '#0369A1',
             borderRadius: '8px',
           },
         },
@@ -278,7 +278,7 @@ function PaymentFormInner({
             type="checkbox"
             checked={ackResearch}
             onChange={(e) => setAckResearch(e.target.checked)}
-            className="mt-0.5 h-4 w-4 shrink-0 rounded border-border accent-[#0A1628]"
+            className="mt-0.5 h-4 w-4 shrink-0 rounded border-border accent-primary"
           />
           <span>
             I confirm that I am at least 18 years of age and am purchasing these products for{' '}
@@ -296,7 +296,7 @@ function PaymentFormInner({
             type="checkbox"
             checked={ackPowder}
             onChange={(e) => setAckPowder(e.target.checked)}
-            className="mt-0.5 h-4 w-4 shrink-0 rounded border-border accent-[#0A1628]"
+            className="mt-0.5 h-4 w-4 shrink-0 rounded border-border accent-primary"
           />
           <span>
             I understand that all products are shipped as{' '}
@@ -313,7 +313,7 @@ function PaymentFormInner({
       <Button
         type="submit"
         disabled={payBlocked}
-        className="w-full bg-[#0A1628] text-white hover:bg-[#0A1628]/90 disabled:pointer-events-none disabled:opacity-40"
+        className="w-full bg-primary text-white hover:bg-primary/90 disabled:pointer-events-none disabled:opacity-40"
         size="lg"
       >
         {isProcessing
@@ -596,7 +596,7 @@ export default function CheckoutPage() {
             <h2 className="mt-6 text-2xl font-bold text-black">Your cart is empty</h2>
             <p className="mt-2 text-muted-foreground">Add items to your cart before checking out.</p>
             <Link href="/shop">
-              <Button className="mt-6 bg-[#0A1628] hover:bg-[#0A1628]/90">Browse Products</Button>
+              <Button className="mt-6 bg-primary hover:bg-primary/90">Browse Products</Button>
             </Link>
           </div>
         </div>
@@ -624,7 +624,7 @@ export default function CheckoutPage() {
             <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#0A1628] text-sm font-bold text-white">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-bold text-white">
                     {checkoutStep > 1 ? <Check className="h-4 w-4" strokeWidth={2.5} /> : '1'}
                   </div>
                   <h2 className="text-lg font-bold text-black">Shipping Address</h2>
@@ -636,7 +636,7 @@ export default function CheckoutPage() {
                   <button
                     type="button"
                     onClick={() => goToStep(1)}
-                    className="text-sm font-medium text-[#0A1628] hover:underline"
+                    className="text-sm font-medium text-primary hover:underline"
                   >
                     Edit
                   </button>
@@ -733,7 +733,7 @@ export default function CheckoutPage() {
                           type="checkbox"
                           checked={smsOptIn}
                           onChange={(e) => setSmsOptIn(e.target.checked)}
-                          className="mt-0.5 h-4 w-4 rounded border-border accent-[#0A1628]"
+                          className="mt-0.5 h-4 w-4 rounded border-border accent-primary"
                         />
                         <span className="text-sm text-foreground">
                           I would like to receive order &amp; shipping text updates
@@ -753,7 +753,7 @@ export default function CheckoutPage() {
                         type="checkbox"
                         checked={billingSameAsShipping}
                         onChange={(e) => setBillingSameAsShipping(e.target.checked)}
-                        className="h-4 w-4 rounded border-border accent-[#0A1628]"
+                        className="h-4 w-4 rounded border-border accent-primary"
                       />
                       <span className="text-sm text-foreground">Billing address same as shipping address</span>
                     </label>
@@ -761,7 +761,7 @@ export default function CheckoutPage() {
                     <Button
                       type="submit"
                       disabled={validatingAddress}
-                      className="w-full bg-[#0A1628] hover:bg-[#0A1628]/90 text-white"
+                      className="w-full bg-primary hover:bg-primary/90 text-white"
                       size="lg"
                     >
                       {validatingAddress ? 'Verifying address…' : 'Continue to delivery →'}
@@ -774,15 +774,15 @@ export default function CheckoutPage() {
                   <div className="grid grid-cols-3 gap-4 text-sm">
                     <div>
                       <p className="mb-1.5 font-semibold text-black">Shipping Address</p>
-                      <p className="text-[#0A1628]">{shippingInfo.name}</p>
-                      <p className="text-[#0A1628]">{shippingInfo.address1}</p>
-                      <p className="text-[#0A1628]">{shippingInfo.city}, {shippingInfo.state} {shippingInfo.zip}</p>
-                      <p className="text-[#0A1628]">{shippingInfo.country === 'CA' ? 'Canada' : 'United States'}</p>
+                      <p className="text-primary">{shippingInfo.name}</p>
+                      <p className="text-primary">{shippingInfo.address1}</p>
+                      <p className="text-primary">{shippingInfo.city}, {shippingInfo.state} {shippingInfo.zip}</p>
+                      <p className="text-primary">{shippingInfo.country === 'CA' ? 'Canada' : 'United States'}</p>
                     </div>
                     <div>
                       <p className="mb-1.5 font-semibold text-black">Contact</p>
-                      <p className="text-[#0A1628]">{shippingInfo.phone}</p>
-                      <p className="text-[#0A1628]">{shippingInfo.email}</p>
+                      <p className="text-primary">{shippingInfo.phone}</p>
+                      <p className="text-primary">{shippingInfo.email}</p>
                       <p className="mt-1 text-xs text-muted-foreground">
                         Order confirmation, tracking &amp; updates sent here.
                       </p>
@@ -790,9 +790,9 @@ export default function CheckoutPage() {
                     <div>
                       <p className="mb-1.5 font-semibold text-black">Billing Address</p>
                       {billingSameAsShipping ? (
-                        <p>Same as <span className="text-[#0A1628]">shipping address</span></p>
+                        <p>Same as <span className="text-primary">shipping address</span></p>
                       ) : (
-                        <p className="text-[#0A1628]">{shippingInfo.address1}</p>
+                        <p className="text-primary">{shippingInfo.address1}</p>
                       )}
                     </div>
                   </div>
@@ -805,7 +805,7 @@ export default function CheckoutPage() {
               <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#0A1628] text-sm font-bold text-white">
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-bold text-white">
                       {checkoutStep > 2 ? <Check className="h-4 w-4" strokeWidth={2.5} /> : '2'}
                     </div>
                     <h2 className="text-lg font-bold text-black">Delivery Method</h2>
@@ -817,7 +817,7 @@ export default function CheckoutPage() {
                     <button
                       type="button"
                       onClick={() => goToStep(2)}
-                      className="text-sm font-medium text-[#0A1628] hover:underline"
+                      className="text-sm font-medium text-primary hover:underline"
                     >
                       Edit
                     </button>
@@ -832,10 +832,10 @@ export default function CheckoutPage() {
                       How would you like your order delivered
                     </p>
 
-                    <div className="flex items-center justify-between rounded-lg border-2 border-[#0A1628] bg-muted/20 p-4 shadow-sm">
+                    <div className="flex items-center justify-between rounded-lg border-2 border-primary bg-muted/20 p-4 shadow-sm">
                       <div className="flex items-center gap-3">
-                        <div className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2 border-[#0A1628]">
-                          <div className="h-2 w-2 rounded-full bg-[#0A1628]" />
+                        <div className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2 border-primary">
+                          <div className="h-2 w-2 rounded-full bg-primary" />
                         </div>
                         <div>
                           <p className="font-semibold text-foreground">Standard Shipping</p>
@@ -848,7 +848,7 @@ export default function CheckoutPage() {
                     <Button
                       type="button"
                       disabled={isCreatingIntent}
-                      className="mt-4 w-full bg-[#0A1628] hover:bg-[#0A1628]/90 text-white"
+                      className="mt-4 w-full bg-primary hover:bg-primary/90 text-white"
                       size="lg"
                       onClick={handleContinueToPayment}
                     >
@@ -886,7 +886,7 @@ export default function CheckoutPage() {
               <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
                 {/* Header */}
                 <div className="flex items-center gap-3 mb-1">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#0A1628] text-sm font-bold text-white">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-bold text-white">
                     3
                   </div>
                   <h2 className="text-lg font-bold text-black">Payment</h2>

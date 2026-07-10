@@ -41,7 +41,7 @@ function ProductFaqs({ faqs }: { faqs: FAQ[] }) {
           <p className="mt-5 text-center text-sm text-muted-foreground">
             <Link
               href="/faq"
-              className="font-medium text-[#0A1931] underline decoration-border underline-offset-4 transition hover:text-[#0d2040]"
+              className="font-medium text-navy underline decoration-border underline-offset-4 transition hover:text-[#0d2040]"
             >
               View all FAQs
             </Link>

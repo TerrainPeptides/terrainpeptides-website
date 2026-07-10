@@ -7,7 +7,6 @@ import { AGE_VERIFIED_EVENT, isAgeVerifiedInStorage } from '@/lib/age-verificati
 
 const PROMO_CODE = 'WELCOME15'
 const PROMO_PERCENT = 15
-/** Delay after age confirmation before showing the discount popup. */
 const PROMO_DELAY_AFTER_AGE_MS = 7000
 
 export function PromoPopup() {
@@ -70,76 +69,70 @@ export function PromoPopup() {
 
   return (
     <>
-      {/* Backdrop */}
       <div
-        className={`fixed inset-0 z-[200] bg-black/45 backdrop-blur-[2px] transition-opacity duration-300 ${
+        className={`fixed inset-0 z-[200] bg-navy/50 backdrop-blur-[2px] transition-opacity duration-300 ${
           visible ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
         }`}
         onClick={dismiss}
         aria-hidden
       />
 
-      {/* Modal */}
       <div
         role="dialog"
         aria-modal="true"
         aria-labelledby="promo-popup-title"
-        className={`fixed left-1/2 top-1/2 z-[201] w-[calc(100vw-2rem)] max-w-[420px] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-3xl bg-white shadow-2xl transition-all duration-300 ${
+        className={`fixed left-1/2 top-1/2 z-[201] w-[calc(100vw-2rem)] max-w-[420px] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-lg border border-border bg-white shadow-2xl transition-all duration-300 ${
           visible ? 'pointer-events-auto scale-100 opacity-100' : 'pointer-events-none scale-95 opacity-0'
         }`}
       >
-        {/* Close button */}
         <button
           onClick={dismiss}
-          className="absolute right-4 top-4 z-10 rounded-full p-1.5 text-white/70 transition-colors hover:bg-white/15 hover:text-white"
+          className="absolute right-4 top-4 z-10 rounded-md p-1.5 text-white/70 transition-colors hover:bg-white/15 hover:text-white"
           aria-label="Close"
         >
           <X className="h-4 w-4" />
         </button>
 
-        {/* Header */}
-        <div className="bg-[#0A1628] px-8 pb-8 pt-7 text-white">
+        <div className="border-b border-white/10 bg-primary px-8 pb-8 pt-7 text-white">
           <div className="flex items-center gap-2.5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/10">
+            <div className="flex h-8 w-8 items-center justify-center rounded-md border border-white/20 bg-white/10">
               <Tag className="h-4 w-4 text-white" />
             </div>
-            <span className="text-[0.65rem] font-bold uppercase tracking-[0.18em] text-white/55">
-              Limited Offer
+            <span className="text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-white/70">
+              New account offer
             </span>
           </div>
 
           <h2
             id="promo-popup-title"
-            className="mt-4 text-2xl font-extrabold leading-tight tracking-tight"
+            className="mt-4 text-2xl font-semibold leading-tight tracking-tight"
           >
             Get {PROMO_PERCENT}% Off
             <br />
-            <span className="text-white/65">Your First Order</span>
+            <span className="text-white/75">Your First Order</span>
           </h2>
-          <p className="mt-2 text-sm leading-relaxed text-white/55">
+          <p className="mt-2 text-sm leading-relaxed text-white/65">
             Create a free account to claim your discount — applied automatically at checkout.
           </p>
         </div>
 
-        {/* Body */}
         <div className="px-8 pb-8 pt-6">
-          {/* Code display */}
-          <div className="flex items-center justify-between rounded-xl border-2 border-dashed border-[#0A1628]/20 bg-[#F2F5F8] px-4 py-3">
+          <div className="flex items-center justify-between rounded-md border border-dashed border-primary/25 bg-section-subtle px-4 py-3">
             <div>
-              <p className="text-[0.6rem] font-bold uppercase tracking-widest text-[#0A1628]/45">
+              <p className="text-[0.6rem] font-semibold uppercase tracking-widest text-muted-foreground">
                 Your Code
               </p>
-              <p className="mt-0.5 font-mono text-lg font-extrabold tracking-widest text-[#0A1628]">
+              <p className="mt-0.5 font-mono text-lg font-bold tracking-widest text-navy">
                 {PROMO_CODE}
               </p>
             </div>
             <button
               onClick={copyCode}
-              className="flex items-center gap-1.5 rounded-lg border border-[#0A1628]/15 bg-white px-3 py-1.5 text-xs font-semibold text-[#0A1628] transition hover:border-[#0A1628]/30 hover:shadow-sm"
+              className="flex items-center gap-1.5 rounded-md border border-border bg-white px-3 py-1.5 text-xs font-semibold text-primary transition hover:border-primary/30 hover:shadow-sm"
             >
               {copied ? (
                 <>
-                  <Check className="h-3.5 w-3.5 text-emerald-500" />
+                  <Check className="h-3.5 w-3.5 text-clinical-teal" />
                   Copied
                 </>
               ) : (
@@ -151,19 +144,18 @@ export function PromoPopup() {
             </button>
           </div>
 
-          {/* CTA */}
           <button
             onClick={handleClaim}
-            className="mt-5 flex w-full items-center justify-center rounded-full bg-[#0A1628] px-8 py-3.5 text-sm font-semibold text-white shadow-lg transition-all duration-200 hover:bg-[#132744] hover:shadow-xl active:scale-[0.97]"
+            className="mt-5 flex w-full items-center justify-center rounded-md bg-primary px-8 py-3.5 text-sm font-semibold text-primary-foreground shadow-sm transition-colors hover:bg-primary/90"
           >
             Claim My {PROMO_PERCENT}% Discount →
           </button>
 
-          <p className="mt-3 text-center text-xs text-[#0A1628]/40">
+          <p className="mt-3 text-center text-xs text-muted-foreground">
             Saved to your account after sign-up.{' '}
             <button
               onClick={dismiss}
-              className="underline underline-offset-2 transition-colors hover:text-[#0A1628]/60"
+              className="underline underline-offset-2 transition-colors hover:text-foreground"
             >
               No thanks
             </button>

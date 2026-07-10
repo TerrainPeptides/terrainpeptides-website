@@ -18,7 +18,7 @@ import { useSession, signOut } from 'next-auth/react'
 
 const navLinks = [
   { href: '/', label: 'Home' },
-  { href: '/shop', label: 'Shop' },
+  { href: '/shop', label: 'Catalog' },
   { href: '/affiliates', label: 'Affiliate' },
   { href: '/contact', label: 'Contact' },
   { href: '/faq', label: 'FAQ' },
@@ -26,33 +26,29 @@ const navLinks = [
 
 const TICKER_ITEMS = [
   'Free Shipping on Orders $300+',
-  '99%+ Purity Guaranteed',
-  'Third-Party Tested',
-  'Discreet Packaging',
-  'USA Warehouse',
+  '99%+ Purity — HPLC Verified',
+  'Third-Party Tested COA Included',
+  'Cold-Chain Shipping Available',
+  'USA Warehouse — Fast Delivery',
   'Research Grade Only',
 ] as const
 
-/**
- * One marquee cycle: uppercase labels + → after each item; `pr` matches `gap` so two
- * copies tile seamlessly at translateX(-50%) with no dead navy gap.
- */
 function NavbarTickerPeriod({ duplicate }: { duplicate?: boolean }) {
   return (
     <div
-      className="flex shrink-0 items-center gap-x-6 pr-6 sm:gap-x-8 sm:pr-8 md:gap-x-10 md:pr-10"
+      className="flex shrink-0 items-center gap-x-8 pr-8 sm:gap-x-10 sm:pr-10 md:gap-x-12 md:pr-12"
       aria-hidden={duplicate}
     >
       {TICKER_ITEMS.map((text) => (
         <Fragment key={duplicate ? `d-${text}` : text}>
-          <span className="whitespace-nowrap text-[11px] font-semibold uppercase tracking-[0.12em] text-white sm:text-xs md:text-[13px]">
+          <span className="whitespace-nowrap text-xs font-semibold uppercase tracking-[0.12em] text-white sm:text-[0.8125rem]">
             {text}
           </span>
           <span
-            className="shrink-0 select-none px-1 text-sm font-medium text-white sm:text-[15px] md:text-base"
+            className="shrink-0 select-none text-white/40"
             aria-hidden
           >
-            →
+            |
           </span>
         </Fragment>
       ))}
@@ -67,40 +63,37 @@ export function Navbar() {
 
   return (
     <header className="w-full">
-      {/* Fixed Terrain bar stays visible while scrolling; spacer reserves layout height */}
-      <div className="fixed top-0 left-0 right-0 z-[100] w-full border-b border-slate-200 bg-white">
-        <nav className="mx-auto grid h-[4rem] max-w-7xl grid-cols-[auto_1fr_auto] items-center px-4 sm:h-[4.5rem] sm:px-6 lg:px-8">
+      <div className="fixed top-0 left-0 right-0 z-[100] w-full border-b border-navy/12 bg-white shadow-sm">
+        <nav className="mx-auto grid h-[3.75rem] max-w-7xl grid-cols-[auto_1fr_auto] items-center px-4 sm:h-16 sm:px-6 lg:px-8">
           <Link href="/" className="flex items-center justify-self-start">
             <Image
               src="/images/terrain-logo.png"
               alt="Terrain Peptides"
               width={603}
               height={278}
-              className="h-11 w-auto sm:h-12"
+              className="h-9 w-auto sm:h-10"
               priority
             />
           </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden items-center justify-self-center gap-10 lg:gap-14 md:flex">
+          <div className="hidden items-center justify-self-center gap-3 md:flex lg:gap-5">
             {navLinks.map(link => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="rounded-lg px-3.5 py-2 text-sm font-medium text-slate-800 transition-colors hover:bg-slate-100 hover:text-slate-950"
+                className="rounded-md px-4 py-2 text-[0.9375rem] font-semibold text-navy transition-colors hover:bg-section-clinical hover:text-primary lg:px-5"
               >
                 {link.label}
               </Link>
             ))}
           </div>
 
-          {/* Desktop Actions */}
-          <div className="hidden items-center justify-self-end gap-4 md:flex">
-            <Button variant="ghost" size="icon" className="relative text-slate-800 hover:bg-slate-100 hover:text-slate-950" asChild>
+          <div className="hidden items-center justify-self-end gap-2 md:flex">
+            <Button variant="ghost" size="icon" className="relative text-navy hover:bg-section-clinical hover:text-primary" asChild>
               <Link href="/cart">
                 <ShoppingCart className="h-5 w-5" />
                 {totalItems > 0 && (
-                  <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-[#0A1628] text-xs font-medium text-white">
+                  <span className="absolute -right-0.5 -top-0.5 flex h-4.5 w-4.5 min-w-[1.125rem] items-center justify-center rounded-sm bg-primary text-[10px] font-semibold text-primary-foreground">
                     {totalItems}
                   </span>
                 )}
@@ -110,8 +103,8 @@ export function Navbar() {
             {status === 'loading' ? null : session ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="relative text-slate-800 hover:bg-slate-100 hover:text-slate-950">
-                    <div className="flex h-7 w-7 items-center justify-center rounded-full bg-slate-100 text-xs font-semibold text-slate-800">
+                  <Button variant="ghost" size="icon" className="relative text-navy hover:bg-section-clinical hover:text-primary">
+                    <div className="flex h-7 w-7 items-center justify-center rounded-md border border-navy/20 bg-section-subtle text-xs font-semibold text-navy">
                       {session.user?.name?.[0]?.toUpperCase() ?? session.user?.email?.[0]?.toUpperCase() ?? <User className="h-3.5 w-3.5" />}
                     </div>
                     <span className="sr-only">Account</span>
@@ -139,7 +132,7 @@ export function Navbar() {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <Button variant="ghost" size="icon" className="text-slate-800 hover:bg-slate-100 hover:text-slate-950" asChild>
+              <Button variant="ghost" size="icon" className="text-navy hover:bg-section-clinical hover:text-primary" asChild>
                 <Link href="/auth">
                   <CircleUser className="h-5 w-5" />
                   <span className="sr-only">Sign in</span>
@@ -148,21 +141,20 @@ export function Navbar() {
             )}
           </div>
 
-          {/* Mobile Navigation */}
-          <div className="flex items-center justify-self-end gap-2 md:hidden">
+          <div className="flex items-center justify-self-end gap-1 md:hidden">
             {status === 'loading' ? null : !session ? (
-              <Button variant="ghost" size="icon" className="text-slate-800 hover:bg-slate-100 hover:text-slate-950" asChild>
+              <Button variant="ghost" size="icon" className="text-navy hover:bg-section-clinical" asChild>
                 <Link href="/auth">
                   <CircleUser className="h-5 w-5" />
                   <span className="sr-only">Sign in</span>
                 </Link>
               </Button>
             ) : null}
-            <Button variant="ghost" size="icon" className="relative text-slate-800 hover:bg-slate-100 hover:text-slate-950" asChild>
+            <Button variant="ghost" size="icon" className="relative text-navy hover:bg-section-clinical" asChild>
               <Link href="/cart">
                 <ShoppingCart className="h-5 w-5" />
                 {totalItems > 0 && (
-                  <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-[#0A1628] text-xs font-medium text-white">
+                  <span className="absolute -right-0.5 -top-0.5 flex h-4.5 w-4.5 min-w-[1.125rem] items-center justify-center rounded-sm bg-primary text-[10px] font-semibold text-primary-foreground">
                     {totalItems}
                   </span>
                 )}
@@ -171,27 +163,27 @@ export function Navbar() {
             </Button>
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="text-slate-800 hover:bg-slate-100 hover:text-slate-950">
+                <Button variant="ghost" size="icon" className="text-navy hover:bg-section-clinical">
                   <Menu className="h-5 w-5" />
                   <span className="sr-only">Menu</span>
                 </Button>
               </SheetTrigger>
               <SheetContent side="right" className="w-[300px] bg-background">
                 <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
-                <div className="flex flex-col gap-6 pt-6">
+                <div className="flex flex-col gap-1 pt-6">
                   {navLinks.map(link => (
                     <Link
                       key={link.href}
                       href={link.href}
                       onClick={() => setIsOpen(false)}
-                      className="text-lg font-medium text-foreground/80 transition-colors hover:text-foreground"
+                      className="rounded-md px-3 py-2.5 text-base font-semibold text-navy transition-colors hover:bg-section-clinical hover:text-primary"
                     >
                       {link.label}
                     </Link>
                   ))}
-                  <div className="border-t pt-4">
+                  <div className="mt-4 border-t border-border pt-4">
                     {session ? (
-                      <div className="flex flex-col gap-3">
+                      <div className="flex flex-col gap-3 px-3">
                         <div>
                           <p className="text-sm font-medium">{session.user?.name}</p>
                           <p className="text-xs text-muted-foreground">{session.user?.email}</p>
@@ -208,7 +200,7 @@ export function Navbar() {
                       <Link
                         href="/auth"
                         onClick={() => setIsOpen(false)}
-                        className="text-lg font-medium text-foreground/80 transition-colors hover:text-foreground"
+                        className="block rounded-md px-3 py-2.5 text-base font-semibold text-navy hover:bg-section-clinical hover:text-primary"
                       >
                         Sign In
                       </Link>
@@ -220,13 +212,10 @@ export function Navbar() {
           </div>
         </nav>
       </div>
-      <div
-        className="h-[4rem] shrink-0 sm:h-[4.5rem]"
-        aria-hidden
-      />
+      <div className="h-[3.75rem] shrink-0 sm:h-16" aria-hidden />
 
       <div
-        className="navbar-ticker navbar-ticker--rolling w-full py-2.5 sm:py-3"
+        className="navbar-ticker navbar-ticker--rolling w-full py-2 sm:py-2.5"
         role="region"
         aria-label="Announcements"
       >

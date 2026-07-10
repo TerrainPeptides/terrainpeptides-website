@@ -51,49 +51,50 @@ export function FeaturedProducts({ products }: FeaturedProductsProps) {
   if (!products || products.length === 0) return null
 
   return (
-    <section className="bg-white py-16 sm:py-24">
+    <section className="bg-section-subtle py-14 sm:py-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
-        <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
+        <div className="flex flex-col items-start justify-between gap-4 border-b-2 border-navy/10 pb-6 sm:flex-row sm:items-end">
           <div>
-            <h2 className="text-2xl font-bold tracking-tight text-black sm:text-3xl">
-              Featured Products
+            <p className="clinical-eyebrow">
+              Catalog highlights
+            </p>
+            <h2 className="mt-2 text-2xl font-bold tracking-tight text-navy sm:text-3xl">
+              Featured Compounds
             </h2>
-            <p className="mt-2 text-black/60">
-              Our most popular research compounds, trusted by laboratories worldwide.
+            <p className="mt-2 text-base text-foreground/80">
+              Our most requested research peptides, independently verified for purity.
             </p>
           </div>
-          <Button variant="outline" className="gap-2 border-black/15 text-black hover:bg-black/5" asChild>
+          <Button variant="outline" className="gap-2 border-navy/25 text-navy hover:border-navy/40 hover:bg-section-clinical" asChild>
             <Link href="/shop">
-              View All
+              Full Catalog
               <ArrowRight className="h-4 w-4" />
             </Link>
           </Button>
         </div>
       </div>
 
-      {/* Full-width carousel with edge arrows */}
-      <div className="relative mt-10">
+      <div className="relative mt-8">
         <Button
           variant="outline"
           size="icon"
           onClick={scrollPrev}
           disabled={!canPrev}
-          className="absolute left-3 top-1/2 z-10 h-10 w-10 -translate-y-1/2 rounded-full border-black bg-black text-white shadow-sm transition-colors hover:bg-neutral-900 disabled:opacity-30 sm:left-5 sm:h-12 sm:w-12 md:left-6 lg:left-8"
+          className="absolute left-3 top-1/2 z-10 h-9 w-9 -translate-y-1/2 rounded-md border-navy/15 bg-white text-navy shadow-sm transition-colors hover:border-navy/30 hover:bg-section-clinical disabled:opacity-30 sm:left-5 md:left-6 lg:left-8"
           aria-label="Previous slide"
         >
-          <ChevronLeft className="h-5 w-5 sm:h-6 sm:w-6" />
+          <ChevronLeft className="h-5 w-5" />
         </Button>
 
         <div
-          className="overflow-hidden px-14 sm:px-[4.5rem] md:px-[5.5rem] lg:px-[6.5rem]"
+          className="overflow-hidden px-12 sm:px-[4rem] md:px-[5rem] lg:px-[6rem]"
           ref={emblaRef}
         >
-          <div className="flex -ml-4 sm:-ml-6">
+          <div className="flex -ml-4 sm:-ml-5">
             {products.map((product) => (
               <div
                 key={product.id}
-                className="min-w-0 flex-[0_0_100%] pl-4 sm:flex-[0_0_50%] sm:pl-6 lg:flex-[0_0_33.333%] xl:flex-[0_0_25%]"
+                className="min-w-0 flex-[0_0_100%] pl-4 sm:flex-[0_0_50%] sm:pl-5 lg:flex-[0_0_33.333%] xl:flex-[0_0_25%]"
               >
                 <ProductCard product={product} />
               </div>
@@ -106,10 +107,10 @@ export function FeaturedProducts({ products }: FeaturedProductsProps) {
           size="icon"
           onClick={scrollNext}
           disabled={!canNext}
-          className="absolute right-3 top-1/2 z-10 h-10 w-10 -translate-y-1/2 rounded-full border-black bg-black text-white shadow-sm transition-colors hover:bg-neutral-900 disabled:opacity-30 sm:right-5 sm:h-12 sm:w-12 md:right-6 lg:right-8"
+          className="absolute right-3 top-1/2 z-10 h-9 w-9 -translate-y-1/2 rounded-md border-navy/15 bg-white text-navy shadow-sm transition-colors hover:border-navy/30 hover:bg-section-clinical disabled:opacity-30 sm:right-5 md:right-6 lg:right-8"
           aria-label="Next slide"
         >
-          <ChevronRight className="h-5 w-5 sm:h-6 sm:w-6" />
+          <ChevronRight className="h-5 w-5" />
         </Button>
       </div>
     </section>
