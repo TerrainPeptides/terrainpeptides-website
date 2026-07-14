@@ -22,19 +22,17 @@ interface CoaButtonProps {
   compact?: boolean
 }
 
-export function CoaButton({ coaUrl, theme = 'default', compact = false }: CoaButtonProps) {
+export function CoaButton({ coaUrl, theme: _theme = 'default', compact = false }: CoaButtonProps) {
   const [open, setOpen] = useState(false)
   const [email, setEmail] = useState('')
   const [submitting, setSubmitting] = useState(false)
 
-  const isNavy = theme === 'navy'
-  const btnClass = isNavy
-    ? 'border-border/35 text-foreground hover:bg-primary/5'
-    : ''
+  const outlineCoaClass =
+    'mt-0 inline-flex items-center justify-center gap-2 rounded-full border border-terrain bg-transparent px-5 py-3 text-[11px] font-semibold uppercase tracking-[0.12em] text-terrain transition-colors hover:bg-terrain hover:text-white'
 
   const compactClass = compact
-    ? 'rounded-full border border-black/15 px-4 py-3.5 text-sm font-semibold text-primary hover:bg-gray-50 transition-colors'
-    : `mt-4 gap-2 ${btnClass}`
+    ? 'rounded-sm border border-ink/12 px-5 py-4 text-[0.7rem] font-bold uppercase tracking-[0.12em] text-ink transition-colors hover:border-terrain hover:bg-accent sm:min-w-[5.5rem]'
+    : outlineCoaClass
 
   if (coaUrl) {
     return (
@@ -42,13 +40,12 @@ export function CoaButton({ coaUrl, theme = 'default', compact = false }: CoaBut
         <DialogTrigger asChild>
           {compact ? (
             <button type="button" className={compactClass}>
-              CoA
+              COA
             </button>
           ) : (
-            <Button variant="outline" size="sm" className={compactClass}>
-              <FileText className="h-4 w-4" />
-              View Certificate of Analysis
-            </Button>
+            <button type="button" className={outlineCoaClass}>
+              View Latest COA
+            </button>
           )}
         </DialogTrigger>
         <DialogContent
@@ -84,18 +81,12 @@ export function CoaButton({ coaUrl, theme = 'default', compact = false }: CoaBut
           onClick={() => setOpen(true)}
           className={compactClass}
         >
-          CoA
+          COA
         </button>
       ) : (
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => setOpen(true)}
-          className={`mt-4 gap-2 ${btnClass}`}
-        >
-          <FileText className="h-4 w-4" />
-          View Certificate of Analysis
-        </Button>
+        <button type="button" onClick={() => setOpen(true)} className={outlineCoaClass}>
+          View Latest COA
+        </button>
       )}
 
       {open && (

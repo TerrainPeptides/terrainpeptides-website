@@ -8,7 +8,8 @@ export const dynamic = 'force-dynamic'
 
 export const metadata = {
   title: 'Shop | Terrain Peptides',
-  description: 'Browse our complete catalog of premium research peptides by goal: fat loss, skin and collagen, sleep, cognitive support, and performance.',
+  description:
+    'Browse our complete catalog of premium research peptides by goal: fat loss, skin and collagen, sleep, cognitive support, and performance.',
 }
 
 export default async function ShopPage() {
@@ -21,24 +22,26 @@ export default async function ShopPage() {
   })
 
   return (
-    <>
-      <div className="clinical-navy-band bg-section-subtle">
-        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-          <div className="mb-8 pb-6 text-left">
-            <p className="clinical-eyebrow">Research catalog</p>
-            <h1 className="page-title mt-2 text-3xl font-bold sm:text-4xl">
-              All Products
-            </h1>
-            <p className="mt-2 max-w-xl text-base text-foreground/75">
-              Premium research peptides with 99%+ purity — third-party tested, COA included.
-            </p>
-          </div>
-
-          <Suspense fallback={<div className="min-h-[400px] animate-pulse rounded-lg bg-muted" />}>
-            <ShopContent products={products} />
-          </Suspense>
+    <div className="bg-white">
+      <div className="page-hero-dark">
+        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
+          <p className="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-terrain">
+            Research catalog
+          </p>
+          <h1 className="mt-3 text-3xl font-bold tracking-tight text-ink sm:text-4xl">
+            All <span className="orbit-accent">products</span>
+          </h1>
+          <p className="mt-3 max-w-xl text-base text-muted-foreground">
+            99%+ purity research peptides — third-party tested, COA included with every order.
+          </p>
         </div>
       </div>
-    </>
+
+      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+        <Suspense fallback={<div className="min-h-[400px] animate-pulse bg-muted" />}>
+          <ShopContent products={products} />
+        </Suspense>
+      </div>
+    </div>
   )
 }

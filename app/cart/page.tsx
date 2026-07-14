@@ -89,16 +89,18 @@ export default function CartPage() {
 
   if (items.length === 0) {
     return (
-      <div className="min-h-[60vh] bg-section-subtle">
+      <div className="min-h-[60vh] bg-white">
         <div className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center justify-center text-center">
-            <div className="flex h-20 w-20 items-center justify-center rounded-lg border-2 border-border bg-white shadow-sm">
-              <ShoppingBag className="h-10 w-10 text-primary/50" />
+            <div className="flex h-20 w-20 items-center justify-center border border-border bg-white">
+              <ShoppingBag className="h-10 w-10 text-terrain/50" />
             </div>
-            <h1 className="page-title mt-6 text-2xl font-bold">Your cart is empty</h1>
-            <p className="mt-2 text-base text-foreground/75">Browse our catalog and add research compounds to your cart.</p>
+            <h1 className="mt-6 text-2xl font-extrabold text-ink">Your cart is empty</h1>
+            <p className="mt-2 text-base text-muted-foreground">
+              Browse our catalog and add research compounds to your cart.
+            </p>
             <Link href="/shop">
-              <Button className="mt-6 gap-2">
+              <Button className="mt-6 gap-2 rounded-full bg-terrain font-semibold tracking-[0.04em] text-white hover:bg-terrain-deep">
                 Shop Now
                 <ArrowRight className="h-4 w-4" />
               </Button>
@@ -110,12 +112,16 @@ export default function CartPage() {
   }
 
   return (
-    <div className="min-h-screen bg-section-subtle">
-      <div className="clinical-navy-band border-b border-border bg-white">
-        <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-          <p className="clinical-eyebrow">Checkout</p>
-          <h1 className="page-title mt-2 text-3xl font-bold">Shopping Cart</h1>
-          <p className="mt-2 text-base text-foreground/75">
+    <div className="min-h-screen bg-white">
+      <div className="page-hero-dark">
+        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+          <p className="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-terrain">
+            Checkout
+          </p>
+          <h1 className="mt-3 text-3xl font-bold text-ink sm:text-4xl">
+            Shopping <span className="orbit-accent">cart</span>
+          </h1>
+          <p className="mt-2 text-base text-muted-foreground">
             {items.length} {items.length === 1 ? 'item' : 'items'} in your cart
           </p>
         </div>
@@ -133,10 +139,10 @@ export default function CartPage() {
               return (
                 <div
                   key={`${item.product.id}-${item.dosage_variant_id}`}
-                  className="flex gap-5 rounded-lg border-2 border-border bg-white p-5 shadow-sm"
+                  className="flex gap-5 border border-border bg-white p-5"
                 >
                   {/* Product image */}
-                  <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-lg border border-border/50 bg-muted/30">
+                  <div className="relative h-24 w-24 shrink-0 overflow-hidden border border-border bg-[#f4f6f5]">
                     {imageSrc ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
@@ -153,20 +159,20 @@ export default function CartPage() {
                   </div>
 
                   {/* Details */}
-                  <div className="flex flex-1 flex-col gap-2 min-w-0">
-                    <div className="flex items-start justify-between gap-2">
+                  <div className="flex min-w-0 flex-1 flex-col gap-2">
+                    <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
                         <Link
                           href={`/product/${item.product.slug}`}
-                          className="text-base font-bold text-navy hover:text-primary hover:underline"
+                          className="text-base font-bold text-ink hover:text-terrain-deep"
                         >
                           {item.product.name}
                         </Link>
                         {dose && (
-                          <p className="text-sm text-muted-foreground">{dose}</p>
+                          <p className="mt-0.5 font-mono text-[0.7rem] text-ink/40">{dose}</p>
                         )}
                         {showVials && (
-                          <div className="mt-1.5 inline-flex items-center gap-1.5 rounded-md bg-primary/8 px-2.5 py-1 text-xs font-semibold text-foreground">
+                          <div className="mt-1.5 inline-flex items-center gap-1.5 bg-accent px-2.5 py-1 text-xs font-semibold text-terrain-deep">
                             <Package className="h-3.5 w-3.5 shrink-0" />
                             {item.quantity === 1
                               ? '1 research vial'
@@ -174,31 +180,30 @@ export default function CartPage() {
                           </div>
                         )}
                       </div>
-                      <p className="shrink-0 text-base font-bold tabular-nums text-foreground">
+                      <p className="shrink-0 font-mono text-lg font-medium tabular-nums text-terrain-deep [font-feature-settings:'tnum']">
                         {formatPrice(lineTotal)}
                       </p>
                     </div>
 
-                    {/* Quantity controls + remove */}
                     <div className="mt-auto flex items-center justify-between">
-                      <div className="flex items-center gap-1 rounded-lg border border-border bg-muted/30 p-0.5">
+                      <div className="inline-flex items-stretch border border-border bg-white">
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="h-8 w-8 rounded-md hover:bg-background"
+                          className="h-9 w-9 rounded-none hover:bg-section-subtle"
                           onClick={() =>
                             updateQuantity(item.product.id, item.quantity - 1, item.dosage_variant_id)
                           }
                         >
                           <Minus className="h-3.5 w-3.5" />
                         </Button>
-                        <span className="w-8 text-center text-sm font-semibold tabular-nums">
+                        <span className="flex w-9 items-center justify-center border-x border-border text-sm font-bold tabular-nums">
                           {item.quantity}
                         </span>
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="h-8 w-8 rounded-md hover:bg-background"
+                          className="h-9 w-9 rounded-none hover:bg-section-subtle"
                           onClick={() =>
                             updateQuantity(item.product.id, item.quantity + 1, item.dosage_variant_id)
                           }
@@ -241,7 +246,7 @@ export default function CartPage() {
           {/* ── Order Summary ─────────────────────────────────────── */}
           <div>
             <div className="sticky top-24 rounded-lg border-2 border-border bg-white p-6 shadow-sm">
-              <h2 className="mb-5 text-lg font-bold text-navy">Order Summary</h2>
+              <h2 className="mb-5 text-lg font-bold text-ink">Order Summary</h2>
 
               {/* Referral code */}
               {!referralCode ? (
@@ -307,14 +312,14 @@ export default function CartPage() {
 
               <div className="flex justify-between">
                 <span className="text-base font-bold text-foreground">Estimated Total</span>
-                <span className="text-base font-bold tabular-nums text-foreground">
+                <span className="font-mono text-base font-medium tabular-nums text-terrain-deep [font-feature-settings:'tnum']">
                   {formatPrice(totalWithShipping)}
                 </span>
               </div>
               <p className="mt-1 text-xs text-muted-foreground">Tax (if applicable) calculated at checkout</p>
 
               <Link href="/checkout" className="mt-5 block">
-                <Button className="w-full gap-2 bg-primary hover:bg-primary/90" size="lg">
+                <Button className="w-full gap-2 rounded-full bg-terrain font-semibold tracking-[0.04em] text-white hover:bg-terrain-deep" size="lg">
                   Proceed to Checkout
                   <ArrowRight className="h-4 w-4" />
                 </Button>

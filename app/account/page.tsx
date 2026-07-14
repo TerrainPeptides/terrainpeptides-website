@@ -76,17 +76,20 @@ interface AffiliateOrder {
 }
 
 const STATUS_COLORS: Record<string, string> = {
-  pending: 'bg-yellow-100 text-yellow-700',
-  processing: 'bg-blue-100 text-blue-700',
-  shipped: 'bg-purple-100 text-purple-700',
-  delivered: 'bg-green-100 text-green-700',
-  cancelled: 'bg-red-100 text-red-700',
+  pending: 'bg-amber-50 text-amber-700',
+  processing: 'bg-terrain-muted text-terrain-deep',
+  shipped: 'bg-accent text-terrain-deep',
+  delivered: 'bg-terrain/15 text-terrain-deep',
+  cancelled: 'bg-red-50 text-red-700',
 }
+
+const FIELD =
+  'w-full rounded-xl border border-border bg-section-subtle px-3 py-2.5 text-sm text-ink outline-none transition focus:border-terrain focus:ring-2 focus:ring-terrain/15'
 
 function AccountPageFallback() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#f5f5f5]">
-      <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-navy" />
+    <div className="flex min-h-screen items-center justify-center bg-white">
+      <div className="h-8 w-8 animate-spin rounded-full border-4 border-border border-t-terrain" />
     </div>
   )
 }
@@ -292,8 +295,8 @@ function AccountPageContent() {
 
   if (status === 'loading' || !session) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#f5f5f5]">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-navy" />
+      <div className="flex min-h-screen items-center justify-center bg-white">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-border border-t-terrain" />
       </div>
     )
   }
@@ -302,32 +305,34 @@ function AccountPageContent() {
   const initial = (session.user?.name?.[0] ?? session.user?.email?.[0] ?? 'U').toUpperCase()
 
   return (
-    <div className="min-h-screen bg-[#f5f5f5]">
-      {/* ── Dark hero header ─────────────────────────────── */}
-      <div className="bg-gradient-to-b from-[#0a0a0a] to-[#1a1a1a] px-4 py-10 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-3xl">
+    <div className="min-h-screen bg-white">
+      <div className="page-hero-dark">
+        <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6 lg:px-8">
           <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:gap-6">
-            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-white/15 text-xl font-bold text-white ring-2 ring-white/20">
+            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-terrain text-xl font-bold text-white">
               {initial}
             </div>
             <div className="flex-1">
-              <h1 className="text-2xl font-bold text-white">Hi, {userName}</h1>
-              <p className="mt-0.5 text-sm text-white/50">{session.user?.email}</p>
-              <p className="mt-2 text-sm text-white/45">
-                View your order history and track your purchases.
+              <p className="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-terrain">
+                Account
               </p>
-              <div className="mt-4 flex flex-wrap gap-3">
-                <Link
-                  href="/shop"
-                  className="rounded-full border border-white/20 bg-transparent px-5 py-2 text-sm font-medium text-white transition hover:bg-white/10"
-                >
+              <h1 className="mt-2 text-2xl font-bold text-ink sm:text-3xl">
+                Hi, <span className="orbit-accent">{userName}</span>
+              </h1>
+              <p className="mt-1 text-sm text-muted-foreground">{session.user?.email}</p>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Manage your profile, addresses, discounts, and affiliate earnings.
+              </p>
+              <div className="mt-5 flex flex-wrap gap-3">
+                <Link href="/shop" className="btn-terrain !px-5 !py-2.5 text-sm">
                   Continue Shopping
                 </Link>
                 <button
+                  type="button"
                   onClick={() => signOut({ callbackUrl: '/' })}
-                  className="flex items-center gap-1.5 rounded-full border border-white/20 bg-transparent px-5 py-2 text-sm font-medium text-white/80 transition hover:bg-white/10"
+                  className="btn-ghost-ink !px-5 !py-2.5 text-sm"
                 >
-                  <LogOut className="h-3.5 w-3.5" />
+                  <LogOut className="mr-1.5 h-3.5 w-3.5" />
                   Sign Out
                 </button>
               </div>
@@ -336,60 +341,60 @@ function AccountPageContent() {
         </div>
       </div>
 
-      {/* ── Tab cards ────────────────────────────────────── */}
-      <div className="mx-auto mt-8 max-w-3xl px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           {([
-            { id: 'profile', icon: User, label: 'Profile', sub: 'Edit your details' },
-            { id: 'addresses', icon: MapPin, label: 'Addresses', sub: 'Manage addresses' },
+            { id: 'profile', icon: User, label: 'Profile', sub: 'Your details' },
+            { id: 'addresses', icon: MapPin, label: 'Addresses', sub: 'Shipping' },
             { id: 'discounts', icon: Tag, label: 'Discounts', sub: `${savedDiscounts.length} saved`, badge: savedDiscounts.length > 0 },
-            { id: 'affiliate', icon: Users, label: 'Affiliate', sub: affiliateCode ? `Code: ${affiliateCode.code}` : 'Earn commissions', badge: false },
+            { id: 'affiliate', icon: Users, label: 'Affiliate', sub: affiliateCode ? affiliateCode.code : 'Partner', badge: false },
           ] as const).map(({ id, icon: Icon, label, sub, badge }) => (
             <button
               key={id}
+              type="button"
               onClick={() => setActiveTab(id as Tab)}
               className={`relative flex flex-col items-start gap-1.5 rounded-2xl border p-4 text-left transition ${
                 activeTab === id
-                  ? 'border-[#6c5ce7] bg-[#6c5ce7] text-white'
-                  : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300 hover:shadow-sm'
+                  ? 'border-terrain bg-terrain text-white '
+                  : 'border-border bg-white text-ink hover:border-terrain/40'
               }`}
             >
               {badge && activeTab !== id && (
-                <span className="absolute right-3 top-3 flex h-2 w-2 rounded-full bg-emerald-500" />
+                <span className="absolute right-3 top-3 flex h-2 w-2 rounded-full bg-terrain" />
               )}
-              <Icon className="h-5 w-5 opacity-80" />
+              <Icon className={`h-5 w-5 ${activeTab === id ? 'text-white' : 'text-terrain'}`} />
               <span className="text-sm font-semibold">{label}</span>
-              <span className={`text-xs ${activeTab === id ? 'text-white/70' : 'text-gray-400'}`}>{sub}</span>
+              <span className={`text-xs ${activeTab === id ? 'text-white/75' : 'text-muted-foreground'}`}>
+                {sub}
+              </span>
             </button>
           ))}
         </div>
 
-        {/* ── Profile tab ──────────────────────────────── */}
         {activeTab === 'profile' && (
-          <div className="mt-5 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-            <h2 className="mb-4 text-base font-semibold text-gray-900">Your Profile</h2>
+          <div className="mt-5 rounded-2xl border border-border bg-white p-6">
+            <h2 className="mb-4 text-base font-semibold text-ink">Your Profile</h2>
             <div className="space-y-3">
-              <div className="rounded-xl bg-gray-50 px-4 py-3">
-                <p className="text-xs text-gray-400">Name</p>
-                <p className="mt-0.5 text-sm font-medium text-gray-800">{session.user?.name ?? '—'}</p>
+              <div className="rounded-xl border border-border bg-section-subtle px-4 py-3">
+                <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">Name</p>
+                <p className="mt-1 text-sm font-medium text-ink">{session.user?.name ?? '—'}</p>
               </div>
-              <div className="rounded-xl bg-gray-50 px-4 py-3">
-                <p className="text-xs text-gray-400">Email</p>
-                <p className="mt-0.5 text-sm font-medium text-gray-800">{session.user?.email}</p>
+              <div className="rounded-xl border border-border bg-section-subtle px-4 py-3">
+                <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">Email</p>
+                <p className="mt-1 text-sm font-medium text-ink">{session.user?.email}</p>
               </div>
             </div>
           </div>
         )}
 
-        {/* ── Addresses tab ────────────────────────────── */}
         {activeTab === 'addresses' && (
-          <div className="mt-5 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+          <div className="mt-5 rounded-2xl border border-border bg-white p-6">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-base font-semibold text-gray-900">Shipping Addresses</h2>
-                <p className="mt-0.5 text-xs text-gray-400">
+                <h2 className="text-base font-semibold text-ink">Shipping Addresses</h2>
+                <p className="mt-0.5 text-xs text-muted-foreground">
                   You can update your shipping address on the{' '}
-                  <Link href="/checkout" className="text-[#6c5ce7] hover:underline">checkout page</Link>
+                  <Link href="/checkout" className="font-medium text-terrain-deep hover:underline">checkout page</Link>
                   . Saving your address will make future checkouts quicker.
                 </p>
               </div>
@@ -398,37 +403,40 @@ function AccountPageContent() {
             <div className="mt-5 space-y-3">
               {addressLoading ? (
                 <div className="flex justify-center py-6">
-                  <div className="h-5 w-5 animate-spin rounded-full border-2 border-gray-200 border-t-[#6c5ce7]" />
+                  <div className="h-5 w-5 animate-spin rounded-full border-2 border-border border-t-terrain" />
                 </div>
               ) : addresses.length === 0 ? (
                 <button
+                  type="button"
                   onClick={() => setShowAddModal(true)}
-                  className="flex w-full flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-gray-200 py-8 text-gray-400 transition hover:border-gray-300 hover:text-gray-500"
+                  className="flex w-full flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-border py-8 text-muted-foreground transition hover:border-terrain hover:text-terrain-deep"
                 >
                   <Plus className="h-6 w-6" />
-                  <span className="text-sm">New address</span>
+                  <span className="text-sm font-medium">New address</span>
                 </button>
               ) : (
                 <>
                   {addresses.map(addr => (
-                    <div key={addr.id} className="flex items-start justify-between rounded-xl border border-gray-100 bg-gray-50 p-4">
-                      <div className="text-sm text-gray-700">
+                    <div key={addr.id} className="flex items-start justify-between rounded-xl border border-border bg-section-subtle p-4">
+                      <div className="text-sm text-ink">
                         <p className="font-medium">{addr.first_name} {addr.last_name}</p>
-                        <p className="text-gray-500">{addr.address1}{addr.address2 ? `, ${addr.address2}` : ''}</p>
-                        <p className="text-gray-500">{addr.city}{addr.province ? `, ${addr.province}` : ''} {addr.postal_code}</p>
-                        <p className="text-gray-500">{addr.country}</p>
+                        <p className="text-muted-foreground">{addr.address1}{addr.address2 ? `, ${addr.address2}` : ''}</p>
+                        <p className="text-muted-foreground">{addr.city}{addr.province ? `, ${addr.province}` : ''} {addr.postal_code}</p>
+                        <p className="text-muted-foreground">{addr.country}</p>
                       </div>
                       <button
+                        type="button"
                         onClick={() => handleDeleteAddress(addr.id)}
-                        className="ml-3 shrink-0 text-gray-300 transition hover:text-red-400"
+                        className="ml-3 shrink-0 text-muted-foreground transition hover:text-red-500"
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>
                     </div>
                   ))}
                   <button
+                    type="button"
                     onClick={() => setShowAddModal(true)}
-                    className="flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-gray-200 py-3 text-sm text-gray-400 transition hover:border-gray-300 hover:text-gray-500"
+                    className="flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-border py-3 text-sm text-muted-foreground transition hover:border-terrain hover:text-terrain-deep"
                   >
                     <Plus className="h-4 w-4" />
                     Add address
@@ -439,20 +447,19 @@ function AccountPageContent() {
           </div>
         )}
 
-        {/* ── Discounts tab ────────────────────────────── */}
         {activeTab === 'discounts' && (
-          <div className="mt-5 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+          <div className="mt-5 rounded-2xl border border-border bg-white p-6">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-base font-semibold text-gray-900">Your Discount Codes</h2>
-                <p className="mt-0.5 text-xs text-gray-400">
+                <h2 className="text-base font-semibold text-ink">Your Discount Codes</h2>
+                <p className="mt-0.5 text-xs text-muted-foreground">
                   Codes are applied automatically to your cart when you click &quot;Apply to Cart&quot;.
                 </p>
               </div>
             </div>
 
             {appliedCode && (
-              <div className="mt-4 flex items-center gap-2 rounded-xl bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+              <div className="mt-4 flex items-center gap-2 rounded-xl border border-terrain/25 bg-terrain/10 px-4 py-3 text-sm text-terrain-deep">
                 <Check className="h-4 w-4 shrink-0" />
                 <span>
                   <strong>{appliedCode}</strong> applied to your cart!
@@ -462,7 +469,7 @@ function AccountPageContent() {
 
             <div className="mt-5 space-y-3">
               {savedDiscounts.length === 0 ? (
-                <div className="flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-gray-200 py-10 text-center text-gray-400">
+                <div className="flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-border py-10 text-center text-muted-foreground">
                   <Tag className="h-8 w-8 opacity-40" />
                   <p className="text-sm font-medium">No discount codes yet</p>
                   <p className="text-xs">Discount codes you claim will appear here.</p>
@@ -471,35 +478,37 @@ function AccountPageContent() {
                 savedDiscounts.map((d) => (
                   <div
                     key={d.code}
-                    className="flex items-center justify-between rounded-xl border border-gray-100 bg-gray-50 p-4"
+                    className="flex flex-col gap-3 rounded-xl border border-border bg-section-subtle p-4 sm:flex-row sm:items-center sm:justify-between"
                   >
                     <div>
-                      <div className="flex items-center gap-2">
-                        <span className="font-mono text-base font-extrabold tracking-widest text-primary">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="font-mono text-base font-bold tracking-widest text-terrain-deep">
                           {d.code}
                         </span>
-                        <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[0.65rem] font-bold text-emerald-700">
+                        <span className="rounded-full bg-terrain/15 px-2 py-0.5 text-[0.65rem] font-bold text-terrain-deep">
                           {d.percent}% OFF
                         </span>
                       </div>
-                      <p className="mt-0.5 text-xs text-gray-400">
+                      <p className="mt-0.5 text-xs text-muted-foreground">
                         Claimed {new Date(d.claimedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                       </p>
                     </div>
                     <div className="flex items-center gap-2">
                       <button
+                        type="button"
                         onClick={() => copyDiscountCode(d.code)}
-                        className="flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs font-semibold text-gray-600 transition hover:border-gray-300 hover:shadow-sm"
+                        className="flex items-center gap-1.5 rounded-full border border-border bg-white px-3 py-1.5 text-xs font-semibold text-ink transition hover:border-terrain"
                       >
                         {copiedCode === d.code ? (
-                          <><Check className="h-3.5 w-3.5 text-emerald-500" />Copied</>
+                          <><Check className="h-3.5 w-3.5 text-terrain" />Copied</>
                         ) : (
                           <><Copy className="h-3.5 w-3.5" />Copy</>
                         )}
                       </button>
                       <button
+                        type="button"
                         onClick={() => applyToCart(d.code, d.percent)}
-                        className="flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-navy-light"
+                        className="flex items-center gap-1.5 rounded-full bg-terrain px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-terrain-deep"
                       >
                         <ShoppingCart className="h-3.5 w-3.5" />
                         Apply to Cart
@@ -516,17 +525,17 @@ function AccountPageContent() {
         {activeTab === 'affiliate' && (
           <div className="mt-5 space-y-5">
             {/* Hero Banner */}
-            <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+            <div className="overflow-hidden rounded-2xl border border-border bg-white ">
               <div className="grid md:grid-cols-2">
                 {/* Left: text */}
                 <div className="flex flex-col justify-center p-7 sm:p-8">
-                  <p className="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-[#6c5ce7]/70">
+                  <p className="font-mono text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-terrain">
                     Partner Program
                   </p>
-                  <h2 className="mt-2 text-2xl font-extrabold leading-snug text-gray-900 sm:text-3xl">
-                    Partner with premium<br />research peptides
+                  <h2 className="mt-2 text-2xl font-bold leading-snug text-ink sm:text-3xl">
+                    Partner with premium<br />research <span className="orbit-accent">peptides</span>
                   </h2>
-                  <p className="mt-3 text-sm leading-relaxed text-gray-500">
+                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
                     Earn 10% commission on every order referred through your unique code.
                   </p>
                   <div className="mt-5 grid grid-cols-2 gap-x-6 gap-y-4">
@@ -537,8 +546,8 @@ function AccountPageContent() {
                       { value: 'Monthly', label: 'Payouts via bank deposit' },
                     ].map(s => (
                       <div key={s.label}>
-                        <p className="text-lg font-extrabold text-gray-900">{s.value}</p>
-                        <p className="text-[0.7rem] font-medium text-gray-400">{s.label}</p>
+                        <p className="text-lg font-extrabold text-ink">{s.value}</p>
+                        <p className="text-[0.7rem] font-medium text-muted-foreground">{s.label}</p>
                       </div>
                     ))}
                   </div>
@@ -546,7 +555,7 @@ function AccountPageContent() {
                     <div className="mt-6">
                       <button
                         onClick={() => document.getElementById('claim-code-input')?.focus()}
-                        className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-navy-light"
+                        className="inline-flex items-center gap-2 rounded-full bg-terrain px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-terrain-deep"
                       >
                         Become a Partner →
                       </button>
@@ -554,7 +563,7 @@ function AccountPageContent() {
                   )}
                 </div>
                 {/* Right: hero image */}
-                <div className="relative flex items-center justify-center overflow-hidden bg-[#eef1f7] p-6">
+                <div className="relative flex items-center justify-center overflow-hidden bg-section-subtle p-6">
                   <Image
                     src="/images/affiliate-hero.png"
                     alt="Affiliate earnings"
@@ -569,13 +578,13 @@ function AccountPageContent() {
 
             {affiliateLoading ? (
               <div className="flex justify-center py-10">
-                <div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-200 border-t-[#6c5ce7]" />
+                <div className="h-6 w-6 animate-spin rounded-full border-2 border-border border-t-terrain" />
               </div>
             ) : !affiliateCode ? (
               /* Code Claim Form */
-              <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-                <h3 className="text-base font-semibold text-gray-900">Claim your referral code</h3>
-                <p className="mt-1 text-sm text-gray-400">
+              <div className="rounded-2xl border border-border bg-white p-6 ">
+                <h3 className="text-base font-semibold text-ink">Claim your referral code</h3>
+                <p className="mt-1 text-sm text-muted-foreground">
                   Choose a unique code — customers will use it for 10% off their order and you earn 10% commission.
                 </p>
                 <form onSubmit={handleClaimCode} className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-start">
@@ -585,7 +594,7 @@ function AccountPageContent() {
                       placeholder="YOURCODE"
                       value={claimInput}
                       onChange={e => { setClaimInput(e.target.value.toUpperCase()); setClaimError('') }}
-                      className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 font-mono text-sm font-semibold uppercase tracking-widest text-gray-800 outline-none transition placeholder:font-normal placeholder:tracking-normal placeholder:text-gray-400 focus:border-[#6c5ce7] focus:ring-2 focus:ring-[#6c5ce7]/10"
+                      className="w-full rounded-xl border border-border bg-section-subtle px-4 py-3 font-mono text-sm font-semibold uppercase tracking-widest text-ink outline-none transition placeholder:font-normal placeholder:tracking-normal placeholder:text-muted-foreground focus:border-terrain focus:ring-2 focus:ring-terrain/15"
                       maxLength={20}
                       required
                     />
@@ -596,19 +605,19 @@ function AccountPageContent() {
                   <button
                     type="submit"
                     disabled={claimLoading || claimInput.length < 3}
-                    className="flex items-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-white transition hover:bg-navy-light disabled:opacity-50"
+                    className="flex items-center gap-2 rounded-full bg-terrain px-6 py-3 text-sm font-semibold text-white transition hover:bg-terrain-deep disabled:opacity-50"
                   >
                     {claimLoading ? <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/30 border-t-white" /> : <Link2 className="h-3.5 w-3.5" />}
                     Claim Code
                   </button>
                 </form>
                 <div className="mt-3 flex items-center gap-3">
-                  <span className="text-xs text-gray-400">or</span>
+                  <span className="text-xs text-muted-foreground">or</span>
                   <button
                     type="button"
                     onClick={autoGenerateCode}
                     disabled={autoGenerating}
-                    className="text-xs font-semibold text-[#6c5ce7] hover:underline disabled:opacity-50"
+                    className="text-xs font-semibold text-terrain-deep hover:underline disabled:opacity-50"
                   >
                     {autoGenerating ? 'Generating...' : 'Auto-generate a code for me'}
                   </button>
@@ -620,64 +629,64 @@ function AccountPageContent() {
                 {/* Code + earnings */}
                 <div className="grid gap-4 sm:grid-cols-3">
                   {/* Your code card */}
-                  <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:col-span-1">
-                    <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">Your Code</p>
-                    <p className="mt-1.5 font-mono text-2xl font-extrabold tracking-widest text-primary">
+                  <div className="rounded-2xl border border-border bg-white p-5  sm:col-span-1">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Your Code</p>
+                    <p className="mt-1.5 font-mono text-2xl font-bold tracking-widest text-terrain-deep">
                       {affiliateCode.code}
                     </p>
-                    <p className="mt-1 text-xs text-gray-400">{affiliateCode.discount_percent}% off for customers</p>
+                    <p className="mt-1 text-xs text-muted-foreground">{affiliateCode.discount_percent}% off for customers</p>
                     <button
                       onClick={() => copyAffiliateCode(affiliateCode.code)}
-                      className="mt-3 flex items-center gap-1.5 rounded-lg border border-gray-200 bg-gray-50 px-3 py-1.5 text-xs font-semibold text-gray-600 transition hover:border-gray-300 hover:shadow-sm"
+                      className="mt-3 flex items-center gap-1.5 rounded-lg border border-border bg-section-subtle px-3 py-1.5 text-xs font-semibold text-ink/70 transition hover:border-terrain/40 hover:"
                     >
-                      {copiedAffiliate ? <><Check className="h-3.5 w-3.5 text-emerald-500" />Copied!</> : <><Copy className="h-3.5 w-3.5" />Copy Code</>}
+                      {copiedAffiliate ? <><Check className="h-3.5 w-3.5 text-terrain" />Copied!</> : <><Copy className="h-3.5 w-3.5" />Copy Code</>}
                     </button>
                   </div>
 
                   {/* Withdrawable Funds */}
-                  <div className="rounded-2xl border border-emerald-100 bg-emerald-50 p-5 shadow-sm">
+                  <div className="rounded-2xl border border-terrain/20 bg-terrain/10 p-5 ">
                     <div className="flex items-start justify-between">
                       <div>
-                        <p className="text-xs font-semibold uppercase tracking-wide text-emerald-600">Withdrawable Funds</p>
-                        <p className="mt-1.5 text-2xl font-extrabold text-emerald-700">
+                        <p className="text-xs font-semibold uppercase tracking-wide text-terrain-deep">Withdrawable Funds</p>
+                        <p className="mt-1.5 text-2xl font-extrabold text-terrain-deep">
                           ${((affiliateEarned - affiliatePaid) / 100).toFixed(2)}
                         </p>
-                        <p className="mt-1 text-xs text-emerald-600/70">Available for withdrawal</p>
+                        <p className="mt-1 text-xs text-terrain-deep/70">Available for withdrawal</p>
                       </div>
-                      <DollarSign className="h-8 w-8 text-emerald-400/50" />
+                      <DollarSign className="h-8 w-8 text-terrain/40" />
                     </div>
                   </div>
 
                   {/* Funds Received */}
-                  <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+                  <div className="rounded-2xl border border-border bg-white p-5 ">
                     <div className="flex items-start justify-between">
                       <div>
-                        <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">Funds Received</p>
-                        <p className="mt-1.5 text-2xl font-extrabold text-gray-900">
+                        <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Funds Received</p>
+                        <p className="mt-1.5 text-2xl font-extrabold text-ink">
                           ${(affiliatePaid / 100).toFixed(2)}
                         </p>
-                        <p className="mt-1 text-xs text-gray-400">Total paid out</p>
+                        <p className="mt-1 text-xs text-muted-foreground">Total paid out</p>
                       </div>
-                      <TrendingUp className="h-8 w-8 text-gray-300" />
+                      <TrendingUp className="h-8 w-8 text-muted-foreground/50" />
                     </div>
                   </div>
                 </div>
 
                 {/* Payouts Section */}
-                <div className="rounded-2xl border border-gray-200 bg-white shadow-sm">
-                  <div className="flex items-center gap-2.5 border-b border-gray-100 px-6 py-4">
-                    <DollarSign className="h-4 w-4 text-gray-400" />
-                    <h3 className="text-sm font-semibold text-gray-900">Payouts</h3>
+                <div className="rounded-2xl border border-border bg-white ">
+                  <div className="flex items-center gap-2.5 border-b border-border px-6 py-4">
+                    <DollarSign className="h-4 w-4 text-muted-foreground" />
+                    <h3 className="text-sm font-semibold text-ink">Payouts</h3>
                   </div>
-                  <div className="divide-y divide-gray-50">
+                  <div className="divide-y divide-border">
                     <div className="flex items-center justify-between px-6 py-4">
                       <div className="flex items-center gap-3">
                         <span className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-100">
                           <Clock className="h-4 w-4 text-amber-600" />
                         </span>
                         <div>
-                          <p className="text-sm font-medium text-gray-900">Payouts Being Confirmed</p>
-                          <p className="text-xs text-gray-400">Earnings from orders awaiting payment confirmation</p>
+                          <p className="text-sm font-medium text-ink">Payouts Being Confirmed</p>
+                          <p className="text-xs text-muted-foreground">Earnings from orders awaiting payment confirmation</p>
                         </div>
                       </div>
                       <p className="text-sm font-semibold text-amber-600">
@@ -691,15 +700,15 @@ function AccountPageContent() {
                     </div>
                     <div className="flex items-center justify-between px-6 py-4">
                       <div className="flex items-center gap-3">
-                        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100">
-                          <DollarSign className="h-4 w-4 text-emerald-600" />
+                        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-terrain/15">
+                          <DollarSign className="h-4 w-4 text-terrain-deep" />
                         </span>
                         <div>
-                          <p className="text-sm font-medium text-gray-900">Withdrawable Funds</p>
-                          <p className="text-xs text-gray-400">Commission from confirmed orders, ready for payout</p>
+                          <p className="text-sm font-medium text-ink">Withdrawable Funds</p>
+                          <p className="text-xs text-muted-foreground">Commission from confirmed orders, ready for payout</p>
                         </div>
                       </div>
-                      <p className="text-sm font-semibold text-emerald-600">
+                      <p className="text-sm font-semibold text-terrain-deep">
                         ${((affiliateEarned - affiliatePaid) / 100).toFixed(2)}
                       </p>
                     </div>
@@ -707,38 +716,38 @@ function AccountPageContent() {
                 </div>
 
                 {/* Orders through code */}
-                <div className="rounded-2xl border border-gray-200 bg-white shadow-sm">
-                  <div className="flex items-center gap-2.5 border-b border-gray-100 px-6 py-4">
-                    <Users className="h-4 w-4 text-gray-400" />
-                    <h3 className="text-sm font-semibold text-gray-900">Orders via your code</h3>
-                    <span className="ml-auto text-xs text-gray-400">{affiliateOrders.length} total</span>
+                <div className="rounded-2xl border border-border bg-white ">
+                  <div className="flex items-center gap-2.5 border-b border-border px-6 py-4">
+                    <Users className="h-4 w-4 text-muted-foreground" />
+                    <h3 className="text-sm font-semibold text-ink">Orders via your code</h3>
+                    <span className="ml-auto text-xs text-muted-foreground">{affiliateOrders.length} total</span>
                   </div>
                   {affiliateOrders.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-12 text-center">
-                      <Users className="h-10 w-10 text-gray-200" strokeWidth={1.5} />
-                      <p className="mt-3 text-sm font-medium text-gray-500">No orders yet</p>
-                      <p className="mt-1 text-xs text-gray-400">Share your code and start earning commissions.</p>
+                      <Users className="h-10 w-10 text-muted-foreground/30" strokeWidth={1.5} />
+                      <p className="mt-3 text-sm font-medium text-muted-foreground">No orders yet</p>
+                      <p className="mt-1 text-xs text-muted-foreground">Share your code and start earning commissions.</p>
                     </div>
                   ) : (
-                    <div className="divide-y divide-gray-50">
+                    <div className="divide-y divide-border">
                       {affiliateOrders.map(order => (
                         <div key={order.id} className="flex items-center justify-between px-6 py-4">
                           <div>
-                            <p className="text-sm font-medium text-gray-900">#{order.order_number}</p>
-                            <p className="text-xs text-gray-400">{order.email}</p>
-                            <p className="text-xs text-gray-400">
+                            <p className="text-sm font-medium text-ink">#{order.order_number}</p>
+                            <p className="text-xs text-muted-foreground">{order.email}</p>
+                            <p className="text-xs text-muted-foreground">
                               {new Date(order.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                             </p>
                           </div>
                           <div className="text-right">
-                            <p className="text-sm font-semibold text-gray-900">${(order.total_cents / 100).toFixed(2)}</p>
-                            <p className="text-xs font-medium text-emerald-600">
+                            <p className="text-sm font-semibold text-ink">${(order.total_cents / 100).toFixed(2)}</p>
+                            <p className="text-xs font-medium text-terrain-deep">
                               +${((order.total_cents * 0.1) / 100).toFixed(2)} commission
                             </p>
                             <span className={`inline-block rounded-full px-2 py-0.5 text-xs font-medium ${
                               order.payment_status === 'paid'
-                                ? 'bg-emerald-100 text-emerald-700'
-                                : 'bg-gray-100 text-gray-500'
+                                ? 'bg-terrain/15 text-terrain-deep'
+                                : 'bg-section-subtle text-muted-foreground'
                             }`}>
                               {order.payment_status}
                             </span>
@@ -754,54 +763,54 @@ function AccountPageContent() {
         )}
 
         {/* ── Orders ───────────────────────────────────── */}
-        <div className="mb-12 mt-5 rounded-2xl border border-gray-200 bg-white shadow-sm">
-          <div className="flex items-center gap-2.5 border-b border-gray-100 px-6 py-4">
-            <ShoppingBag className="h-4 w-4 text-gray-400" />
-            <h2 className="text-sm font-semibold text-gray-900">Your Orders</h2>
-            <span className="ml-auto text-xs text-gray-400">
+        <div className="mb-12 mt-5 rounded-2xl border border-border bg-white ">
+          <div className="flex items-center gap-2.5 border-b border-border px-6 py-4">
+            <ShoppingBag className="h-4 w-4 text-muted-foreground" />
+            <h2 className="text-sm font-semibold text-ink">Your Orders</h2>
+            <span className="ml-auto text-xs text-muted-foreground">
               {ordersLoading ? '...' : `${orders.length} order${orders.length !== 1 ? 's' : ''}`}
             </span>
           </div>
 
           {ordersLoading ? (
             <div className="flex justify-center py-12">
-              <div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-200 border-t-navy" />
+              <div className="h-6 w-6 animate-spin rounded-full border-2 border-border border-t-terrain" />
             </div>
           ) : orders.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-14 text-center">
-              <Package className="h-12 w-12 text-gray-200" strokeWidth={1.5} />
-              <p className="mt-3 text-sm font-medium text-gray-500">No orders yet</p>
-              <p className="mt-1 text-xs text-gray-400">When you place an order, it will appear here.</p>
+              <Package className="h-12 w-12 text-muted-foreground/30" strokeWidth={1.5} />
+              <p className="mt-3 text-sm font-medium text-muted-foreground">No orders yet</p>
+              <p className="mt-1 text-xs text-muted-foreground">When you place an order, it will appear here.</p>
               <Link
                 href="/shop"
-                className="mt-5 rounded-full bg-navy px-6 py-2.5 text-sm font-medium text-white transition hover:bg-navy-light"
+                className="mt-5 rounded-full bg-terrain px-6 py-2.5 text-sm font-medium text-white transition hover:bg-terrain-deep"
               >
                 Start Shopping
               </Link>
             </div>
           ) : (
-            <div className="divide-y divide-gray-50">
+            <div className="divide-y divide-border">
               {orders.map(order => (
                 <div key={order.id} className="flex items-center justify-between px-6 py-4">
                   <div>
-                    <p className="text-sm font-medium text-gray-900">#{order.order_number}</p>
-                    <p className="text-xs text-gray-400">
+                    <p className="text-sm font-medium text-ink">#{order.order_number}</p>
+                    <p className="text-xs text-muted-foreground">
                       {new Date(order.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
                     </p>
                     {order.items?.[0] && (
-                      <p className="text-xs text-gray-500">{order.items[0].product_name}{order.items.length > 1 ? ` +${order.items.length - 1} more` : ''}</p>
+                      <p className="text-xs text-muted-foreground">{order.items[0].product_name}{order.items.length > 1 ? ` +${order.items.length - 1} more` : ''}</p>
                     )}
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="text-right">
-                      <p className="text-sm font-semibold text-gray-900">
+                      <p className="text-sm font-semibold text-ink">
                         ${(order.total_cents / 100).toFixed(2)}
                       </p>
-                      <span className={`inline-block rounded-full px-2 py-0.5 text-xs font-medium ${STATUS_COLORS[order.status] ?? 'bg-gray-100 text-gray-600'}`}>
+                      <span className={`inline-block rounded-full px-2 py-0.5 text-xs font-medium ${STATUS_COLORS[order.status] ?? 'bg-section-subtle text-ink/70'}`}>
                         {order.status}
                       </span>
                     </div>
-                    <ChevronRight className="h-4 w-4 text-gray-300" />
+                    <ChevronRight className="h-4 w-4 text-muted-foreground/50" />
                   </div>
                 </div>
               ))}
@@ -814,9 +823,9 @@ function AccountPageContent() {
       {showAddModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm">
           <div className="w-full max-w-md rounded-2xl bg-white shadow-2xl">
-            <div className="flex items-center justify-between border-b border-gray-100 px-6 py-4">
-              <h3 className="text-base font-semibold text-gray-900">Add address</h3>
-              <button onClick={() => { setShowAddModal(false); setAddError('') }} className="text-gray-400 hover:text-gray-600">
+            <div className="flex items-center justify-between border-b border-border px-6 py-4">
+              <h3 className="text-base font-semibold text-ink">Add address</h3>
+              <button onClick={() => { setShowAddModal(false); setAddError('') }} className="text-muted-foreground hover:text-ink/70">
                 <X className="h-5 w-5" />
               </button>
             </div>
@@ -828,7 +837,7 @@ function AccountPageContent() {
                     placeholder="First name *"
                     value={addForm.first_name}
                     onChange={e => setAddForm(f => ({ ...f, first_name: e.target.value }))}
-                    className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm outline-none focus:border-[#6c5ce7] focus:ring-1 focus:ring-[#6c5ce7]/20"
+                    className={FIELD}
                     required
                   />
                 </div>
@@ -837,7 +846,7 @@ function AccountPageContent() {
                     placeholder="Last name *"
                     value={addForm.last_name}
                     onChange={e => setAddForm(f => ({ ...f, last_name: e.target.value }))}
-                    className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm outline-none focus:border-[#6c5ce7] focus:ring-1 focus:ring-[#6c5ce7]/20"
+                    className={FIELD}
                     required
                   />
                 </div>
@@ -846,7 +855,7 @@ function AccountPageContent() {
               <select
                 value={addForm.country}
                 onChange={e => setAddForm(f => ({ ...f, country: e.target.value }))}
-                className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm text-gray-700 outline-none focus:border-[#6c5ce7] focus:ring-1 focus:ring-[#6c5ce7]/20"
+                className={FIELD}
               >
                 <option value="United States">United States</option>
                 <option value="Canada">Canada</option>
@@ -861,7 +870,7 @@ function AccountPageContent() {
                 placeholder="Address *"
                 value={addForm.address1}
                 onChange={e => setAddForm(f => ({ ...f, address1: e.target.value }))}
-                className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm outline-none focus:border-[#6c5ce7] focus:ring-1 focus:ring-[#6c5ce7]/20"
+                className={FIELD}
                 required
               />
 
@@ -869,7 +878,7 @@ function AccountPageContent() {
                 placeholder="Apartment, suite, etc."
                 value={addForm.address2}
                 onChange={e => setAddForm(f => ({ ...f, address2: e.target.value }))}
-                className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm outline-none focus:border-[#6c5ce7] focus:ring-1 focus:ring-[#6c5ce7]/20"
+                className={FIELD}
               />
 
               <div className="grid grid-cols-2 gap-3">
@@ -877,14 +886,14 @@ function AccountPageContent() {
                   placeholder="Postal code *"
                   value={addForm.postal_code}
                   onChange={e => setAddForm(f => ({ ...f, postal_code: e.target.value }))}
-                  className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm outline-none focus:border-[#6c5ce7] focus:ring-1 focus:ring-[#6c5ce7]/20"
+                  className={FIELD}
                   required
                 />
                 <input
                   placeholder="City *"
                   value={addForm.city}
                   onChange={e => setAddForm(f => ({ ...f, city: e.target.value }))}
-                  className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm outline-none focus:border-[#6c5ce7] focus:ring-1 focus:ring-[#6c5ce7]/20"
+                  className={FIELD}
                   required
                 />
               </div>
@@ -892,7 +901,7 @@ function AccountPageContent() {
               <select
                 value={addForm.province}
                 onChange={e => setAddForm(f => ({ ...f, province: e.target.value }))}
-                className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm text-gray-700 outline-none focus:border-[#6c5ce7] focus:ring-1 focus:ring-[#6c5ce7]/20"
+                className={FIELD}
               >
                 <option value="">State / Province</option>
                 {['AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY'].map(s => (
@@ -904,7 +913,7 @@ function AccountPageContent() {
                 placeholder="Phone"
                 value={addForm.phone}
                 onChange={e => setAddForm(f => ({ ...f, phone: e.target.value }))}
-                className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm outline-none focus:border-[#6c5ce7] focus:ring-1 focus:ring-[#6c5ce7]/20"
+                className={FIELD}
               />
 
               {addError && <p className="text-xs text-red-500">{addError}</p>}
@@ -913,14 +922,14 @@ function AccountPageContent() {
                 <button
                   type="button"
                   onClick={() => { setShowAddModal(false); setAddError('') }}
-                  className="rounded-full border border-gray-200 px-5 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50"
+                  className="rounded-full border border-border px-5 py-2 text-sm font-medium text-ink/70 hover:bg-section-subtle"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={addLoading}
-                  className="flex items-center gap-2 rounded-full bg-navy px-5 py-2 text-sm font-medium text-white transition hover:bg-navy-light disabled:opacity-60"
+                  className="flex items-center gap-2 rounded-full bg-terrain px-5 py-2 text-sm font-medium text-white transition hover:bg-terrain-deep disabled:opacity-60"
                 >
                   {addLoading ? <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/30 border-t-white" /> : null}
                   Save →

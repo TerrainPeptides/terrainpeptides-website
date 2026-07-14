@@ -31,7 +31,7 @@ const TABS: { id: TrackLookupMethod; label: string }[] = [
 
 const statusConfig = {
   pending: { label: 'Pending', icon: Clock, color: 'bg-yellow-100 text-yellow-700' },
-  processing: { label: 'Processing', icon: Package, color: 'bg-blue-100 text-blue-700' },
+  processing: { label: 'Processing', icon: Package, color: 'bg-terrain-muted text-terrain-deep' },
   shipped: { label: 'Shipped', icon: Truck, color: 'bg-purple-100 text-purple-700' },
   delivered: { label: 'Delivered', icon: CheckCircle, color: 'bg-green-100 text-green-700' },
   cancelled: { label: 'Cancelled', icon: AlertCircle, color: 'bg-red-100 text-red-700' },

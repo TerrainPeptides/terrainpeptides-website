@@ -18,17 +18,16 @@ import { useSession, signOut } from 'next-auth/react'
 
 const navLinks = [
   { href: '/', label: 'Home' },
-  { href: '/shop', label: 'Catalog' },
-  { href: '/affiliates', label: 'Affiliate' },
-  { href: '/contact', label: 'Contact' },
+  { href: '/shop', label: 'Shop' },
   { href: '/faq', label: 'FAQ' },
+  { href: '/contact', label: 'Contact' },
+  { href: '/affiliates', label: 'Affiliate' },
 ]
 
 const TICKER_ITEMS = [
   'Free Shipping on Orders $300+',
   '99%+ Purity — HPLC Verified',
   'Third-Party Tested COA Included',
-  'Cold-Chain Shipping Available',
   'USA Warehouse — Fast Delivery',
   'Research Grade Only',
 ] as const
@@ -41,14 +40,11 @@ function NavbarTickerPeriod({ duplicate }: { duplicate?: boolean }) {
     >
       {TICKER_ITEMS.map((text) => (
         <Fragment key={duplicate ? `d-${text}` : text}>
-          <span className="whitespace-nowrap text-xs font-semibold uppercase tracking-[0.12em] text-white sm:text-[0.8125rem]">
+          <span className="whitespace-nowrap text-xs font-semibold uppercase tracking-[0.14em] text-ink/80 sm:text-[0.8125rem]">
             {text}
           </span>
-          <span
-            className="shrink-0 select-none text-white/40"
-            aria-hidden
-          >
-            |
+          <span className="shrink-0 select-none text-terrain/60" aria-hidden>
+            ◆
           </span>
         </Fragment>
       ))}
@@ -63,7 +59,7 @@ export function Navbar() {
 
   return (
     <header className="w-full">
-      <div className="fixed top-0 left-0 right-0 z-[100] w-full border-b border-navy/12 bg-white shadow-sm">
+      <div className="fixed top-0 left-0 right-0 z-[100] w-full border-b border-border bg-white/95 backdrop-blur-md">
         <nav className="mx-auto grid h-[3.75rem] max-w-7xl grid-cols-[auto_1fr_auto] items-center px-4 sm:h-16 sm:px-6 lg:px-8">
           <Link href="/" className="flex items-center justify-self-start">
             <Image
@@ -76,12 +72,12 @@ export function Navbar() {
             />
           </Link>
 
-          <div className="hidden items-center justify-self-center gap-3 md:flex lg:gap-5">
-            {navLinks.map(link => (
+          <div className="hidden items-center justify-self-center gap-0.5 md:flex lg:gap-1">
+            {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="rounded-md px-4 py-2 text-[0.9375rem] font-semibold text-navy transition-colors hover:bg-section-clinical hover:text-primary lg:px-5"
+                className="rounded-sm px-4 py-2 text-[0.8rem] font-semibold uppercase tracking-[0.1em] text-ink/70 transition-colors hover:bg-white hover:text-terrain-deep lg:px-5"
               >
                 {link.label}
               </Link>
@@ -89,11 +85,16 @@ export function Navbar() {
           </div>
 
           <div className="hidden items-center justify-self-end gap-2 md:flex">
-            <Button variant="ghost" size="icon" className="relative text-navy hover:bg-section-clinical hover:text-primary" asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="relative text-ink hover:bg-section-subtle hover:text-terrain-deep"
+              asChild
+            >
               <Link href="/cart">
                 <ShoppingCart className="h-5 w-5" />
                 {totalItems > 0 && (
-                  <span className="absolute -right-0.5 -top-0.5 flex h-4.5 w-4.5 min-w-[1.125rem] items-center justify-center rounded-sm bg-primary text-[10px] font-semibold text-primary-foreground">
+                  <span className="absolute -right-0.5 -top-0.5 flex h-4.5 w-4.5 min-w-[1.125rem] items-center justify-center rounded-sm bg-terrain text-[10px] font-bold text-white">
                     {totalItems}
                   </span>
                 )}
@@ -103,9 +104,16 @@ export function Navbar() {
             {status === 'loading' ? null : session ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="relative text-navy hover:bg-section-clinical hover:text-primary">
-                    <div className="flex h-7 w-7 items-center justify-center rounded-md border border-navy/20 bg-section-subtle text-xs font-semibold text-navy">
-                      {session.user?.name?.[0]?.toUpperCase() ?? session.user?.email?.[0]?.toUpperCase() ?? <User className="h-3.5 w-3.5" />}
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="relative text-ink hover:bg-section-subtle hover:text-terrain-deep"
+                  >
+                    <div className="flex h-7 w-7 items-center justify-center rounded-sm border border-border bg-section-subtle text-xs font-bold text-terrain-deep">
+                      {session.user?.name?.[0]?.toUpperCase() ??
+                        session.user?.email?.[0]?.toUpperCase() ?? (
+                          <User className="h-3.5 w-3.5" />
+                        )}
                     </div>
                     <span className="sr-only">Account</span>
                   </Button>
@@ -132,7 +140,12 @@ export function Navbar() {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <Button variant="ghost" size="icon" className="text-navy hover:bg-section-clinical hover:text-primary" asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-ink hover:bg-section-subtle hover:text-terrain-deep"
+                asChild
+              >
                 <Link href="/auth">
                   <CircleUser className="h-5 w-5" />
                   <span className="sr-only">Sign in</span>
@@ -143,18 +156,18 @@ export function Navbar() {
 
           <div className="flex items-center justify-self-end gap-1 md:hidden">
             {status === 'loading' ? null : !session ? (
-              <Button variant="ghost" size="icon" className="text-navy hover:bg-section-clinical" asChild>
+              <Button variant="ghost" size="icon" className="text-ink hover:bg-section-subtle" asChild>
                 <Link href="/auth">
                   <CircleUser className="h-5 w-5" />
                   <span className="sr-only">Sign in</span>
                 </Link>
               </Button>
             ) : null}
-            <Button variant="ghost" size="icon" className="relative text-navy hover:bg-section-clinical" asChild>
+            <Button variant="ghost" size="icon" className="relative text-ink hover:bg-section-subtle" asChild>
               <Link href="/cart">
                 <ShoppingCart className="h-5 w-5" />
                 {totalItems > 0 && (
-                  <span className="absolute -right-0.5 -top-0.5 flex h-4.5 w-4.5 min-w-[1.125rem] items-center justify-center rounded-sm bg-primary text-[10px] font-semibold text-primary-foreground">
+                  <span className="absolute -right-0.5 -top-0.5 flex h-4.5 w-4.5 min-w-[1.125rem] items-center justify-center rounded-sm bg-terrain text-[10px] font-bold text-white">
                     {totalItems}
                   </span>
                 )}
@@ -163,7 +176,7 @@ export function Navbar() {
             </Button>
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="text-navy hover:bg-section-clinical">
+                <Button variant="ghost" size="icon" className="text-ink hover:bg-section-subtle">
                   <Menu className="h-5 w-5" />
                   <span className="sr-only">Menu</span>
                 </Button>
@@ -171,12 +184,12 @@ export function Navbar() {
               <SheetContent side="right" className="w-[300px] bg-background">
                 <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
                 <div className="flex flex-col gap-1 pt-6">
-                  {navLinks.map(link => (
+                  {navLinks.map((link) => (
                     <Link
                       key={link.href}
                       href={link.href}
                       onClick={() => setIsOpen(false)}
-                      className="rounded-md px-3 py-2.5 text-base font-semibold text-navy transition-colors hover:bg-section-clinical hover:text-primary"
+                      className="rounded-sm px-3 py-2.5 text-sm font-semibold uppercase tracking-[0.08em] text-ink transition-colors hover:bg-section-subtle hover:text-terrain-deep"
                     >
                       {link.label}
                     </Link>
@@ -189,7 +202,10 @@ export function Navbar() {
                           <p className="text-xs text-muted-foreground">{session.user?.email}</p>
                         </div>
                         <button
-                          onClick={() => { signOut({ callbackUrl: '/' }); setIsOpen(false) }}
+                          onClick={() => {
+                            signOut({ callbackUrl: '/' })
+                            setIsOpen(false)
+                          }}
                           className="flex items-center gap-2 text-sm text-destructive"
                         >
                           <LogOut className="h-4 w-4" />
@@ -200,7 +216,7 @@ export function Navbar() {
                       <Link
                         href="/auth"
                         onClick={() => setIsOpen(false)}
-                        className="block rounded-md px-3 py-2.5 text-base font-semibold text-navy hover:bg-section-clinical hover:text-primary"
+                        className="block rounded-sm px-3 py-2.5 text-sm font-semibold uppercase tracking-[0.08em] text-ink hover:bg-section-subtle hover:text-terrain-deep"
                       >
                         Sign In
                       </Link>
@@ -215,7 +231,7 @@ export function Navbar() {
       <div className="h-[3.75rem] shrink-0 sm:h-16" aria-hidden />
 
       <div
-        className="navbar-ticker navbar-ticker--rolling w-full py-2 sm:py-2.5"
+        className="navbar-ticker navbar-ticker--rolling w-full py-2.5"
         role="region"
         aria-label="Announcements"
       >

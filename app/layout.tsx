@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { Source_Sans_3, Geist_Mono } from 'next/font/google'
+import { Montserrat, Geist_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 import { Navbar } from '@/components/navbar'
@@ -12,10 +12,10 @@ import { SiteBottomPromoGate } from '@/components/site-bottom-promo-gate'
 import { PromoPopup } from '@/components/promo-popup'
 import { getSiteUrl } from '@/lib/site-url'
 
-const sourceSans = Source_Sans_3({
+const montserrat = Montserrat({
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-source-sans',
+  weight: ['400', '500', '600', '700', '800'],
+  variable: '--font-montserrat',
   display: 'swap',
 })
 const geistMono = Geist_Mono({ subsets: ['latin'], variable: '--font-geist-mono' })
@@ -57,7 +57,7 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: '#F8FAFC',
+  themeColor: '#07140e',
   width: 'device-width',
   initialScale: 1,
 }
@@ -69,7 +69,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${sourceSans.variable} ${geistMono.variable} font-sans antialiased`}>
+      <body className={`${montserrat.variable} ${geistMono.variable} font-sans antialiased`}>
         <AuthProvider>
           <CartProvider>
             <AgeVerification />

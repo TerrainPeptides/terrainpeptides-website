@@ -91,21 +91,19 @@ export default function ContactPage() {
   }
 
   return (
-    <div className="min-h-screen bg-section-subtle">
-      {/* Hero */}
-      <section className="clinical-navy-band relative border-b border-border bg-section-clinical clinical-grid-bg">
-        <div className="clinical-strip" aria-hidden />
-        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
+    <div className="min-h-screen bg-white">
+      <section className="page-hero-dark">
+        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
-            <p className="clinical-eyebrow">
+            <p className="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-terrain">
               Customer support
             </p>
-            <h1 className="page-title mt-3 text-3xl font-semibold sm:text-4xl">
-              Contact Our Support Team
+            <h1 className="mt-3 text-3xl font-bold tracking-tight text-ink sm:text-4xl">
+              Contact our <span className="orbit-accent">support</span> team
             </h1>
-            <p className="mt-4 text-base leading-relaxed text-muted-foreground">
-              Questions about orders, certificates of analysis, or research compounds?
-              Our team responds within one business day.
+            <p className="mt-3 text-base leading-relaxed text-muted-foreground">
+              Questions about orders, certificates of analysis, or research compounds? Our team
+              responds within one business day.
             </p>
           </div>
 
@@ -113,13 +111,13 @@ export default function ContactPage() {
             {SUPPORT_CHANNELS.map((channel) => (
               <div
                 key={channel.title}
-                className="rounded-md border border-navy/10 bg-white p-5 shadow-sm"
+                className="rounded-2xl border border-border bg-white p-6"
               >
-                <div className="flex h-9 w-9 items-center justify-center rounded-md border border-navy/15 bg-section-clinical">
-                  <channel.icon className="h-4 w-4 text-navy" aria-hidden />
+                <div className="flex h-9 w-9 items-center justify-center rounded-full border border-terrain/25 bg-terrain/10">
+                  <channel.icon className="h-4 w-4 text-terrain-deep" aria-hidden />
                 </div>
-                <h2 className="mt-3 text-sm font-semibold text-navy">{channel.title}</h2>
-                <p className="mt-1 text-sm font-medium text-navy/80">{channel.detail}</p>
+                <h2 className="mt-4 text-sm font-bold text-ink">{channel.title}</h2>
+                <p className="mt-1 text-sm font-medium text-terrain-deep">{channel.detail}</p>
                 <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{channel.note}</p>
               </div>
             ))}
@@ -131,9 +129,9 @@ export default function ContactPage() {
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
         <div className="grid gap-10 lg:grid-cols-[1fr_340px] lg:gap-12">
           {/* Form */}
-          <div className="overflow-hidden rounded-lg border border-border bg-white shadow-sm">
+          <div className="overflow-hidden border border-border bg-white">
             <div className="border-b border-border bg-section-subtle px-6 py-4 sm:px-8">
-              <h2 className="text-lg font-semibold text-navy">Submit a support request</h2>
+              <h2 className="text-lg font-bold text-ink">Submit a support request</h2>
               <p className="mt-1 text-sm text-muted-foreground">
                 Include your order number if applicable for faster resolution.
               </p>
@@ -215,7 +213,7 @@ export default function ContactPage() {
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="h-11 w-full gap-2 rounded-md text-sm font-semibold uppercase tracking-wide"
+                className="h-11 w-full gap-2 rounded-full bg-terrain text-sm font-semibold text-white hover:bg-terrain-deep"
               >
                 <Send className="h-4 w-4" />
                 {isSubmitting ? 'Sending…' : 'Send Message'}

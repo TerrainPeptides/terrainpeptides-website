@@ -89,26 +89,28 @@ export default function AffiliatesPage() {
   return (
     <div className="flex flex-col">
       {/* Hero */}
-      <section className="relative overflow-hidden border-b border-border bg-section-clinical clinical-grid-bg">
-        <div className="clinical-strip" aria-hidden />
-        <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
-          <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
+      <section className="page-hero-dark">
+        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
+          <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
             <div>
-              <p className="inline-flex items-center gap-2 rounded border border-primary/20 bg-white px-3 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-primary">
+              <p className="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-terrain">
                 Partner program
               </p>
-              <h1 className="page-title mt-5 text-balance text-3xl font-semibold sm:text-4xl lg:text-[2.75rem] lg:leading-[1.12]">
-                Research Affiliate{' '}
-                <span className="text-primary">Partnership Program</span>
+              <h1 className="mt-4 text-balance text-3xl font-bold tracking-tight text-ink sm:text-4xl lg:text-[2.5rem] lg:leading-[1.15]">
+                Research Affiliate <span className="orbit-accent">Partnership</span> Program
               </h1>
-              <p className="mt-5 max-w-lg text-base leading-relaxed text-muted-foreground sm:text-lg">
+              <p className="mt-4 max-w-lg text-base leading-relaxed text-muted-foreground sm:text-lg">
                 Partner with a premium research peptide supplier. Earn{' '}
-                <span className="font-semibold text-navy">10% commission</span> on every order
-                you refer — backed by documented quality and US fulfillment.
+                <span className="font-semibold text-ink">10% commission</span> on every order you
+                refer — backed by documented quality and US fulfillment.
               </p>
 
               <div className="mt-8 flex flex-wrap gap-3">
-                <Button size="lg" className="rounded-md px-8 font-semibold" asChild>
+                <Button
+                  size="lg"
+                  className="rounded-full bg-terrain px-8 font-semibold text-white hover:bg-terrain-deep"
+                  asChild
+                >
                   <Link href={applyHref}>
                     Apply Now
                     <ArrowRight className="ml-2 h-4 w-4" />
@@ -117,7 +119,7 @@ export default function AffiliatesPage() {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="rounded-md border-primary/30 text-primary hover:bg-white"
+                  className="rounded-full border-border bg-white text-ink hover:border-terrain hover:text-terrain-deep"
                   asChild
                 >
                   <a href="#how-it-works">How It Works</a>
@@ -125,16 +127,15 @@ export default function AffiliatesPage() {
               </div>
             </div>
 
-            {/* Commission card */}
-            <div className="rounded-lg border border-border bg-white shadow-sm">
-              <div className="border-b border-border bg-section-subtle px-5 py-3">
-                <p className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+            <div className="overflow-hidden rounded-2xl border border-border bg-section-subtle">
+              <div className="border-b border-border px-5 py-3">
+                <p className="font-mono text-[0.65rem] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
                   Commission structure
                 </p>
               </div>
               <div className="p-6 sm:p-8">
                 <div className="flex items-baseline gap-2">
-                  <span className="text-5xl font-bold tabular-nums text-primary">10%</span>
+                  <span className="text-5xl font-bold tabular-nums text-terrain-deep">10%</span>
                   <span className="text-sm font-medium text-muted-foreground">per qualified sale</span>
                 </div>
                 <ul className="mt-6 space-y-3 border-t border-border pt-6">
@@ -145,7 +146,7 @@ export default function AffiliatesPage() {
                     'Performance bonuses for top partners',
                   ].map((item) => (
                     <li key={item} className="flex items-start gap-2.5 text-sm text-muted-foreground">
-                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-clinical-teal" aria-hidden />
+                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-terrain" aria-hidden />
                       {item}
                     </li>
                   ))}
@@ -175,10 +176,8 @@ export default function AffiliatesPage() {
       <section id="how-it-works" className="bg-section-subtle py-16 sm:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-12 text-center">
-            <p className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-primary">
-              Onboarding
-            </p>
-            <h2 className="mt-2 text-2xl font-semibold tracking-tight text-navy sm:text-3xl">
+            <p className="section-index justify-center">Onboarding</p>
+            <h2 className="mt-4 text-2xl font-extrabold tracking-tight text-ink sm:text-3xl">
               How It Works
             </h2>
             <p className="mx-auto mt-3 max-w-xl text-muted-foreground">
@@ -236,12 +235,11 @@ export default function AffiliatesPage() {
       </section>
 
       {/* Requirements + CTA */}
-      <section className="bg-navy py-16 sm:py-20">
-        <div className="clinical-strip" aria-hidden />
-        <div className="mx-auto max-w-7xl px-4 pt-12 sm:px-6 sm:pt-16 lg:px-8">
+      <section className="bg-ink py-16 sm:py-20">
+        <div className="mx-auto max-w-7xl px-4 pt-4 sm:px-6 lg:px-8">
           <div className="grid gap-10 lg:grid-cols-2 lg:items-center lg:gap-16">
             <div>
-              <p className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-sky-300/90">
+              <p className="font-mono text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-terrain-bright">
                 Program guidelines
               </p>
               <h2 className="mt-2 text-2xl font-semibold tracking-tight text-white sm:text-3xl">
@@ -250,21 +248,21 @@ export default function AffiliatesPage() {
               <ul className="mt-6 space-y-3">
                 {requirements.map((req) => (
                   <li key={req} className="flex items-start gap-2.5 text-sm text-white/70">
-                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-sky-300" aria-hidden />
+                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-terrain-bright" aria-hidden />
                     {req}
                   </li>
                 ))}
               </ul>
             </div>
 
-            <div className="rounded-lg border border-white/10 bg-white/5 p-8 backdrop-blur-sm">
+            <div className="rounded-2xl border border-white/10 bg-ink-soft p-8">
               <h3 className="text-xl font-semibold text-white">Ready to apply?</h3>
               <p className="mt-3 text-sm leading-relaxed text-white/65">
                 Create your account and claim your referral code from the affiliate tab in your dashboard.
               </p>
               <Button
                 size="lg"
-                className="mt-6 w-full rounded-md bg-white font-semibold text-navy hover:bg-white/90 sm:w-auto"
+                className="mt-6 w-full rounded-full bg-terrain font-semibold text-white hover:bg-terrain-deep sm:w-auto"
                 asChild
               >
                 <Link href={applyHref}>
@@ -274,7 +272,7 @@ export default function AffiliatesPage() {
               </Button>
               <p className="mt-4 text-xs text-white/45">
                 Already a member?{' '}
-                <Link href="/account?tab=affiliate" className="text-sky-300 underline underline-offset-2 hover:text-sky-200">
+                <Link href="/account?tab=affiliate" className="text-terrain-bright underline underline-offset-2 hover:text-white">
                   Go to your dashboard
                 </Link>
               </p>

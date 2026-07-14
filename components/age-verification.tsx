@@ -66,10 +66,10 @@ export function AgeVerification() {
               className="h-12 w-auto sm:h-14"
             />
           </div>
-          <p className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-primary">
+          <p className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-terrain-deep">
             Access verification
           </p>
-          <DialogTitle className="mt-2 text-xl font-semibold text-navy">
+          <DialogTitle className="mt-2 text-xl font-semibold text-ink">
             Age Verification Required
           </DialogTitle>
           <DialogDescription className="text-muted-foreground">
@@ -78,7 +78,7 @@ export function AgeVerification() {
         </DialogHeader>
         
         <div className="mt-6 space-y-4">
-          <div className="rounded-md border border-clinical-teal/25 bg-clinical-teal/5 p-4">
+          <div className="rounded-sm border border-terrain/25 bg-terrain/5 p-4">
             <p className="text-center text-sm leading-relaxed text-muted-foreground">
               All products on this website are intended for laboratory research purposes only and are not for human or animal consumption.
             </p>
@@ -87,14 +87,14 @@ export function AgeVerification() {
           <div className="flex flex-col gap-3 sm:flex-row">
             <Button
               onClick={handleVerify}
-              className="flex-1 rounded-md bg-primary text-primary-foreground hover:bg-primary/90"
+              className="flex-1 rounded-full bg-terrain font-semibold text-white hover:bg-terrain-deep"
             >
               I am 21 or older
             </Button>
             <Button
               onClick={handleDecline}
               variant="outline"
-              className="flex-1 rounded-md"
+              className="flex-1 rounded-sm"
             >
               Exit
             </Button>

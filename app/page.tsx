@@ -1,5 +1,4 @@
 import { HeroSection } from '@/components/home/hero-section'
-// import { TerrainGuaranteeSection } from '@/components/home/terrain-guarantee-section'
 import { FeaturedProducts } from '@/components/home/featured-products'
 import { QualitySection } from '@/components/home/quality-section'
 import { getProductsAsync, getFaqs } from '@/lib/data'
@@ -20,7 +19,6 @@ export default async function HomePage() {
       <TrustStrip />
       <QualitySection />
       <FeaturedProducts products={allProducts} />
-      {/* <TerrainGuaranteeSection /> */}
       <CTASection />
       <FaqSection faqs={faqs} />
     </div>

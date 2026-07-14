@@ -109,16 +109,15 @@ export function ShopContent({ products }: ShopContentProps) {
 
   return (
     <div className="space-y-6">
-      {/* Search + sort */}
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:gap-6">
         <div className="relative min-w-0 flex-1">
-          <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-navy/45" />
+          <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             type="search"
             placeholder="Search products..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="h-11 rounded-full border-2 border-navy/12 bg-white pl-11 text-base text-navy shadow-sm focus-visible:border-primary"
+            className="h-11 rounded-sm border border-border bg-white pl-11 text-base text-ink shadow-none focus-visible:border-terrain focus-visible:ring-terrain/20"
           />
         </div>
 
@@ -129,28 +128,28 @@ export function ShopContent({ products }: ShopContentProps) {
                 type="button"
                 variant="outline"
                 className={cn(
-                  'h-11 gap-2 rounded-full border-2 border-border bg-white px-4 font-semibold text-navy shadow-sm hover:bg-section-clinical',
-                  priceFilterActive && 'border-primary/40 bg-section-clinical text-primary',
+                  'h-11 gap-2 rounded-sm border border-border bg-white px-4 font-semibold text-ink hover:bg-section-subtle',
+                  priceFilterActive && 'border-terrain bg-accent text-terrain-deep',
                 )}
               >
                 <SlidersHorizontal className="h-4 w-4" />
                 Price
                 {priceFilterActive && (
-                  <span className="h-1.5 w-1.5 rounded-full bg-primary" aria-hidden />
+                  <span className="h-1.5 w-1.5 rounded-full bg-terrain" aria-hidden />
                 )}
               </Button>
             </PopoverTrigger>
             <PopoverContent align="end" className="w-72">
-              <p className="mb-4 text-sm font-semibold text-navy">Filter by price</p>
+              <p className="mb-4 text-sm font-semibold text-ink">Filter by price</p>
               <Slider
                 min={priceExtents.min}
                 max={priceExtents.max}
                 step={100}
                 value={priceRange}
                 onValueChange={handlePriceChange}
-                className="[&_[data-slot=slider-range]]:!bg-primary [&_[data-slot=slider-thumb]]:!border-primary [&_[data-slot=slider-thumb]]:!ring-primary/25"
+                className="[&_[data-slot=slider-range]]:!bg-terrain [&_[data-slot=slider-thumb]]:!border-terrain [&_[data-slot=slider-thumb]]:!ring-terrain/25"
               />
-              <div className="mt-4 flex items-center justify-between text-sm font-semibold tabular-nums text-navy">
+              <div className="mt-4 flex items-center justify-between text-sm font-semibold tabular-nums text-ink">
                 <span>{formatUsdCents(priceRange[0])}</span>
                 <span>{formatUsdCents(priceRange[1])}</span>
               </div>
@@ -158,7 +157,7 @@ export function ShopContent({ products }: ShopContentProps) {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="mt-3 w-full text-primary"
+                  className="mt-3 w-full text-terrain-deep"
                   onClick={() => setPriceRange([priceExtents.min, priceExtents.max])}
                 >
                   Reset price
@@ -168,12 +167,12 @@ export function ShopContent({ products }: ShopContentProps) {
           </Popover>
 
           <div className="flex items-center gap-2">
-            <span className="text-sm font-medium text-navy/65">Sort by:</span>
+            <span className="text-sm font-medium text-muted-foreground">Sort by:</span>
             <div className="relative">
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as SortOption)}
-                className="h-11 appearance-none rounded-full border-2 border-border bg-white py-2 pl-4 pr-10 text-sm font-semibold text-navy shadow-sm outline-none transition-colors hover:border-primary/30 focus:border-primary focus:ring-2 focus:ring-primary/15"
+                className="h-11 appearance-none rounded-sm border border-border bg-white py-2 pl-4 pr-10 text-sm font-semibold text-ink outline-none transition-colors hover:border-terrain/40 focus:border-terrain focus:ring-2 focus:ring-terrain/15"
                 aria-label="Sort products"
               >
                 <option value="featured">Featured</option>
@@ -181,13 +180,12 @@ export function ShopContent({ products }: ShopContentProps) {
                 <option value="price-asc">Price: Low to High</option>
                 <option value="price-desc">Price: High to Low</option>
               </select>
-              <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-foreground/50" />
+              <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             </div>
           </div>
         </div>
       </div>
 
-      {/* Category pills */}
       <div className="flex flex-wrap gap-2">
         {SHOP_CATEGORY_FILTERS.map((cat) => (
           <button
@@ -195,10 +193,10 @@ export function ShopContent({ products }: ShopContentProps) {
             type="button"
             onClick={() => setActiveCategory(cat.value)}
             className={cn(
-              'rounded-full border-2 px-4 py-2 text-sm font-semibold transition-colors',
+              'rounded-sm border px-4 py-2 text-xs font-bold uppercase tracking-[0.1em] transition-colors',
               activeCategory === cat.value
-                ? 'border-navy bg-navy text-white shadow-sm'
-                : 'border-transparent bg-white text-navy/70 shadow-sm hover:border-navy/15 hover:bg-section-clinical hover:text-navy',
+                ? 'border-ink bg-ink text-white'
+                : 'border-border bg-white text-ink/65 hover:border-terrain/40 hover:text-ink',
             )}
           >
             {cat.label}
@@ -206,13 +204,11 @@ export function ShopContent({ products }: ShopContentProps) {
         ))}
       </div>
 
-      {/* Results count */}
-      <p className="text-sm font-medium text-navy/60">
+      <p className="text-sm font-medium text-muted-foreground">
         Showing {filteredProducts.length}{' '}
         {filteredProducts.length === 1 ? 'product' : 'products'}
       </p>
 
-      {/* Product grid — 4 columns on large screens */}
       {filteredProducts.length > 0 ? (
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {filteredProducts.map((product) => (
@@ -220,12 +216,12 @@ export function ShopContent({ products }: ShopContentProps) {
           ))}
         </div>
       ) : (
-        <div className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-border bg-white py-16 text-center">
-          <p className="text-lg font-semibold text-navy">No products found</p>
-          <p className="mt-2 text-base text-foreground/70">
+        <div className="flex flex-col items-center justify-center border border-dashed border-border bg-section-subtle py-16 text-center">
+          <p className="text-lg font-semibold text-ink">No products found</p>
+          <p className="mt-2 text-base text-muted-foreground">
             Try adjusting your search or filter criteria.
           </p>
-          <Button variant="outline" className="mt-6 rounded-full" onClick={clearFilters}>
+          <Button variant="outline" className="mt-6 rounded-sm" onClick={clearFilters}>
             Clear filters
           </Button>
         </div>
