@@ -188,7 +188,7 @@ export const seedProducts: Product[] = [
     in_stock: true,
     stock_level: null,
     featured: false,
-    image_url: '/images/bpc-157-vial.png',
+    image_url: '/images/kisspeptin-vial.png',
     coa_url: null,
     created_at: now,
     updated_at: now,

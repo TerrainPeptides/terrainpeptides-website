@@ -36,7 +36,7 @@ export function QualitySection() {
       <section className="border-b border-border bg-white py-20 sm:py-24">
         <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:gap-20 lg:px-8">
           <div>
-            <p className="section-index">01 Mission</p>
+            <p className="section-index">02 Mission</p>
             <h2 className="mt-4 text-3xl font-bold tracking-tight text-ink sm:text-[2.5rem] sm:leading-[1.1]">
               Where dedication meets <span className="orbit-accent">accuracy</span>
             </h2>
@@ -89,7 +89,7 @@ export function QualitySection() {
 
       <section className="border-b border-border bg-section-subtle py-20 sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <p className="section-index">02 Standards</p>
+          <p className="section-index">03 Standards</p>
           <h2 className="mt-4 max-w-2xl text-3xl font-bold tracking-tight text-ink sm:text-[2.5rem]">
             Five things we get right, <span className="orbit-accent">every batch</span>
           </h2>

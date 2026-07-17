@@ -27,7 +27,7 @@ export function CTASection() {
           <div>
             <p className="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-terrain-bright">
               <span className="mr-2 inline-block h-px w-5 align-middle bg-terrain-bright" />
-              04 Difference
+              05 Difference
             </p>
             <h2 className="mt-4 max-w-xl text-3xl font-bold tracking-tight text-white sm:text-[2.5rem]">
               What sets Terrain <span className="orbit-accent-light">apart</span>

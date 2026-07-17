@@ -3,25 +3,29 @@
 export const DEFAULT_PRODUCT_IMAGE = '/images/vial-placeholder.svg'
 
 export const PRODUCT_IMAGE_BY_SLUG: Record<string, string> = {
-  'bpc-157': DEFAULT_PRODUCT_IMAGE,
-  'tb-500': DEFAULT_PRODUCT_IMAGE,
-  tb500: DEFAULT_PRODUCT_IMAGE,
-  'ghk-cu': DEFAULT_PRODUCT_IMAGE,
-  semax: DEFAULT_PRODUCT_IMAGE,
-  selank: DEFAULT_PRODUCT_IMAGE,
-  retatrutide: DEFAULT_PRODUCT_IMAGE,
-  'glp-3-rt': DEFAULT_PRODUCT_IMAGE,
-  'glp3-rt': DEFAULT_PRODUCT_IMAGE,
-  'aod-9604': DEFAULT_PRODUCT_IMAGE,
-  dsip: DEFAULT_PRODUCT_IMAGE,
-  'dsip-5mg': DEFAULT_PRODUCT_IMAGE,
-  'mt-2': DEFAULT_PRODUCT_IMAGE,
-  mt2: DEFAULT_PRODUCT_IMAGE,
-  kisspeptin: DEFAULT_PRODUCT_IMAGE,
-  Epitalon: DEFAULT_PRODUCT_IMAGE,
-  epitalon: DEFAULT_PRODUCT_IMAGE,
-  NAD: DEFAULT_PRODUCT_IMAGE,
-  nad: DEFAULT_PRODUCT_IMAGE,
+  'bpc-157': '/images/bpc-157-vial.png',
+  'tb-500': '/images/tb-500-vial.png',
+  tb500: '/images/tb500-vial.png',
+  'ghk-cu': '/images/ghk-cu-vial.png',
+  semax: '/images/semax-vial.png',
+  selank: '/images/selank-vial.png',
+  retatrutide: '/images/retatrutide-vial.png',
+  'glp-3-rt': '/images/glp-3-rt-vial.png',
+  'glp3-rt': '/images/glp3-rt-vial.png',
+  'aod-9604': '/images/aod-9604-vial.png',
+  dsip: '/images/dsip-vial.png',
+  'dsip-5mg': '/images/dsip-5mg-vial.png',
+  'dsip-10mg': '/images/dsip-10mg-vial.png',
+  'mt-2': '/images/mt-2-vial.png',
+  mt2: '/images/mt-2-vial.png',
+  'mt2-10mg': '/images/mt-2-vial.png',
+  kisspeptin: '/images/kisspeptin-vial.png',
+  Epitalon: '/images/epitalon-vial.png',
+  epitalon: '/images/epitalon-vial.png',
+  NAD: '/images/nad-vial.png',
+  nad: '/images/nad-vial.png',
+  'nad+': '/images/nad-vial.png',
+  'nad-plus': '/images/nad-vial.png',
   'blend-recovery': DEFAULT_PRODUCT_IMAGE,
   'capsule-stack': DEFAULT_PRODUCT_IMAGE,
   'syringe-kit': DEFAULT_PRODUCT_IMAGE,
@@ -41,7 +45,11 @@ export function resolveProductImageSrc(product: {
   if (raw) {
     if (raw.startsWith('http://') || raw.startsWith('https://') || raw.startsWith('data:')) return raw
     if (raw.startsWith('/')) return raw
-    return `/${raw.replace(/^\.?\//, '')}`
+    return `/${raw.replace(/^\.\?\//, '')}`
   }
-  return PRODUCT_IMAGE_BY_SLUG[product.slug] ?? PRODUCT_IMAGE_BY_SLUG[product.slug.toLowerCase()] ?? DEFAULT_PRODUCT_IMAGE
+  return (
+    PRODUCT_IMAGE_BY_SLUG[product.slug] ??
+    PRODUCT_IMAGE_BY_SLUG[product.slug.toLowerCase()] ??
+    DEFAULT_PRODUCT_IMAGE
+  )
 }

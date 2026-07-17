@@ -30,7 +30,7 @@ export function FeaturedProducts({ products }: FeaturedProductsProps) {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
           <div>
-            <p className="section-index">03 Catalog</p>
+            <p className="section-index">04 Catalog</p>
             <h2 className="mt-4 text-3xl font-bold tracking-tight text-ink sm:text-[2.5rem]">
               Best-selling research <span className="orbit-accent">peptides</span>
             </h2>
@@ -76,7 +76,7 @@ export function FeaturedProducts({ products }: FeaturedProductsProps) {
             <div
               key={product.id}
               data-carousel-card
-              className="w-[min(78vw,280px)] shrink-0 sm:w-[260px] lg:w-[280px]"
+              className="w-[min(46vw,220px)] shrink-0 sm:w-[230px] lg:w-[250px]"
             >
               <ProductCard product={product} />
             </div>

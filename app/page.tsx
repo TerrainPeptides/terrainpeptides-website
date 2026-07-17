@@ -1,6 +1,7 @@
 import { HeroSection } from '@/components/home/hero-section'
 import { FeaturedProducts } from '@/components/home/featured-products'
 import { QualitySection } from '@/components/home/quality-section'
+import { PriceGapSection } from '@/components/home/price-gap-section'
 import { getProductsAsync, getFaqs } from '@/lib/data'
 import { FaqSection } from '@/components/home/faq-section'
 import { TrustStrip } from '@/components/home/trust-strip'
@@ -17,6 +18,7 @@ export default async function HomePage() {
     <div className="flex flex-col bg-white font-sans">
       <HeroSection />
       <TrustStrip />
+      <PriceGapSection products={allProducts} />
       <QualitySection />
       <FeaturedProducts products={allProducts} />
       <CTASection />

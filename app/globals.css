@@ -151,6 +151,9 @@
 }
 
 @layer base {
+  html {
+    zoom: 1.25;
+  }
   * {
     @apply border-border outline-ring/50;
   }
@@ -247,6 +250,11 @@
 
   .btn-ghost-light {
     @apply inline-flex items-center justify-center rounded-full border border-white/30 bg-transparent px-7 py-3.5 text-sm font-semibold tracking-[0.04em] text-white transition-colors hover:bg-white/10;
+  }
+
+  /* Price gap board — 75% so the full comparison fits without scrolling away */
+  .price-gap-section {
+    zoom: 0.75;
   }
 }
 
