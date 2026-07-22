@@ -5,25 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
 import { signIn } from 'next-auth/react'
-import { Eye, EyeOff, FlaskConical, Truck, Microscope } from 'lucide-react'
-
-const AUTH_HERO_FEATURES = [
-  {
-    icon: FlaskConical,
-    iconClass: 'text-terrain-bright',
-    text: 'High quality · Lab tested · Verified COAs',
-  },
-  {
-    icon: Truck,
-    iconClass: 'text-terrain-bright',
-    text: 'Same-day shipping on orders before 1PM PST',
-  },
-  {
-    icon: Microscope,
-    iconClass: 'text-terrain-bright',
-    text: 'Research use only · Verified accounts',
-  },
-] as const
+import { Eye, EyeOff } from 'lucide-react'
 
 type Tab = 'signin' | 'signup'
 
@@ -45,8 +27,8 @@ export default function AuthPage() {
 
 function AuthPageSkeleton() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-white">
-      <div className="h-8 w-8 animate-spin rounded-full border-4 border-border border-t-terrain" />
+    <div className="flex min-h-screen items-center justify-center bg-ink">
+      <div className="h-8 w-8 animate-spin rounded-full border-4 border-white/20 border-t-terrain" />
     </div>
   )
 }
@@ -228,79 +210,55 @@ function AuthPageInner() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col md:flex-row">
-      {/* ── Left Panel: full-bleed photo (vial on right, empty navy on left) + HTML text in that left zone ── */}
-      <div className="relative hidden min-h-screen md:block md:w-[55%] lg:w-[60%]">
-        <div className="relative min-h-screen w-full">
-          <Image
-            src="/images/auth-hero-panel.png"
-            alt="GHK-Cu research peptide vial"
-            fill
-            className="object-cover object-left"
-            priority
-            sizes="(min-width: 1024px) 60vw, 55vw"
-          />
-          {/* Text in the left “empty” area (see annotated reference); vial stays visible on the right */}
-          <div className="absolute inset-0 flex items-center justify-start">
-            <div
-              className="flex h-full w-1/2 min-w-0 max-w-md flex-col justify-center px-7 py-10 pl-8 sm:max-w-lg sm:pl-10 xl:pl-12 xl:pr-2 [&_h1]:[text-shadow:0_2px_24px_rgba(0,0,0,0.55)] [&_li_span:last-child]:[text-shadow:0_1px_12px_rgba(0,0,0,0.45)] [&_p]:[text-shadow:0_1px_16px_rgba(0,0,0,0.4)]"
-            >
-              <h1 className="text-3xl font-bold leading-[1.1] tracking-tight text-white sm:text-4xl xl:text-[2.65rem] xl:leading-[1.08]">
-                Member-only
-                <br />
-                <span className="text-terrain-bright">research access.</span>
-              </h1>
-              <p className="mt-5 max-w-none text-[15px] leading-relaxed text-white/70 sm:text-base">
-                Sign up to browse our full catalog of lab-tested, high-purity peptides — for verified
-                researchers only.
-              </p>
-              <ul className="mt-9 space-y-4">
-                {AUTH_HERO_FEATURES.map(({ icon: Icon, iconClass, text }) => (
-                  <li key={text} className="flex items-start gap-3.5">
-                    <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-white/20 bg-white/10 backdrop-blur-[2px]">
-                      <Icon className={`h-4 w-4 ${iconClass}`} strokeWidth={2} />
-                    </span>
-                    <span className="pt-1 text-sm font-medium leading-snug text-white/95">{text}</span>
-                  </li>
-                ))}
-              </ul>
-              <p className="mt-12 text-xs text-white/45 [text-shadow:0_1px_8px_rgba(0,0,0,0.5)]">
-                © {new Date().getFullYear()} Terrain Peptides · For research use only
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div className="relative flex min-h-screen items-center justify-center bg-ink px-4 py-14 sm:px-6">
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            'radial-gradient(50% 60% at 12% 10%, rgba(32,157,80,0.22), transparent 65%), radial-gradient(40% 50% at 85% 25%, rgba(32,157,80,0.12), transparent 70%)',
+        }}
+        aria-hidden
+      />
 
-      {/* ── Right Panel ─────────────────────────────────────── */}
-      <div className="flex flex-1 items-center justify-center bg-white px-6 py-12 sm:px-10">
-        <div className="w-full max-w-[400px]">
-          {/* Mobile logo */}
-          <div className="mb-8 flex justify-center md:hidden">
+      <div className="relative w-full max-w-[420px]">
+        <div className="mb-8 text-center">
+          <Link href="/" className="inline-flex flex-col items-center">
             <Image
               src="/images/terrain-logo.png"
-              alt="Terrain"
+              alt="Terrain Peptides"
               width={603}
               height={278}
-              className="h-12 w-auto"
+              className="h-11 w-auto brightness-0 invert sm:h-12"
+              priority
             />
-          </div>
+          </Link>
+          <p className="mt-5 font-mono text-[0.7rem] font-medium uppercase tracking-[0.2em] text-terrain-bright">
+            Research access
+          </p>
+          <h1 className="mt-3 text-2xl font-bold tracking-tight text-white sm:text-[1.75rem]">
+            {tab === 'signup' ? 'Create your account' : 'Welcome back'}
+          </h1>
+          <p className="mt-2 text-sm text-white/60">
+            Lab-tested peptides for verified researchers.
+          </p>
+        </div>
 
+        <div className="rounded-2xl border border-white/10 bg-white p-6 shadow-[0_20px_60px_rgba(0,0,0,0.35)] sm:p-8">
           {/* Promo claim banner */}
           {claimPromo && promoPercent && (
-            <div className="mb-6 rounded-2xl bg-primary px-5 py-4 text-white">
+            <div className="mb-6 rounded-xl bg-terrain px-5 py-4 text-white">
               <div className="flex items-start gap-3">
-                <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/10">
-                  <span className="text-sm">🎁</span>
+                <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/15">
+                  <span className="text-sm" aria-hidden>
+                    %
+                  </span>
                 </div>
                 <div>
-                  <p className="text-sm font-bold">
-                    {promoPercent}% off waiting for you
-                  </p>
-                  <p className="mt-0.5 text-xs leading-relaxed text-white/60">
+                  <p className="text-sm font-bold">{promoPercent}% off waiting for you</p>
+                  <p className="mt-0.5 text-xs leading-relaxed text-white/75">
                     Create your account and code{' '}
-                    <span className="font-mono font-bold text-white">{claimPromo}</span>{' '}
-                    will be saved automatically.
+                    <span className="font-mono font-bold text-white">{claimPromo}</span> will be
+                    saved automatically.
                   </p>
                 </div>
               </div>
@@ -308,24 +266,26 @@ function AuthPageInner() {
           )}
 
           {/* Tab switcher */}
-          <div className="mb-8 border-b border-gray-200">
+          <div className="mb-8 border-b border-border">
             <div className="flex">
               <button
+                type="button"
                 onClick={() => setTab('signin')}
                 className={`pb-3 pr-6 text-sm font-semibold transition-all ${
                   tab === 'signin'
                     ? 'border-b-2 border-terrain text-terrain-deep'
-                    : 'text-gray-400 hover:text-gray-600'
+                    : 'text-muted-foreground hover:text-ink'
                 }`}
               >
                 Sign In
               </button>
               <button
+                type="button"
                 onClick={() => setTab('signup')}
-                className={`pb-3 px-4 text-sm font-semibold transition-all ${
+                className={`px-4 pb-3 text-sm font-semibold transition-all ${
                   tab === 'signup'
                     ? 'border-b-2 border-terrain text-terrain-deep'
-                    : 'text-gray-400 hover:text-gray-600'
+                    : 'text-muted-foreground hover:text-ink'
                 }`}
               >
                 Create Account
@@ -335,7 +295,13 @@ function AuthPageInner() {
 
           {/* General error banner */}
           {errors.general && (
-            <div className="mb-5 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+            <div
+              className={`mb-5 rounded-lg border px-4 py-3 text-sm ${
+                errors.general.includes('Account created')
+                  ? 'border-terrain/30 bg-terrain-muted text-terrain-deep'
+                  : 'border-red-200 bg-red-50 text-red-700'
+              }`}
+            >
               {errors.general}
             </div>
           )}
@@ -344,7 +310,7 @@ function AuthPageInner() {
           {tab === 'signin' && (
             <form onSubmit={handleSignIn} className="space-y-5" noValidate>
               <div>
-                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-gray-500">
+                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                   Email or Username
                 </label>
                 <input
@@ -352,16 +318,16 @@ function AuthPageInner() {
                   autoComplete="email"
                   placeholder="you@example.com"
                   value={signInForm.email}
-                  onChange={e => setSignInForm(f => ({ ...f, email: e.target.value }))}
+                  onChange={(e) => setSignInForm((f) => ({ ...f, email: e.target.value }))}
                   className={`w-full rounded-lg border px-4 py-2.5 text-sm outline-none transition focus:border-terrain focus:ring-2 focus:ring-terrain/15 ${
-                    errors.email ? 'border-red-400 bg-red-50' : 'border-gray-300 bg-white'
+                    errors.email ? 'border-red-400 bg-red-50' : 'border-border bg-white'
                   }`}
                 />
                 {errors.email && <p className="mt-1 text-xs text-red-500">{errors.email}</p>}
               </div>
 
               <div>
-                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-gray-500">
+                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                   Password
                 </label>
                 <div className="relative">
@@ -370,15 +336,15 @@ function AuthPageInner() {
                     autoComplete="current-password"
                     placeholder="••••••••"
                     value={signInForm.password}
-                    onChange={e => setSignInForm(f => ({ ...f, password: e.target.value }))}
+                    onChange={(e) => setSignInForm((f) => ({ ...f, password: e.target.value }))}
                     className={`w-full rounded-lg border px-4 py-2.5 pr-11 text-sm outline-none transition focus:border-terrain focus:ring-2 focus:ring-terrain/15 ${
-                      errors.password ? 'border-red-400 bg-red-50' : 'border-gray-300 bg-white'
+                      errors.password ? 'border-red-400 bg-red-50' : 'border-border bg-white'
                     }`}
                   />
                   <button
                     type="button"
-                    onClick={() => setShowPassword(v => !v)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    onClick={() => setShowPassword((v) => !v)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-ink"
                     tabIndex={-1}
                   >
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -390,7 +356,7 @@ function AuthPageInner() {
               <div className="flex justify-end">
                 <Link
                   href="/auth/forgot-password"
-                  className="text-xs font-medium text-terrain-deep/70 hover:text-terrain-deep transition-colors"
+                  className="text-xs font-medium text-terrain-deep/70 transition-colors hover:text-terrain-deep"
                 >
                   Forgot password?
                 </Link>
@@ -399,7 +365,7 @@ function AuthPageInner() {
               <button
                 type="submit"
                 disabled={loading}
-                className="flex w-full items-center justify-center gap-2 rounded-full bg-terrain px-4 py-3 text-sm font-semibold text-white transition hover:bg-terrain-light disabled:cursor-not-allowed disabled:opacity-60"
+                className="flex w-full items-center justify-center gap-2 rounded-full bg-terrain px-4 py-3 text-sm font-semibold text-white transition hover:bg-terrain-deep disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {loading ? (
                   <>
@@ -411,7 +377,7 @@ function AuthPageInner() {
                 )}
               </button>
 
-              <p className="text-center text-xs text-gray-500">
+              <p className="text-center text-xs text-muted-foreground">
                 Don&apos;t have an account?{' '}
                 <button
                   type="button"
@@ -428,7 +394,7 @@ function AuthPageInner() {
           {tab === 'signup' && (
             <form onSubmit={handleSignUp} className="space-y-5" noValidate>
               <div>
-                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-gray-500">
+                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                   Full Name
                 </label>
                 <input
@@ -436,16 +402,16 @@ function AuthPageInner() {
                   autoComplete="name"
                   placeholder="Dr. Jane Smith"
                   value={signUpForm.name}
-                  onChange={e => setSignUpForm(f => ({ ...f, name: e.target.value }))}
+                  onChange={(e) => setSignUpForm((f) => ({ ...f, name: e.target.value }))}
                   className={`w-full rounded-lg border px-4 py-2.5 text-sm outline-none transition focus:border-terrain focus:ring-2 focus:ring-terrain/15 ${
-                    errors.name ? 'border-red-400 bg-red-50' : 'border-gray-300 bg-white'
+                    errors.name ? 'border-red-400 bg-red-50' : 'border-border bg-white'
                   }`}
                 />
                 {errors.name && <p className="mt-1 text-xs text-red-500">{errors.name}</p>}
               </div>
 
               <div>
-                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-gray-500">
+                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                   Email
                 </label>
                 <input
@@ -453,16 +419,16 @@ function AuthPageInner() {
                   autoComplete="email"
                   placeholder="you@example.com"
                   value={signUpForm.email}
-                  onChange={e => setSignUpForm(f => ({ ...f, email: e.target.value }))}
+                  onChange={(e) => setSignUpForm((f) => ({ ...f, email: e.target.value }))}
                   className={`w-full rounded-lg border px-4 py-2.5 text-sm outline-none transition focus:border-terrain focus:ring-2 focus:ring-terrain/15 ${
-                    errors.email ? 'border-red-400 bg-red-50' : 'border-gray-300 bg-white'
+                    errors.email ? 'border-red-400 bg-red-50' : 'border-border bg-white'
                   }`}
                 />
                 {errors.email && <p className="mt-1 text-xs text-red-500">{errors.email}</p>}
               </div>
 
               <div>
-                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-gray-500">
+                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                   Password
                 </label>
                 <div className="relative">
@@ -471,15 +437,15 @@ function AuthPageInner() {
                     autoComplete="new-password"
                     placeholder="Min. 8 characters"
                     value={signUpForm.password}
-                    onChange={e => setSignUpForm(f => ({ ...f, password: e.target.value }))}
+                    onChange={(e) => setSignUpForm((f) => ({ ...f, password: e.target.value }))}
                     className={`w-full rounded-lg border px-4 py-2.5 pr-11 text-sm outline-none transition focus:border-terrain focus:ring-2 focus:ring-terrain/15 ${
-                      errors.password ? 'border-red-400 bg-red-50' : 'border-gray-300 bg-white'
+                      errors.password ? 'border-red-400 bg-red-50' : 'border-border bg-white'
                     }`}
                   />
                   <button
                     type="button"
-                    onClick={() => setShowPassword(v => !v)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    onClick={() => setShowPassword((v) => !v)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-ink"
                     tabIndex={-1}
                   >
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -489,7 +455,7 @@ function AuthPageInner() {
               </div>
 
               <div>
-                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-gray-500">
+                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                   Confirm Password
                 </label>
                 <div className="relative">
@@ -498,18 +464,24 @@ function AuthPageInner() {
                     autoComplete="new-password"
                     placeholder="Re-enter your password"
                     value={signUpForm.confirmPassword}
-                    onChange={e => setSignUpForm(f => ({ ...f, confirmPassword: e.target.value }))}
+                    onChange={(e) =>
+                      setSignUpForm((f) => ({ ...f, confirmPassword: e.target.value }))
+                    }
                     className={`w-full rounded-lg border px-4 py-2.5 pr-11 text-sm outline-none transition focus:border-terrain focus:ring-2 focus:ring-terrain/15 ${
-                      errors.confirmPassword ? 'border-red-400 bg-red-50' : 'border-gray-300 bg-white'
+                      errors.confirmPassword ? 'border-red-400 bg-red-50' : 'border-border bg-white'
                     }`}
                   />
                   <button
                     type="button"
-                    onClick={() => setShowConfirmPassword(v => !v)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    onClick={() => setShowConfirmPassword((v) => !v)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-ink"
                     tabIndex={-1}
                   >
-                    {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    {showConfirmPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
                   </button>
                 </div>
                 {errors.confirmPassword && (
@@ -520,7 +492,7 @@ function AuthPageInner() {
               <button
                 type="submit"
                 disabled={loading}
-                className="flex w-full items-center justify-center gap-2 rounded-full bg-terrain px-4 py-3 text-sm font-semibold text-white transition hover:bg-terrain-light disabled:cursor-not-allowed disabled:opacity-60"
+                className="flex w-full items-center justify-center gap-2 rounded-full bg-terrain px-4 py-3 text-sm font-semibold text-white transition hover:bg-terrain-deep disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {loading ? (
                   <>
@@ -532,7 +504,7 @@ function AuthPageInner() {
                 )}
               </button>
 
-              <p className="text-center text-xs text-gray-500">
+              <p className="text-center text-xs text-muted-foreground">
                 Already have an account?{' '}
                 <button
                   type="button"
@@ -543,13 +515,13 @@ function AuthPageInner() {
                 </button>
               </p>
 
-              <p className="text-center text-[11px] leading-relaxed text-gray-400">
+              <p className="text-center text-[11px] leading-relaxed text-muted-foreground/80">
                 By creating an account you agree to our{' '}
-                <Link href="/terms" className="underline hover:text-gray-600">
+                <Link href="/terms" className="underline hover:text-ink">
                   Terms of Service
                 </Link>{' '}
                 and{' '}
-                <Link href="/privacy" className="underline hover:text-gray-600">
+                <Link href="/privacy" className="underline hover:text-ink">
                   Privacy Policy
                 </Link>
                 .
@@ -557,6 +529,10 @@ function AuthPageInner() {
             </form>
           )}
         </div>
+
+        <p className="mt-8 text-center text-xs text-white/40">
+          © {new Date().getFullYear()} Terrain Peptides · For research use only
+        </p>
       </div>
     </div>
   )

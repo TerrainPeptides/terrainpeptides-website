@@ -40,10 +40,10 @@ function NavbarTickerPeriod({ duplicate }: { duplicate?: boolean }) {
     >
       {TICKER_ITEMS.map((text) => (
         <Fragment key={duplicate ? `d-${text}` : text}>
-          <span className="whitespace-nowrap text-xs font-semibold uppercase tracking-[0.14em] text-ink/80 sm:text-[0.8125rem]">
+          <span className="whitespace-nowrap text-xs font-medium uppercase tracking-[0.14em] text-black/75 sm:text-[0.8125rem]">
             {text}
           </span>
-          <span className="shrink-0 select-none text-terrain/60" aria-hidden>
+          <span className="shrink-0 select-none text-black/35" aria-hidden>
             ◆
           </span>
         </Fragment>
@@ -77,7 +77,7 @@ export function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="rounded-sm px-4 py-2 text-[0.8rem] font-semibold uppercase tracking-[0.1em] text-ink/70 transition-colors hover:bg-white hover:text-terrain-deep lg:px-5"
+                className="rounded-sm px-4 py-2 text-[0.8rem] font-medium uppercase tracking-[0.1em] text-black transition-colors hover:bg-[#f4f4f5] hover:text-black lg:px-5"
               >
                 {link.label}
               </Link>
@@ -88,7 +88,7 @@ export function Navbar() {
             <Button
               variant="ghost"
               size="icon"
-              className="relative text-ink hover:bg-section-subtle hover:text-terrain-deep"
+              className="relative text-black hover:bg-[#f4f4f5] hover:text-black"
               asChild
             >
               <Link href="/cart">
@@ -102,12 +102,12 @@ export function Navbar() {
               </Link>
             </Button>
             {status === 'loading' ? null : session ? (
-              <DropdownMenu>
+              <DropdownMenu modal={false}>
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="relative text-ink hover:bg-section-subtle hover:text-terrain-deep"
+                    className="relative shrink-0 text-black hover:bg-[#f4f4f5] hover:text-black"
                   >
                     <div className="flex h-7 w-7 items-center justify-center rounded-sm border border-border bg-section-subtle text-xs font-bold text-terrain-deep">
                       {session.user?.name?.[0]?.toUpperCase() ??
@@ -118,7 +118,13 @@ export function Navbar() {
                     <span className="sr-only">Account</span>
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-52">
+                <DropdownMenuContent
+                  align="end"
+                  side="bottom"
+                  sideOffset={8}
+                  collisionPadding={16}
+                  className="z-[200] w-52"
+                >
                   <div className="px-2 py-1.5">
                     <p className="text-xs font-medium text-foreground">{session.user?.name}</p>
                     <p className="truncate text-xs text-muted-foreground">{session.user?.email}</p>
@@ -143,7 +149,7 @@ export function Navbar() {
               <Button
                 variant="ghost"
                 size="icon"
-                className="text-ink hover:bg-section-subtle hover:text-terrain-deep"
+                className="text-black hover:bg-[#f4f4f5] hover:text-black"
                 asChild
               >
                 <Link href="/auth">
@@ -155,15 +161,27 @@ export function Navbar() {
           </div>
 
           <div className="flex items-center justify-self-end gap-1 md:hidden">
-            {status === 'loading' ? null : !session ? (
-              <Button variant="ghost" size="icon" className="text-ink hover:bg-section-subtle" asChild>
+            {status === 'loading' ? null : session ? (
+              <Button variant="ghost" size="icon" className="shrink-0 text-black hover:bg-[#f4f4f5]" asChild>
+                <Link href="/account">
+                  <div className="flex h-7 w-7 items-center justify-center rounded-sm border border-border bg-section-subtle text-xs font-bold text-terrain-deep">
+                    {session.user?.name?.[0]?.toUpperCase() ??
+                      session.user?.email?.[0]?.toUpperCase() ?? (
+                        <User className="h-3.5 w-3.5" />
+                      )}
+                  </div>
+                  <span className="sr-only">Account</span>
+                </Link>
+              </Button>
+            ) : (
+              <Button variant="ghost" size="icon" className="text-black hover:bg-[#f4f4f5]" asChild>
                 <Link href="/auth">
                   <CircleUser className="h-5 w-5" />
                   <span className="sr-only">Sign in</span>
                 </Link>
               </Button>
-            ) : null}
-            <Button variant="ghost" size="icon" className="relative text-ink hover:bg-section-subtle" asChild>
+            )}
+            <Button variant="ghost" size="icon" className="relative text-black hover:bg-[#f4f4f5]" asChild>
               <Link href="/cart">
                 <ShoppingCart className="h-5 w-5" />
                 {totalItems > 0 && (
@@ -176,7 +194,7 @@ export function Navbar() {
             </Button>
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="text-ink hover:bg-section-subtle">
+                <Button variant="ghost" size="icon" className="text-black hover:bg-[#f4f4f5]">
                   <Menu className="h-5 w-5" />
                   <span className="sr-only">Menu</span>
                 </Button>
@@ -189,7 +207,7 @@ export function Navbar() {
                       key={link.href}
                       href={link.href}
                       onClick={() => setIsOpen(false)}
-                      className="rounded-sm px-3 py-2.5 text-sm font-semibold uppercase tracking-[0.08em] text-ink transition-colors hover:bg-section-subtle hover:text-terrain-deep"
+                      className="rounded-sm px-3 py-2.5 text-sm font-medium uppercase tracking-[0.08em] text-black transition-colors hover:bg-[#f4f4f5] hover:text-black"
                     >
                       {link.label}
                     </Link>
@@ -201,6 +219,14 @@ export function Navbar() {
                           <p className="text-sm font-medium">{session.user?.name}</p>
                           <p className="text-xs text-muted-foreground">{session.user?.email}</p>
                         </div>
+                        <Link
+                          href="/account"
+                          onClick={() => setIsOpen(false)}
+                          className="flex items-center gap-2 text-sm font-medium text-black"
+                        >
+                          <User className="h-4 w-4" />
+                          My Account
+                        </Link>
                         <button
                           onClick={() => {
                             signOut({ callbackUrl: '/' })
@@ -216,7 +242,7 @@ export function Navbar() {
                       <Link
                         href="/auth"
                         onClick={() => setIsOpen(false)}
-                        className="block rounded-sm px-3 py-2.5 text-sm font-semibold uppercase tracking-[0.08em] text-ink hover:bg-section-subtle hover:text-terrain-deep"
+                        className="block rounded-sm px-3 py-2.5 text-sm font-medium uppercase tracking-[0.08em] text-black hover:bg-[#f4f4f5] hover:text-black"
                       >
                         Sign In
                       </Link>

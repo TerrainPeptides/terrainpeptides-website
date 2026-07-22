@@ -50,13 +50,13 @@ export default async function FAQPage() {
     <div className="min-h-screen bg-white">
       <section className="page-hero-dark">
         <div className="mx-auto max-w-4xl px-4 py-12 text-center sm:px-6 sm:py-14 lg:px-8">
-          <p className="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-terrain">
+          <p className="text-[0.68rem] font-medium uppercase tracking-[0.2em] text-black/50">
             Knowledge base
           </p>
-          <h1 className="mt-3 text-3xl font-bold tracking-tight text-ink sm:text-4xl">
+          <h1 className="mt-3 text-3xl font-semibold tracking-tight text-black sm:text-4xl">
             Frequently asked <span className="orbit-accent">questions</span>
           </h1>
-          <p className="mx-auto mt-3 max-w-xl text-muted-foreground">
+          <p className="mx-auto mt-3 max-w-xl text-black/65">
             Answers about product quality, shipping, payments, and research compliance.
           </p>
         </div>

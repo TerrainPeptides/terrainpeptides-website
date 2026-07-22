@@ -100,7 +100,7 @@ export function AboutTerrainSection() {
             <div className="mt-10">
               <Button
                 size="lg"
-                className="rounded-md bg-black px-8 font-semibold text-white hover:bg-black/90"
+                className="rounded-full bg-black px-6 py-2.5 text-sm font-medium text-white hover:bg-[#4eb573]"
                 asChild
               >
                 <Link href="/shop">

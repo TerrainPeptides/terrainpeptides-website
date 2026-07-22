@@ -25,7 +25,7 @@ const footerLinks = {
 
 export function Footer() {
   return (
-    <footer className="border-t border-white/10 bg-ink text-white">
+    <footer className="border-t border-white/10 bg-black text-white">
       <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
         <div className="mb-12 flex flex-wrap items-center gap-3 rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3.5">
           <ShieldCheck className="h-4 w-4 shrink-0 text-terrain-bright" aria-hidden />
@@ -60,7 +60,7 @@ export function Footer() {
             ] as const
           ).map(([title, links]) => (
             <div key={title}>
-              <h3 className="mb-4 text-[0.7rem] font-semibold uppercase tracking-[0.16em] text-terrain-bright">
+              <h3 className="mb-4 text-[0.7rem] font-medium uppercase tracking-[0.16em] text-white">
                 {title}
               </h3>
               <ul className="space-y-2.5">

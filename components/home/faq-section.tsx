@@ -17,22 +17,22 @@ export function FaqSection({ faqs }: { faqs: FAQ[] }) {
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
         <div className="mb-10 text-center">
           <p className="section-index justify-center">05 FAQ</p>
-          <h2 className="mt-4 text-3xl font-bold tracking-tight text-ink sm:text-[2.5rem]">
+          <h2 className="mt-4 text-3xl font-semibold tracking-tight text-black sm:text-[2.5rem]">
             Frequently asked <span className="orbit-accent">questions</span>
           </h2>
-          <p className="mx-auto mt-3 max-w-md text-base text-muted-foreground">
+          <p className="mx-auto mt-3 max-w-md text-base text-black/60">
             Purity, shipping, payments, and research compliance — answered clearly.
           </p>
         </div>
 
-        <div className="overflow-hidden rounded-2xl border border-border bg-white">
+        <div className="overflow-hidden rounded-2xl border border-black/10 bg-white">
           <Accordion type="single" collapsible className="w-full">
             {items.map((faq) => (
-              <AccordionItem key={faq.id} value={faq.id} className="border-border px-5 sm:px-7">
-                <AccordionTrigger className="py-5 text-left text-[0.95rem] font-semibold text-ink hover:no-underline [&>svg]:text-muted-foreground [&[data-state=open]>svg]:text-terrain">
+              <AccordionItem key={faq.id} value={faq.id} className="border-black/10 px-5 sm:px-7">
+                <AccordionTrigger className="py-5 text-left text-[0.95rem] font-semibold text-black hover:no-underline [&>svg]:text-black/40 [&[data-state=open]>svg]:text-black">
                   {faq.question}
                 </AccordionTrigger>
-                <AccordionContent className="pb-5 text-base leading-relaxed text-muted-foreground">
+                <AccordionContent className="pb-5 text-base leading-relaxed text-black/60">
                   {faq.answer}
                 </AccordionContent>
               </AccordionItem>
@@ -43,7 +43,7 @@ export function FaqSection({ faqs }: { faqs: FAQ[] }) {
         <p className="mt-8 text-center">
           <Link
             href="/faq"
-            className="text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-terrain-deep underline underline-offset-4 transition hover:text-ink"
+            className="text-[0.7rem] font-medium uppercase tracking-[0.14em] text-black underline underline-offset-4 transition hover:text-terrain-deep"
           >
             View all FAQs
           </Link>

@@ -7,24 +7,21 @@ const STATS = [
 
 export function TrustStrip() {
   return (
-    <section
-      className="border-y border-border bg-white"
-      aria-label="Key metrics"
-    >
+    <section className="border-y border-black/10 bg-white" aria-label="Key metrics">
       <div className="mx-auto grid max-w-7xl grid-cols-2 lg:grid-cols-4">
         {STATS.map((stat, i) => (
           <div
             key={stat.label}
             className={`relative px-5 py-10 text-center sm:px-8 sm:py-12 ${
-              i % 2 === 1 ? 'border-l border-border' : ''
-            } ${i >= 2 ? 'border-t border-border lg:border-t-0' : ''} ${
-              i >= 1 ? 'lg:border-l lg:border-border' : ''
+              i % 2 === 1 ? 'border-l border-black/10' : ''
+            } ${i >= 2 ? 'border-t border-black/10 lg:border-t-0' : ''} ${
+              i >= 1 ? 'lg:border-l lg:border-black/10' : ''
             }`}
           >
-            <p className="font-mono text-3xl font-medium tracking-tight text-ink sm:text-[2.35rem] [font-feature-settings:'tnum']">
+            <p className="text-3xl font-semibold tracking-tight text-black sm:text-[2.35rem] [font-feature-settings:'tnum']">
               {stat.value}
             </p>
-            <p className="mt-2.5 font-mono text-[11px] font-medium uppercase tracking-[0.16em] text-[#7a857d]">
+            <p className="mt-2.5 text-[11px] font-medium uppercase tracking-[0.16em] text-black/50">
               {stat.label}
             </p>
           </div>

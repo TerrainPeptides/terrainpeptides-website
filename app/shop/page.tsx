@@ -25,13 +25,13 @@ export default async function ShopPage() {
     <div className="bg-white">
       <div className="page-hero-dark">
         <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
-          <p className="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-terrain">
+          <p className="text-[0.68rem] font-medium uppercase tracking-[0.2em] text-black/50">
             Research catalog
           </p>
-          <h1 className="mt-3 text-3xl font-bold tracking-tight text-ink sm:text-4xl">
-            All <span className="orbit-accent">products</span>
+          <h1 className="mt-3 text-3xl font-semibold tracking-tight text-black sm:text-4xl">
+            All products
           </h1>
-          <p className="mt-3 max-w-xl text-base text-muted-foreground">
+          <p className="mt-3 max-w-xl text-base text-black/65">
             99%+ purity research peptides — third-party tested, COA included with every order.
           </p>
         </div>

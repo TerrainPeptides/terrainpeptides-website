@@ -31,10 +31,10 @@ export function FeaturedProducts({ products }: FeaturedProductsProps) {
         <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
           <div>
             <p className="section-index">04 Catalog</p>
-            <h2 className="mt-4 text-3xl font-bold tracking-tight text-ink sm:text-[2.5rem]">
+            <h2 className="mt-4 text-3xl font-semibold tracking-tight text-black sm:text-[2.5rem]">
               Best-selling research <span className="orbit-accent">peptides</span>
             </h2>
-            <p className="mt-3 max-w-lg text-base text-muted-foreground">
+            <p className="mt-3 max-w-lg text-base text-black/65">
               Independently verified compounds — COA included with every order.
             </p>
           </div>
@@ -45,7 +45,7 @@ export function FeaturedProducts({ products }: FeaturedProductsProps) {
                 type="button"
                 aria-label="Previous products"
                 onClick={() => scrollByCard(-1)}
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-border bg-white text-ink transition hover:border-terrain hover:text-terrain-deep"
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-black/15 bg-white text-black transition hover:border-black hover:bg-black hover:text-white"
               >
                 <ChevronLeft className="h-5 w-5" />
               </button>
@@ -53,14 +53,14 @@ export function FeaturedProducts({ products }: FeaturedProductsProps) {
                 type="button"
                 aria-label="Next products"
                 onClick={() => scrollByCard(1)}
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-border bg-white text-ink transition hover:border-terrain hover:text-terrain-deep"
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-black/15 bg-white text-black transition hover:border-black hover:bg-black hover:text-white"
               >
                 <ChevronRight className="h-5 w-5" />
               </button>
             </div>
             <Link
               href="/shop"
-              className="group hidden items-center gap-2 rounded-full border border-ink bg-ink px-5 py-2.5 text-[0.7rem] font-semibold uppercase tracking-[0.1em] text-white transition hover:bg-terrain hover:border-terrain sm:inline-flex"
+              className="group hidden items-center gap-2 rounded-full border border-black bg-black px-5 py-2 text-[0.7rem] font-medium uppercase tracking-[0.1em] text-white transition hover:border-[#4eb573] hover:bg-[#4eb573] sm:inline-flex"
             >
               See all
               <ArrowUpRight className="h-4 w-4" />
@@ -86,7 +86,7 @@ export function FeaturedProducts({ products }: FeaturedProductsProps) {
         <div className="mt-8 sm:hidden">
           <Link
             href="/shop"
-            className="inline-flex items-center gap-2 rounded-full border border-ink bg-ink px-5 py-2.5 text-[0.7rem] font-semibold uppercase tracking-[0.1em] text-white"
+            className="inline-flex items-center gap-2 rounded-full border border-black bg-black px-5 py-2 text-[0.7rem] font-medium uppercase tracking-[0.1em] text-white"
           >
             See all products
             <ArrowUpRight className="h-4 w-4" />

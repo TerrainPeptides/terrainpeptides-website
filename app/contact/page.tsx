@@ -95,13 +95,13 @@ export default function ContactPage() {
       <section className="page-hero-dark">
         <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
-            <p className="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-terrain">
+            <p className="text-[0.68rem] font-medium uppercase tracking-[0.2em] text-black/50">
               Customer support
             </p>
-            <h1 className="mt-3 text-3xl font-bold tracking-tight text-ink sm:text-4xl">
-              Contact our <span className="orbit-accent">support</span> team
+            <h1 className="mt-3 text-3xl font-semibold tracking-tight text-black sm:text-4xl">
+              Contact our support team
             </h1>
-            <p className="mt-3 text-base leading-relaxed text-muted-foreground">
+            <p className="mt-3 text-base leading-relaxed text-black/65">
               Questions about orders, certificates of analysis, or research compounds? Our team
               responds within one business day.
             </p>

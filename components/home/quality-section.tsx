@@ -37,10 +37,10 @@ export function QualitySection() {
         <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:gap-20 lg:px-8">
           <div>
             <p className="section-index">02 Mission</p>
-            <h2 className="mt-4 text-3xl font-bold tracking-tight text-ink sm:text-[2.5rem] sm:leading-[1.1]">
+            <h2 className="mt-4 text-3xl font-semibold tracking-tight text-black sm:text-[2.5rem] sm:leading-[1.1]">
               Where dedication meets <span className="orbit-accent">accuracy</span>
             </h2>
-            <p className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
+            <p className="mt-5 max-w-xl text-base leading-relaxed text-black/65 sm:text-lg">
               Independent researchers deserve a foundation they can rely on. Terrain delivers
               research-grade peptides with verified purity, precise dosing, and documentation you
               can open before you buy.
@@ -51,7 +51,7 @@ export function QualitySection() {
               </Link>
               <Link
                 href="/faq"
-                className="inline-flex items-center gap-2 rounded-full px-2 text-sm font-semibold text-ink/60 transition hover:text-terrain-deep"
+                className="inline-flex items-center gap-2 rounded-full px-2 text-sm font-medium text-black/70 transition hover:text-black"
               >
                 Learn more
                 <ArrowUpRight className="h-4 w-4" />
@@ -59,8 +59,8 @@ export function QualitySection() {
             </div>
           </div>
 
-          <div className="overflow-hidden rounded-2xl border border-border bg-section-subtle">
-            <div className="relative flex min-h-[320px] items-center justify-center bg-[#f0f3f1] p-10 sm:min-h-[400px]">
+          <div className="overflow-hidden rounded-2xl border border-black/10 bg-[#fafafa]">
+            <div className="relative flex min-h-[320px] items-center justify-center bg-[#f4f4f5] p-10 sm:min-h-[400px]">
               <Image
                 src="/images/quality-vial.png"
                 alt="Terrain research peptide"
@@ -69,17 +69,17 @@ export function QualitySection() {
                 className="h-auto max-h-[340px] w-auto object-contain"
               />
             </div>
-            <div className="grid grid-cols-3 divide-x divide-border border-t border-border bg-white">
+            <div className="grid grid-cols-3 divide-x divide-black/10 border-t border-black/10 bg-white">
               {[
                 { k: 'HPLC', v: 'Verified' },
                 { k: 'Mass Spec', v: 'Confirmed' },
                 { k: 'COA', v: 'Included' },
               ].map((cell) => (
                 <div key={cell.k} className="px-3 py-4 text-center">
-                  <p className="font-mono text-[0.6rem] font-semibold uppercase tracking-[0.14em] text-ink/40">
+                  <p className="font-mono text-[0.6rem] font-medium uppercase tracking-[0.14em] text-black/40">
                     {cell.k}
                   </p>
-                  <p className="mt-1 text-xs font-semibold text-ink sm:text-sm">{cell.v}</p>
+                  <p className="mt-1 text-xs font-semibold text-black sm:text-sm">{cell.v}</p>
                 </div>
               ))}
             </div>
@@ -90,21 +90,21 @@ export function QualitySection() {
       <section className="border-b border-border bg-section-subtle py-20 sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <p className="section-index">03 Standards</p>
-          <h2 className="mt-4 max-w-2xl text-3xl font-bold tracking-tight text-ink sm:text-[2.5rem]">
-            Five things we get right, <span className="orbit-accent">every batch</span>
+          <h2 className="mt-4 max-w-2xl text-3xl font-semibold tracking-tight text-black sm:text-[2.5rem]">
+            Five things we get right, every batch.
           </h2>
 
-          <ol className="mt-12 overflow-hidden rounded-2xl border border-border bg-white">
+          <ol className="mt-12 overflow-hidden rounded-2xl border border-black/10 bg-white">
             {STANDARDS.map((item, idx) => (
               <li
                 key={item.n}
                 className={`grid gap-3 px-5 py-7 sm:grid-cols-[4rem_minmax(0,12rem)_1fr] sm:items-start sm:gap-8 sm:px-8 ${
-                  idx !== STANDARDS.length - 1 ? 'border-b border-border' : ''
+                  idx !== STANDARDS.length - 1 ? 'border-b border-black/10' : ''
                 }`}
               >
-                <span className="font-mono text-sm font-semibold text-terrain">{item.n}</span>
-                <h3 className="text-lg font-bold text-ink">{item.title}</h3>
-                <p className="text-sm leading-relaxed text-muted-foreground">{item.body}</p>
+                <span className="font-mono text-sm font-medium text-black/40">{item.n}</span>
+                <h3 className="text-lg font-semibold text-black">{item.title}</h3>
+                <p className="text-sm leading-relaxed text-black/60">{item.body}</p>
               </li>
             ))}
           </ol>
