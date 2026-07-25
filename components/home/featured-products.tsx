@@ -1,8 +1,7 @@
 'use client'
 
 import { useRef } from 'react'
-import Link from 'next/link'
-import { ArrowUpRight, ChevronLeft, ChevronRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { ProductCard } from '@/components/product-card'
 import type { Product } from '@/lib/types'
 
@@ -15,82 +14,57 @@ export function FeaturedProducts({ products }: FeaturedProductsProps) {
 
   if (!products || products.length === 0) return null
 
-  const featured = products.slice(0, 12)
+  const featured = products.filter((p) => p.featured).slice(0, 12)
+  const items = featured.length > 0 ? featured : products.slice(0, 12)
 
   const scrollByCard = (direction: -1 | 1) => {
     const el = scrollerRef.current
     if (!el) return
     const card = el.querySelector<HTMLElement>('[data-carousel-card]')
-    const amount = card ? card.offsetWidth + 20 : 300
+    const amount = card ? card.offsetWidth + 28 : 320
     el.scrollBy({ left: direction * amount, behavior: 'smooth' })
   }
 
   return (
-    <section className="border-b border-border bg-white py-20 sm:py-24">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
-          <div>
-            <p className="section-index">04 Catalog</p>
-            <h2 className="mt-4 text-3xl font-semibold tracking-tight text-black sm:text-[2.5rem]">
-              Best-selling research <span className="orbit-accent">peptides</span>
-            </h2>
-            <p className="mt-3 max-w-lg text-base text-black/65">
-              Independently verified compounds — COA included with every order.
-            </p>
-          </div>
+    <section className="border-b border-black/8 bg-white py-20 sm:py-24">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <p className="section-index">03 Catalog</p>
+        <h2 className="mt-4 text-3xl font-semibold tracking-tight text-black sm:text-[2.5rem]">
+          Featured Products
+        </h2>
 
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                aria-label="Previous products"
-                onClick={() => scrollByCard(-1)}
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-black/15 bg-white text-black transition hover:border-black hover:bg-black hover:text-white"
-              >
-                <ChevronLeft className="h-5 w-5" />
-              </button>
-              <button
-                type="button"
-                aria-label="Next products"
-                onClick={() => scrollByCard(1)}
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-black/15 bg-white text-black transition hover:border-black hover:bg-black hover:text-white"
-              >
-                <ChevronRight className="h-5 w-5" />
-              </button>
-            </div>
-            <Link
-              href="/shop"
-              className="group hidden items-center gap-2 rounded-full border border-black bg-black px-5 py-2 text-[0.7rem] font-medium uppercase tracking-[0.1em] text-white transition hover:border-[#4eb573] hover:bg-[#4eb573] sm:inline-flex"
-            >
-              See all
-              <ArrowUpRight className="h-4 w-4" />
-            </Link>
-          </div>
-        </div>
-
-        <div
-          ref={scrollerRef}
-          className="mt-10 flex gap-5 overflow-x-auto scroll-smooth pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-        >
-          {featured.map((product) => (
-            <div
-              key={product.id}
-              data-carousel-card
-              className="w-[min(46vw,220px)] shrink-0 sm:w-[230px] lg:w-[250px]"
-            >
-              <ProductCard product={product} />
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-8 sm:hidden">
-          <Link
-            href="/shop"
-            className="inline-flex items-center gap-2 rounded-full border border-black bg-black px-5 py-2 text-[0.7rem] font-medium uppercase tracking-[0.1em] text-white"
+        <div className="relative mt-10">
+          <button
+            type="button"
+            aria-label="Previous products"
+            onClick={() => scrollByCard(-1)}
+            className="absolute -left-1 top-[42%] z-10 hidden h-11 w-11 -translate-y-1/2 items-center justify-center text-black/70 transition hover:text-black md:flex lg:-left-3"
           >
-            See all products
-            <ArrowUpRight className="h-4 w-4" />
-          </Link>
+            <ChevronLeft className="h-8 w-8" strokeWidth={1.25} />
+          </button>
+          <button
+            type="button"
+            aria-label="Next products"
+            onClick={() => scrollByCard(1)}
+            className="absolute -right-1 top-[42%] z-10 hidden h-11 w-11 -translate-y-1/2 items-center justify-center text-black/70 transition hover:text-black md:flex lg:-right-3"
+          >
+            <ChevronRight className="h-8 w-8" strokeWidth={1.25} />
+          </button>
+
+          <div
+            ref={scrollerRef}
+            className="flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth pb-3 pt-1 [-ms-overflow-style:none] [scrollbar-width:none] sm:gap-7 md:px-8 lg:px-10 [&::-webkit-scrollbar]:hidden"
+          >
+            {items.map((product) => (
+              <div
+                key={product.id}
+                data-carousel-card
+                className="w-[min(78vw,280px)] shrink-0 snap-center sm:w-[280px] lg:w-[300px]"
+              >
+                <ProductCard product={product} />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>

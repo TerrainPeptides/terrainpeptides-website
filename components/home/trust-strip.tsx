@@ -18,7 +18,7 @@ export function TrustStrip() {
               i >= 1 ? 'lg:border-l lg:border-black/10' : ''
             }`}
           >
-            <p className="text-3xl font-semibold tracking-tight text-black sm:text-[2.35rem] [font-feature-settings:'tnum']">
+            <p className="text-3xl font-semibold tracking-tight text-[#0e2e1d] sm:text-[2.35rem] [font-feature-settings:'tnum']">
               {stat.value}
             </p>
             <p className="mt-2.5 text-[11px] font-medium uppercase tracking-[0.16em] text-black/50">

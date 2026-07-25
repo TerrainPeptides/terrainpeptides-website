@@ -1,5 +1,4 @@
-import Link from 'next/link'
-import { Headphones, Microscope, FileCheck, ArrowUpRight } from 'lucide-react'
+import { Headphones, Microscope, FileCheck } from 'lucide-react'
 
 const PILLARS = [
   {
@@ -21,38 +20,26 @@ const PILLARS = [
 
 export function CTASection() {
   return (
-    <section className="border-y border-white/10 bg-black py-20 text-white sm:py-24">
+    <section className="border-b border-black/8 bg-[#f7f7f8] py-20 sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col items-start justify-between gap-6 lg:flex-row lg:items-end">
-          <div>
-            <p className="text-[0.68rem] font-medium uppercase tracking-[0.2em] text-white/45">
-              <span className="mr-2 inline-block h-px w-5 align-middle bg-white/45" />
-              05 Difference
-            </p>
-            <h2 className="mt-4 max-w-xl text-3xl font-semibold tracking-tight text-white sm:text-[2.5rem]">
-              What sets Terrain apart
-            </h2>
-          </div>
-          <Link
-            href="/shop"
-            className="inline-flex items-center gap-2 text-[0.7rem] font-medium uppercase tracking-[0.12em] text-white/70 transition hover:text-white"
-          >
-            Browse the catalog
-            <ArrowUpRight className="h-4 w-4" />
-          </Link>
+        <div className="max-w-xl">
+          <p className="section-index">05 Difference</p>
+          <h2 className="mt-4 text-3xl font-semibold tracking-tight text-black sm:text-[2.5rem]">
+            What sets Terrain apart
+          </h2>
         </div>
 
-        <div className="mt-12 grid gap-4 md:grid-cols-3">
+        <div className="mt-12 grid gap-5 md:grid-cols-3">
           {PILLARS.map((pillar) => (
             <article
               key={pillar.title}
-              className="flex flex-col rounded-2xl border border-white/10 bg-white/[0.03] p-8 sm:p-9"
+              className="flex flex-col rounded-2xl border border-[#0e2e1d]/15 bg-white p-7 sm:p-8"
             >
-              <div className="flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-[#0e2e1d]/20 bg-[#0e2e1d]/6 text-[#0e2e1d]">
                 <pillar.icon className="h-5 w-5" aria-hidden />
               </div>
-              <h3 className="mt-6 text-xl font-semibold text-white">{pillar.title}</h3>
-              <p className="mt-3 flex-1 text-sm leading-relaxed text-white/55">{pillar.body}</p>
+              <h3 className="mt-5 text-[1.05rem] font-semibold text-black">{pillar.title}</h3>
+              <p className="mt-2.5 flex-1 text-sm leading-relaxed text-black/55">{pillar.body}</p>
             </article>
           ))}
         </div>

@@ -70,7 +70,7 @@ export function PromoPopup() {
   return (
     <>
       <div
-        className={`fixed inset-0 z-[200] bg-navy/50 backdrop-blur-[2px] transition-opacity duration-300 ${
+        className={`fixed inset-0 z-[200] bg-black/45 backdrop-blur-[2px] transition-opacity duration-300 ${
           visible ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
         }`}
         onClick={dismiss}
@@ -81,58 +81,58 @@ export function PromoPopup() {
         role="dialog"
         aria-modal="true"
         aria-labelledby="promo-popup-title"
-        className={`fixed left-1/2 top-1/2 z-[201] w-[calc(100vw-2rem)] max-w-[420px] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-lg border border-border bg-white shadow-2xl transition-all duration-300 ${
+        className={`fixed left-1/2 top-1/2 z-[201] w-[calc(100vw-2rem)] max-w-[420px] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-xl border border-black/10 bg-white shadow-[0_24px_64px_rgba(0,0,0,0.18)] transition-all duration-300 ${
           visible ? 'pointer-events-auto scale-100 opacity-100' : 'pointer-events-none scale-95 opacity-0'
         }`}
       >
         <button
           onClick={dismiss}
-          className="absolute right-4 top-4 z-10 rounded-md p-1.5 text-white/70 transition-colors hover:bg-white/15 hover:text-white"
+          className="absolute right-3.5 top-3.5 z-10 rounded-md p-1.5 text-black/40 transition-colors hover:bg-black/5 hover:text-black"
           aria-label="Close"
         >
           <X className="h-4 w-4" />
         </button>
 
-        <div className="border-b border-white/10 bg-primary px-8 pb-8 pt-7 text-white">
+        <div className="px-8 pb-2 pt-8">
           <div className="flex items-center gap-2.5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-md border border-white/20 bg-white/10">
-              <Tag className="h-4 w-4 text-white" />
+            <div className="flex h-8 w-8 items-center justify-center rounded-md border border-black/10 bg-[#fafafa]">
+              <Tag className="h-4 w-4 text-black" />
             </div>
-            <span className="text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-white/70">
+            <span className="text-[0.65rem] font-medium uppercase tracking-[0.18em] text-black/50">
               New account offer
             </span>
           </div>
 
           <h2
             id="promo-popup-title"
-            className="mt-4 text-2xl font-semibold leading-tight tracking-tight"
+            className="mt-4 text-2xl font-semibold leading-tight tracking-tight text-black"
           >
-            Get {PROMO_PERCENT}% Off
+            Get {PROMO_PERCENT}% off
             <br />
-            <span className="text-white/75">Your First Order</span>
+            your first order
           </h2>
-          <p className="mt-2 text-sm leading-relaxed text-white/65">
+          <p className="mt-2 text-sm leading-relaxed text-black/60">
             Create a free account to claim your discount — applied automatically at checkout.
           </p>
         </div>
 
-        <div className="px-8 pb-8 pt-6">
-          <div className="flex items-center justify-between rounded-md border border-dashed border-primary/25 bg-section-subtle px-4 py-3">
+        <div className="px-8 pb-8 pt-5">
+          <div className="flex items-center justify-between rounded-lg border border-dashed border-black/20 bg-[#fafafa] px-4 py-3">
             <div>
-              <p className="text-[0.6rem] font-semibold uppercase tracking-widest text-muted-foreground">
-                Your Code
+              <p className="text-[0.6rem] font-medium uppercase tracking-widest text-black/45">
+                Your code
               </p>
-              <p className="mt-0.5 font-mono text-lg font-bold tracking-widest text-navy">
+              <p className="mt-0.5 font-mono text-lg font-semibold tracking-widest text-black">
                 {PROMO_CODE}
               </p>
             </div>
             <button
               onClick={copyCode}
-              className="flex items-center gap-1.5 rounded-md border border-border bg-white px-3 py-1.5 text-xs font-semibold text-primary transition hover:border-primary/30 hover:shadow-sm"
+              className="flex items-center gap-1.5 rounded-full border border-black/15 bg-white px-3 py-1.5 text-xs font-medium text-black transition hover:border-black hover:bg-black hover:text-white"
             >
               {copied ? (
                 <>
-                  <Check className="h-3.5 w-3.5 text-clinical-teal" />
+                  <Check className="h-3.5 w-3.5" />
                   Copied
                 </>
               ) : (
@@ -146,16 +146,16 @@ export function PromoPopup() {
 
           <button
             onClick={handleClaim}
-            className="mt-5 flex w-full items-center justify-center rounded-md bg-primary px-8 py-3.5 text-sm font-semibold text-primary-foreground shadow-sm transition-colors hover:bg-primary/90"
+            className="mt-5 flex w-full items-center justify-center rounded-full bg-black px-8 py-3 text-sm font-medium text-white transition-colors hover:bg-[#4eb573]"
           >
-            Claim My {PROMO_PERCENT}% Discount →
+            Claim my {PROMO_PERCENT}% discount →
           </button>
 
-          <p className="mt-3 text-center text-xs text-muted-foreground">
+          <p className="mt-3 text-center text-xs text-black/45">
             Saved to your account after sign-up.{' '}
             <button
               onClick={dismiss}
-              className="underline underline-offset-2 transition-colors hover:text-foreground"
+              className="underline underline-offset-2 transition-colors hover:text-black"
             >
               No thanks
             </button>

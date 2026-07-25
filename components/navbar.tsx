@@ -40,10 +40,10 @@ function NavbarTickerPeriod({ duplicate }: { duplicate?: boolean }) {
     >
       {TICKER_ITEMS.map((text) => (
         <Fragment key={duplicate ? `d-${text}` : text}>
-          <span className="whitespace-nowrap text-xs font-medium uppercase tracking-[0.14em] text-black/75 sm:text-[0.8125rem]">
+          <span className="whitespace-nowrap text-[10px] font-medium uppercase tracking-[0.14em] text-white/80 sm:text-[11px]">
             {text}
           </span>
-          <span className="shrink-0 select-none text-black/35" aria-hidden>
+          <span className="shrink-0 select-none text-[10px] text-white sm:text-[11px]" aria-hidden>
             ◆
           </span>
         </Fragment>
@@ -58,16 +58,29 @@ export function Navbar() {
   const { data: session, status } = useSession()
 
   return (
-    <header className="w-full">
-      <div className="fixed top-0 left-0 right-0 z-[100] w-full border-b border-border bg-white/95 backdrop-blur-md">
-        <nav className="mx-auto grid h-[3.75rem] max-w-7xl grid-cols-[auto_1fr_auto] items-center px-4 sm:h-16 sm:px-6 lg:px-8">
+    <>
+      <div
+        className="navbar-ticker navbar-ticker--rolling w-full py-1"
+        role="region"
+        aria-label="Announcements"
+      >
+        <div className="overflow-hidden">
+          <div className="navbar-ticker__track flex w-max items-center">
+            <NavbarTickerPeriod />
+            <NavbarTickerPeriod duplicate />
+          </div>
+        </div>
+      </div>
+
+      <div className="sticky top-0 z-[100] w-full border-b border-border bg-white/95 backdrop-blur-md">
+        <nav className="mx-auto grid h-14 max-w-7xl grid-cols-[auto_1fr_auto] items-center px-4 sm:h-[3.75rem] sm:px-6 lg:px-8">
           <Link href="/" className="flex items-center justify-self-start">
             <Image
               src="/images/terrain-logo.png"
               alt="Terrain Peptides"
               width={603}
               height={278}
-              className="h-9 w-auto sm:h-10"
+              className="h-8 w-auto sm:h-9"
               priority
             />
           </Link>
@@ -94,7 +107,7 @@ export function Navbar() {
               <Link href="/cart">
                 <ShoppingCart className="h-5 w-5" />
                 {totalItems > 0 && (
-                  <span className="absolute -right-0.5 -top-0.5 flex h-4.5 w-4.5 min-w-[1.125rem] items-center justify-center rounded-sm bg-terrain text-[10px] font-bold text-white">
+                  <span className="absolute -right-0.5 -top-0.5 flex h-4.5 w-4.5 min-w-[1.125rem] items-center justify-center rounded-sm bg-black text-[10px] font-bold text-white">
                     {totalItems}
                   </span>
                 )}
@@ -109,7 +122,7 @@ export function Navbar() {
                     size="icon"
                     className="relative shrink-0 text-black hover:bg-[#f4f4f5] hover:text-black"
                   >
-                    <div className="flex h-7 w-7 items-center justify-center rounded-sm border border-border bg-section-subtle text-xs font-bold text-terrain-deep">
+                    <div className="flex h-7 w-7 items-center justify-center rounded-sm border border-border bg-section-subtle text-xs font-bold text-black">
                       {session.user?.name?.[0]?.toUpperCase() ??
                         session.user?.email?.[0]?.toUpperCase() ?? (
                           <User className="h-3.5 w-3.5" />
@@ -164,7 +177,7 @@ export function Navbar() {
             {status === 'loading' ? null : session ? (
               <Button variant="ghost" size="icon" className="shrink-0 text-black hover:bg-[#f4f4f5]" asChild>
                 <Link href="/account">
-                  <div className="flex h-7 w-7 items-center justify-center rounded-sm border border-border bg-section-subtle text-xs font-bold text-terrain-deep">
+                  <div className="flex h-7 w-7 items-center justify-center rounded-sm border border-border bg-section-subtle text-xs font-bold text-black">
                     {session.user?.name?.[0]?.toUpperCase() ??
                       session.user?.email?.[0]?.toUpperCase() ?? (
                         <User className="h-3.5 w-3.5" />
@@ -185,7 +198,7 @@ export function Navbar() {
               <Link href="/cart">
                 <ShoppingCart className="h-5 w-5" />
                 {totalItems > 0 && (
-                  <span className="absolute -right-0.5 -top-0.5 flex h-4.5 w-4.5 min-w-[1.125rem] items-center justify-center rounded-sm bg-terrain text-[10px] font-bold text-white">
+                  <span className="absolute -right-0.5 -top-0.5 flex h-4.5 w-4.5 min-w-[1.125rem] items-center justify-center rounded-sm bg-black text-[10px] font-bold text-white">
                     {totalItems}
                   </span>
                 )}
@@ -254,20 +267,6 @@ export function Navbar() {
           </div>
         </nav>
       </div>
-      <div className="h-[3.75rem] shrink-0 sm:h-16" aria-hidden />
-
-      <div
-        className="navbar-ticker navbar-ticker--rolling w-full py-2.5"
-        role="region"
-        aria-label="Announcements"
-      >
-        <div className="overflow-hidden">
-          <div className="navbar-ticker__track flex w-max items-center">
-            <NavbarTickerPeriod />
-            <NavbarTickerPeriod duplicate />
-          </div>
-        </div>
-      </div>
-    </header>
+    </>
   )
 }

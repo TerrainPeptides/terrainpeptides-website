@@ -16,9 +16,9 @@ export function FaqSection({ faqs }: { faqs: FAQ[] }) {
     <section className="bg-white py-20 sm:py-24">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
         <div className="mb-10 text-center">
-          <p className="section-index justify-center">05 FAQ</p>
+          <p className="section-index justify-center">06 FAQ</p>
           <h2 className="mt-4 text-3xl font-semibold tracking-tight text-black sm:text-[2.5rem]">
-            Frequently asked <span className="orbit-accent">questions</span>
+            Frequently asked questions
           </h2>
           <p className="mx-auto mt-3 max-w-md text-base text-black/60">
             Purity, shipping, payments, and research compliance — answered clearly.
